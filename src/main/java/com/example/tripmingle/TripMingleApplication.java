@@ -10,7 +10,4 @@ public class TripMingleApplication {
     }
 
 
-
-
-
 }
