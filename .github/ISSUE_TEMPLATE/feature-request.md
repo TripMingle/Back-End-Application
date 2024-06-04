@@ -1,5 +1,5 @@
 ---
-name: 'Issue '
+name: Feature Request
 about: 해당 이슈에 대해서 템플릿 형식에 맞게 작성해주세요
 title: "[Feat]"
 labels: documentation
