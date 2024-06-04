@@ -1,7 +1,7 @@
 ---
-name: Feature Request
-about: 기능 추가 템플릿
-title: "[Feat]"
+name: Fix Request
+about: 수정 템플릿
+title: "[Fix]"
 labels: documentation
 assignees: min9yu98
 
