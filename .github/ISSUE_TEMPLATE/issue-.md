@@ -1,7 +1,7 @@
 ---
 name: 'Issue '
 about: 해당 이슈에 대해서 템플릿 형식에 맞게 작성해주세요
-title: ''
+title: '[Feat]'
 labels: documentation
 assignees: min9yu98
 
