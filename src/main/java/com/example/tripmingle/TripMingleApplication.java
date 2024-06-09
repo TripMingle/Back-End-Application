@@ -9,8 +9,4 @@ public class TripMingleApplication {
         SpringApplication.run(TripMingleApplication.class, args);
     }
 
-
-
-
-
 }
