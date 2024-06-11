@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: TripMingle
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/tripmingle?createDatabaseIfNotExist=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: ${database.name}
+    password: ${database.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+  jwt:
+    secret: ${jwt.secret-key}
+    access-token-expiration: 600000
+    refresh-token-expiration: 86400000
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${kakao.rest-api-key}
+            client-secret: ${kakao.client-secret}
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            redirect-uri: http://localhost:8080/oauth2/kakao/callback
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: kakao_account
