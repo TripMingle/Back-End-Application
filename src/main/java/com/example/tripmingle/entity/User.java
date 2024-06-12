@@ -1,36 +1,72 @@
 package com.example.tripmingle.entity;
 
 
-import com.example.tripmingle.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import com.example.tripmingle.common.entity.BaseEntity;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class User extends BaseEntity {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    private String name;
+    @Column(nullable = false)
+    private String password;
 
+    @Column(nullable = false)
+    private String role;
+
+    @Column(nullable = false)
+    private String loginType;
+
+    @Column(nullable = false)
+    private String oauthId;
+
+    @Column(nullable = false)
     private String nickName;
 
-    @Enumerated(EnumType.STRING)
-    private AgeRange ageRange;
+    @Column(nullable = false)
+    private String ageRange;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
+    @Column(nullable = false)
+    private String gender;
 
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String nationality;
 
+    @Column(nullable = true)
     private String selfIntroduction;
+
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    @Builder
+    public User(String email, String password, String role, String loginType, String oauthId, String nickName, String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.loginType = loginType;
+        this.oauthId = oauthId;
+        this.nickName = nickName;
+        this.ageRange = ageRange;
+        this.gender = gender;
+        this.name = name;
+        this.nationality = nationality;
+        this.selfIntroduction = selfIntroduction;
+        this.phoneNumber = phoneNumber;
+    }
 
 }
