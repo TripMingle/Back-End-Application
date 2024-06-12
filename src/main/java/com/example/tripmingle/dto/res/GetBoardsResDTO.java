@@ -22,8 +22,8 @@ public class GetBoardsResDTO {
     private String language;
     //user info
     private String nickName;
-    private AgeRange ageRange;
-    private Gender gender;
+    private String ageRange;
+    private String gender;
     private String nationality;
 
 

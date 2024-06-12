@@ -31,7 +31,7 @@ public class UserPersistAdapter implements UserPersistPort {
     }
 
     @Override
-    public Optional<User> findCurrentUserByEmail() {
+    public Optional<User> getCurrentUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 }

@@ -11,5 +11,5 @@ public interface UserPersistPort {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findCurrentUserByEmail();
+    Optional<User> getCurrentUser();
 }
