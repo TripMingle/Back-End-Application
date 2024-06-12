@@ -3,6 +3,9 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.port.in.AuthUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -12,7 +15,6 @@ public class AuthController {
     private final AuthUseCase authUseCase;
 
     /*
-
     회원가입 : 리턴할게 없을때 (텍스트뿐일때)
     엑세스토큰 : 헤더에 넣어야할때
     아이디찾기 : 리턴할게 있을때

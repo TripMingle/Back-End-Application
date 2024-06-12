@@ -1,15 +1,24 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.PostBoardReqDTO;
+import com.example.tripmingle.dto.res.GetBoardInfoResDTO;
+import com.example.tripmingle.dto.res.GetBoardsResDTO;
+import com.example.tripmingle.dto.res.PostBoardResDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
 public interface BoardUseCase {
-    void getRecentBoards();
+    List<GetBoardsResDTO> getRecentBoards(String countryName);
 
     void getClusteredBoards();
 
-    void getAllBoards();
+    Page<GetBoardsResDTO> getAllBoards(String country, String gender, String language, Pageable pageable);
 
-    void getBoard();
+    GetBoardInfoResDTO getBoard(Long boardId);
 
-    void createBoard();
+    PostBoardResDTO createBoard(PostBoardReqDTO postBoardReqDTO);
 
     void updateBoard();
 

@@ -1,30 +1,38 @@
 package com.example.tripmingle.application.Service;
 
+import com.example.tripmingle.dto.req.PostBoardReqDTO;
+import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.port.out.BoardPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardPersistPort boardPersistPort;
 
-    public void getRecentBoards() {
-        boardPersistPort.getRecentBoards();
+    public List<Board> getRecentBoards(String countryName) {
+        return boardPersistPort.getRecentBoards(countryName);
     }
 
     public void getBoardsByIdList() {
         boardPersistPort.getAllBoardsByIds();
     }
 
-    public void getAllBoards() {
-        boardPersistPort.getAllBoards();
+    public Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable) {
+        return boardPersistPort.getAllBoards(country,gender,language,pageable);
     }
 
-    public void getBoardInfo() {
-        boardPersistPort.getBoardById();
+    public Optional<Board> getBoardById(Long boardId) {
+        return boardPersistPort.getBoardById(boardId);
     }
 
-    public void createBoard() {
-        boardPersistPort.saveBoard();
+    public Long createBoard(PostBoardReqDTO postBoardReqDTO) {
+        Board board = Board.builder().build();
+        return boardPersistPort.saveBoard(board);
     }
 
     public void updateBoard() {
@@ -36,9 +44,6 @@ public class BoardService {
         boardPersistPort.deleteBoardById();
     }
 
-    public void getBoardById() {
-        boardPersistPort.getBoardById();
-    }
 
     public void searchBoard() {
         boardPersistPort.searchBoard();
@@ -47,4 +52,5 @@ public class BoardService {
     public void getBoardsWithinRange() {
         boardPersistPort.getBoardsWithinRange();
     }
+
 }

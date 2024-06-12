@@ -1,7 +1,11 @@
 package com.example.tripmingle.port.out;
 
+import com.example.tripmingle.entity.BoardComment;
+
+import java.util.List;
+
 public interface BoardCommentPersistPort {
-    void getBoardCommentsByBoardId();
+    List<BoardComment> getBoardCommentsByBoardId(Long boardId);
 
     void saveBoardComment();
 

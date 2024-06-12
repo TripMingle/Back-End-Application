@@ -1,15 +1,17 @@
 package com.example.tripmingle.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.example.tripmingle.common.entity.BaseEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,4 +68,5 @@ public class User {
         this.selfIntroduction = selfIntroduction;
         this.phoneNumber = phoneNumber;
     }
+
 }

@@ -1,19 +1,27 @@
 package com.example.tripmingle.port.out;
 
-public interface BoardPersistPort {
-    void getAllBoards();
+import com.example.tripmingle.entity.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-    void getBoardById();
+import java.util.List;
+import java.util.Optional;
+
+public interface BoardPersistPort {
+    Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable);
+
+    Optional<Board> getBoardById(Long boardId);
 
     void deleteBoardById();
 
     void getAllBoardsByIds();
 
-    void getRecentBoards();
+    List<Board> getRecentBoards(String countryName);
 
-    void saveBoard();
+    Long saveBoard(Board board);
 
     void searchBoard();
 
     void getBoardsWithinRange();
+
 }
