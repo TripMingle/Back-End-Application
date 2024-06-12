@@ -1,13 +1,10 @@
 package com.example.tripmingle.dto.res;
 
-import com.example.tripmingle.entity.AgeRange;
-import com.example.tripmingle.entity.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
@@ -25,7 +22,5 @@ public class GetBoardsResDTO {
     private String ageRange;
     private String gender;
     private String nationality;
-
-
 
 }

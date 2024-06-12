@@ -1,8 +1,8 @@
 package com.example.tripmingle.dto.res;
 
-import com.example.tripmingle.entity.AgeRange;
-import com.example.tripmingle.entity.Gender;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;

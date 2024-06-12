@@ -28,4 +28,8 @@ public class KakaoProperties {
         return oAuth2ClientProperties.getProvider().get("kakao").getUserInfoUri();
     }
 
+    public String getKauthAuthorizeUri() {
+        return oAuth2ClientProperties.getProvider().get("kakao").getAuthorizationUri();
+    }
+
 }
