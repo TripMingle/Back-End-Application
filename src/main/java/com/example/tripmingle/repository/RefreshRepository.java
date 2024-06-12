@@ -1,4 +1,4 @@
-package com.example.tripmingle.port.out;
+package com.example.tripmingle.repository;
 
 import com.example.tripmingle.entity.Refresh;
 import org.springframework.data.repository.CrudRepository;

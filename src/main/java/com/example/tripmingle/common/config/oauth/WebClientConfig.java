@@ -1,4 +1,4 @@
-package com.example.tripmingle.common.config.security.oauth;
+package com.example.tripmingle.common.config.oauth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
