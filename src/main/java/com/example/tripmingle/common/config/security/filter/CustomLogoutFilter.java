@@ -1,7 +1,7 @@
 package com.example.tripmingle.common.config.security.filter;
 
 import com.example.tripmingle.common.utils.JwtUtils;
-import com.example.tripmingle.port.out.RefreshRepository;
+import com.example.tripmingle.repository.RefreshRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

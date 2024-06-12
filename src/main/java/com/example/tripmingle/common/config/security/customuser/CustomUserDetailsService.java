@@ -1,7 +1,7 @@
 package com.example.tripmingle.common.config.security.customuser;
 
 import com.example.tripmingle.entity.User;
-import com.example.tripmingle.port.out.UserRepository;
+import com.example.tripmingle.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

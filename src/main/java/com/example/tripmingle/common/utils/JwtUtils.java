@@ -40,6 +40,10 @@ public class JwtUtils {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("tokenType", String.class);
     }
 
+    public Long getRefreshTokenExpTimeByToken(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().getTime();
+    }
+
     public Long getAccessTokenExpTime() {
         return this.accessTokenExpTime;
     }
@@ -48,7 +52,7 @@ public class JwtUtils {
         return this.refreshTokenExpTime;
     }
 
-    public boolean isExpired(String token) {
+    public Boolean isExpired(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 

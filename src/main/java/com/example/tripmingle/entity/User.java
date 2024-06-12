@@ -28,7 +28,7 @@ public class User {
     private String loginType;
 
     @Column(nullable = false)
-    private Long oauthId;
+    private String oauthId;
 
     @Column(nullable = false)
     private String nickName;
@@ -52,7 +52,7 @@ public class User {
     private String phoneNumber;
 
     @Builder
-    public User(String email, String password, String role, String loginType, Long oauthId, String nickName, String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber) {
+    public User(String email, String password, String role, String loginType, String oauthId, String nickName, String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber) {
         this.email = email;
         this.password = password;
         this.role = role;

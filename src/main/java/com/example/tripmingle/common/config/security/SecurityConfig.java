@@ -3,12 +3,10 @@ package com.example.tripmingle.common.config.security;
 import com.example.tripmingle.common.config.security.filter.CustomLogoutFilter;
 import com.example.tripmingle.common.config.security.filter.JwtFilter;
 import com.example.tripmingle.common.utils.JwtUtils;
-import com.example.tripmingle.port.out.RefreshRepository;
-import com.example.tripmingle.port.out.UserRepository;
+import com.example.tripmingle.repository.RefreshRepository;
+import com.example.tripmingle.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,7 +73,7 @@ public class SecurityConfig {
                 .formLogin(auth -> auth.disable())
                 .httpBasic(auth -> auth.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/health").permitAll()
+                        .requestMatchers("/kakao/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtils, refreshRepository), LogoutFilter.class)
