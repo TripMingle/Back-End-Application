@@ -7,8 +7,8 @@ import com.example.tripmingle.dto.etc.KakaoUserInfo;
 import com.example.tripmingle.dto.etc.TokenDTO;
 import com.example.tripmingle.entity.Refresh;
 import com.example.tripmingle.entity.User;
-import com.example.tripmingle.port.out.AuthPort;
 import com.example.tripmingle.port.out.RefreshPort;
+import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -37,7 +37,7 @@ public class KakaoService {
     private final PasswordEncoder passwordEncoder;
     private final WebClient webClient;
     private final KakaoProperties kakaoProperties;
-    private final AuthPort authPort;
+    private final UserPersistPort userPersistPort;
     private final RefreshPort refreshPort;
 
     @Transactional
@@ -81,8 +81,8 @@ public class KakaoService {
     //  아니면 나중에 해당 유저 정보를 수정하는 걸로 할지에 대해서
     private User joinStateCheckAndReturnUser(KakaoUserInfo userInfo) {
         User user = null;
-        if (!authPort.existsByEmail(userInfo.getEmail())) {
-            user = authPort.save(User.builder()
+        if (!userPersistPort.existsByEmail(userInfo.getEmail())) {
+            user = userPersistPort.save(User.builder()
                     .email(userInfo.getEmail())
                     .password(passwordEncoder.encode("TripMingle " + userInfo.getEmail() + userInfo.getKakaoId()))
                     .role("ROLE_USER")
@@ -96,7 +96,7 @@ public class KakaoService {
                     .phoneNumber(userInfo.getPhoneNumber())
                     .build());
         } else {
-            user = authPort.findByEmail(userInfo.getEmail()).orElseThrow(() -> new ErrorResponse(KAKAO_ALREADY_EXISTS_USER));
+            user = userPersistPort.findByEmail(userInfo.getEmail()).orElseThrow(() -> new ErrorResponse(KAKAO_ALREADY_EXISTS_USER));
         }
         return user;
     }
