@@ -5,13 +5,16 @@ import com.example.tripmingle.common.error.ErrorResponse;
 import com.example.tripmingle.common.utils.JwtUtils;
 import com.example.tripmingle.dto.etc.KakaoUserInfo;
 import com.example.tripmingle.dto.etc.TokenDTO;
+import com.example.tripmingle.dto.res.KakaoTokenResDTO;
 import com.example.tripmingle.entity.Refresh;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.RefreshPort;
 import com.example.tripmingle.port.out.UserPersistPort;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -117,4 +120,19 @@ public class KakaoService {
         refreshPort.save(refreshEntity);
     }
 
+    public KakaoTokenResDTO getKakaoAccessToken(String code) {
+        return webClient.post()
+                .uri(kakaoProperties.getKauthTokenUrlHost(), uriBuilder -> uriBuilder
+                        .queryParam("grant_type", "authorization_code")
+                        .queryParam("client_id", kakaoProperties.getClientId())
+                        .queryParam("code", code)
+                        .queryParam("client_secret", kakaoProperties.getClientSecret())
+                        .build(true))
+                .header(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED.toString())
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Invalid Parameter")))
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> Mono.error(new RuntimeException("Internal Server Error")))
+                .bodyToMono(KakaoTokenResDTO.class)
+                .block();
+    }
 }
