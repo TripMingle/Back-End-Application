@@ -1,8 +1,8 @@
 package com.example.tripmingle.dto.res;
 
-import com.example.tripmingle.entity.AgeRange;
-import com.example.tripmingle.entity.Gender;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,8 +29,8 @@ public class GetBoardInfoResDTO {
     //게시글 작성자
     private Long userId;
     private String nickName;
-    private AgeRange ageRange;
-    private Gender gender;
+    private String ageRange;
+    private String gender;
     private String nationality;
     private String selfIntroduction;
     //온도
