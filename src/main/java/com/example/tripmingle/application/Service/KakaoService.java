@@ -43,8 +43,8 @@ public class KakaoService {
 
     @Transactional
     public TokenDTO loginKakaoAccount(String kakaoAccessToken) {
-
-        KakaoLoginResDTO kakaoLoginResDTO = kakaoLoginFeignClientPort.getKakaoUserInfo(kakaoAccessToken);
+        String redefineAccessToken = "Bearer " + kakaoAccessToken;
+        KakaoLoginResDTO kakaoLoginResDTO = kakaoLoginFeignClientPort.getKakaoUserInfo(redefineAccessToken);
 
         User user = joinStateCheckAndReturnUser(kakaoLoginResDTO);
         userNullCheck(user);
