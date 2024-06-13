@@ -1,17 +1,17 @@
 package com.example.tripmingle.entity;
 
 
+import com.example.tripmingle.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.example.tripmingle.common.entity.BaseEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +53,7 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String phoneNumber;
 
-    @Builder
+    @Builder(toBuilder = true)
     public User(String email, String password, String role, String loginType, String oauthId, String nickName, String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber) {
         this.email = email;
         this.password = password;
