@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -78,8 +77,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new CustomLogoutFilter(jwtUtils, refreshRepository), LogoutFilter.class)
                 .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2Client(Customizer.withDefaults());
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
