@@ -2,6 +2,7 @@ package com.example.tripmingle.common.exception.handler;
 
 import com.example.tripmingle.common.error.ErrorResponse;
 import com.example.tripmingle.common.exception.ExampleException;
+import com.example.tripmingle.common.exception.PostingNotFoundException;
 import com.example.tripmingle.common.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException ex) {
         log.error("handleUserNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(PostingNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostingNotFound(PostingNotFoundException ex) {
+        log.error("handlePostingNotFoundException", ex);
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }

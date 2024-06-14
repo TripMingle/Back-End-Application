@@ -2,7 +2,9 @@ package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.PostingCommentService;
 import com.example.tripmingle.application.service.PostingService;
+import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.res.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.PostPostingResDTO;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
@@ -35,9 +37,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     }
 
+    @Transactional
     @Override
-    public void updatePosting() {
-        postingService.updatePosting();
+    public PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
+        return postingService.updatePosting(patchPostingReqDTO);
     }
 
     @Override

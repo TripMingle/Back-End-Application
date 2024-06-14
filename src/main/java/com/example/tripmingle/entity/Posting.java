@@ -1,5 +1,6 @@
 package com.example.tripmingle.entity;
 
+import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,4 +29,15 @@ public class Posting {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public void updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
+        if (patchPostingReqDTO.getTitle() != null && !patchPostingReqDTO.getTitle().equals("")) {
+            this.title = patchPostingReqDTO.getTitle();
+        }
+        if (patchPostingReqDTO.getContent() != null && !patchPostingReqDTO.getContent().equals("")) {
+            this.content = patchPostingReqDTO.getContent();
+        }
+        if (patchPostingReqDTO.getPostingType() != null && !patchPostingReqDTO.getPostingType().equals("")) {
+            this.postingType = patchPostingReqDTO.getPostingType();
+        }
+    }
 }

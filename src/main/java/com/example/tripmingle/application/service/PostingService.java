@@ -1,7 +1,9 @@
 package com.example.tripmingle.application.service;
 
 
+import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.res.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.PostPostingResDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.User;
@@ -38,8 +40,12 @@ public class PostingService {
                 .build();
     }
 
-    public void updatePosting() {
-        postingPersistPort.updatePosting();
+    public PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
+        Posting posting = postingPersistPort.getPostingById(patchPostingReqDTO.getPostingId());
+        posting.updatePosting(patchPostingReqDTO);
+        return PatchPostingResDTO.builder()
+                .postingId(posting.getId())
+                .build();
     }
 
     public void deletePosting() {
@@ -47,6 +53,6 @@ public class PostingService {
     }
 
     public void getPostingInfo() {
-        postingPersistPort.getPostingById();
+//        postingPersistPort.getPostingById();
     }
 }

@@ -11,7 +11,7 @@ public interface PostingPersistPort {
 
     void updatePosting();
 
-    void getPostingById();
+    Posting getPostingById(Long postingId);
 
     void deletePostingById();
 }
