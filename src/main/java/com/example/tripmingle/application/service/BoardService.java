@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.dto.req.PostBoardReqDTO;
 import com.example.tripmingle.entity.Board;
@@ -23,7 +23,7 @@ public class BoardService {
     }
 
     public Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable) {
-        return boardPersistPort.getAllBoards(country,gender,language,pageable);
+        return boardPersistPort.getAllBoards(country, gender, language, pageable);
     }
 
     public Optional<Board> getBoardById(Long boardId) {

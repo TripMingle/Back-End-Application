@@ -1,11 +1,15 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.res.PostPostingResDTO;
+
 public interface PostingUseCase {
 
     void getRecentPostings();
+
     void getAllPostings();
 
-    void createPosting();
+    PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO);
 
     void updatePosting();
 
