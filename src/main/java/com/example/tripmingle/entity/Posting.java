@@ -1,5 +1,6 @@
 package com.example.tripmingle.entity;
 
+import com.example.tripmingle.common.entity.BaseEntity;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +10,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Posting {
+public class Posting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
