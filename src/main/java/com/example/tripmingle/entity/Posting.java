@@ -4,12 +4,14 @@ import com.example.tripmingle.common.entity.BaseEntity;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class Posting extends BaseEntity {
 
     @Id
@@ -40,5 +42,9 @@ public class Posting extends BaseEntity {
         if (patchPostingReqDTO.getPostingType() != null && !patchPostingReqDTO.getPostingType().equals("")) {
             this.postingType = patchPostingReqDTO.getPostingType();
         }
+    }
+
+    public void deletePosting() {
+        delete();
     }
 }

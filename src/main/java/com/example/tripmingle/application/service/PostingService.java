@@ -1,8 +1,10 @@
 package com.example.tripmingle.application.service;
 
 
+import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.res.DeletePostingResDTO;
 import com.example.tripmingle.dto.res.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.PostPostingResDTO;
 import com.example.tripmingle.entity.Posting;
@@ -17,14 +19,6 @@ import org.springframework.stereotype.Service;
 public class PostingService {
     private final PostingPersistPort postingPersistPort;
     private final UserPersistPort userPersistPort;
-
-    public void getRecentPostings() {
-        postingPersistPort.getRecentPostings();
-    }
-
-    public void getAllPostings() {
-        postingPersistPort.getAllPostings();
-    }
 
     public PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO) {
         User user = userPersistPort.findCurrentUserByEmail();
@@ -41,18 +35,27 @@ public class PostingService {
     }
 
     public PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
+        User user = userPersistPort.findCurrentUserByEmail();
         Posting posting = postingPersistPort.getPostingById(patchPostingReqDTO.getPostingId());
-        posting.updatePosting(patchPostingReqDTO);
+
+        if (user.getId().equals(posting.getUser().getId())) {
+            posting.updatePosting(patchPostingReqDTO);
+        }
         return PatchPostingResDTO.builder()
                 .postingId(posting.getId())
                 .build();
     }
 
-    public void deletePosting() {
-        postingPersistPort.deletePostingById();
+    public DeletePostingResDTO deletePosting(DeletePostingReqDTO deletePostingReqDTO) {
+        User user = userPersistPort.findCurrentUserByEmail();
+        Posting posting = postingPersistPort.getPostingById(deletePostingReqDTO.getPostingId());
+
+        if (user.getId().equals(posting.getUser().getId())) {
+            posting.deletePosting();
+        }
+        return DeletePostingResDTO.builder()
+                .postingId(posting.getId())
+                .build();
     }
 
-    public void getPostingInfo() {
-//        postingPersistPort.getPostingById();
-    }
 }

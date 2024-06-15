@@ -49,9 +49,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
-    //Webflux
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 

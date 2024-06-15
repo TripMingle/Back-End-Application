@@ -15,32 +15,13 @@ public class PostingPersistAdapter implements PostingPersistPort {
     private final PostingRepository postingRepository;
 
     @Override
-    public void getRecentPostings() {
-
-    }
-
-    @Override
-    public void getAllPostings() {
-
-    }
-
-    @Override
     public Long createPosting(Posting posting) {
         return postingRepository.save(posting).getId();
     }
 
     @Override
-    public void updatePosting() {
-
-    }
-
-    @Override
     public Posting getPostingById(Long postingId) {
-        return postingRepository.findByIdAndIsDeletedFalse(postingId).orElseThrow(() -> new PostingNotFoundException("Posting Not Found.", ErrorCode.POSING_NOT_FOUND));
+        return postingRepository.findById(postingId).orElseThrow(() -> new PostingNotFoundException("Posting Not Found.", ErrorCode.POSING_NOT_FOUND));
     }
 
-    @Override
-    public void deletePostingById() {
-
-    }
 }
