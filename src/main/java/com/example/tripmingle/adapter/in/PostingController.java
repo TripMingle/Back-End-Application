@@ -1,7 +1,9 @@
 package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
+import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.res.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.PostPostingResDTO;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.example.tripmingle.common.result.ResultCode.CREATED_POSTING;
+import static com.example.tripmingle.common.result.ResultCode.UPDATED_POSTING;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,8 +48,10 @@ public class PostingController {
     }
 
     //포스트 수정하기
-    public void updatePosting() {
-        postingUseCase.updatePosting();
+    @PatchMapping("/update")
+    public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
+        PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
+        return ResponseEntity.ok().body(new ResultResponse(UPDATED_POSTING, patchPostingResDTO));
     }
 
     //포스트 삭제하기

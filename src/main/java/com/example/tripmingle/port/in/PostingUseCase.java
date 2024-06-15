@@ -1,6 +1,8 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.res.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.PostPostingResDTO;
 
 public interface PostingUseCase {
@@ -11,7 +13,7 @@ public interface PostingUseCase {
 
     PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO);
 
-    void updatePosting();
+    PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO);
 
     void deletePosting();
 
