@@ -1,15 +1,15 @@
 package com.example.tripmingle.application.facadeService;
 
+import com.example.tripmingle.application.service.BoardCommentService;
+import com.example.tripmingle.application.service.BoardService;
 import com.example.tripmingle.dto.req.PostBoardReqDTO;
 import com.example.tripmingle.dto.res.BoardCommentResDTO;
 import com.example.tripmingle.dto.res.GetBoardInfoResDTO;
 import com.example.tripmingle.dto.res.GetBoardsResDTO;
 import com.example.tripmingle.dto.res.PostBoardResDTO;
 import com.example.tripmingle.entity.Board;
-import com.example.tripmingle.port.in.BoardUseCase;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
-import com.example.tripmingle.application.Service.BoardService;
-import com.example.tripmingle.application.Service.BoardCommentService;
+import com.example.tripmingle.port.in.BoardUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +25,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
-        List<Board>boardList = boardService.getRecentBoards(countryName);
+        List<Board> boardList = boardService.getRecentBoards(countryName);
 
         return boardList
                 .stream().map(board -> GetBoardsResDTO.builder()
@@ -50,7 +50,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public Page<GetBoardsResDTO> getAllBoards(String countryName, String gender, String language, Pageable pageable) {
-        Page<Board>boardPage = boardService.getAllBoards(countryName,gender,language,pageable);
+        Page<Board> boardPage = boardService.getAllBoards(countryName, gender, language, pageable);
 
         return boardPage.map(board -> GetBoardsResDTO.builder()
                 .boardId(board.getId())
@@ -65,6 +65,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .maxCount(board.getMaxCount())
                 .build());
     }
+
     @Override
     public GetBoardInfoResDTO getBoard(Long boardId) {
         Optional<Board> board = boardService.getBoardById(boardId);

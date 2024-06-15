@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.error.ErrorResponse;
 import com.example.tripmingle.common.utils.JwtUtils;
@@ -24,7 +24,6 @@ import java.util.Date;
 import static com.example.tripmingle.common.constants.JwtConstants.ACCESS_TOKEN;
 import static com.example.tripmingle.common.constants.JwtConstants.REFRESH_TOKEN;
 import static com.example.tripmingle.common.constants.LoginType.KAKAO;
-import static com.example.tripmingle.common.error.ErrorCode.KAKAO_ALREADY_EXISTS_USER;
 import static com.example.tripmingle.common.error.ErrorCode.KAKAO_NO_EXISTS_USER;
 
 @Service
@@ -79,7 +78,7 @@ public class KakaoService {
                     .phoneNumber(kakaoUserInfo.getPhoneNumber())
                     .build());
         } else {
-            user = userPersistPort.findByEmail(kakaoUserInfo.getEmail()).orElseThrow(() -> new ErrorResponse(KAKAO_ALREADY_EXISTS_USER));
+            user = userPersistPort.findByEmail(kakaoUserInfo.getEmail());
         }
         return user;
     }

@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.dto.res.BoardCommentResDTO;
 import com.example.tripmingle.entity.BoardComment;
@@ -20,14 +20,13 @@ public class BoardCommentService {
         Map<Integer, List<Integer>> commentMap = new HashMap<>();
         List<Integer> parentList = new ArrayList<>();
 
-        for(int i = 0 ; i < boardComments.size() ; i++){
+        for (int i = 0; i < boardComments.size(); i++) {
             Long commentId = boardComments.get(i).getId();
 
-            if(boardComments.get(i).getParentBoardComment() == null){
+            if (boardComments.get(i).getParentBoardComment() == null) {
                 commentMap.put(i, new ArrayList<>());
                 parentList.add(i);
-            }
-            else{
+            } else {
                 Long parentId = boardComments.get(i).getParentBoardComment().getId();
                 commentMap.get(parentId).add(i);
             }
@@ -35,9 +34,9 @@ public class BoardCommentService {
 
         List<BoardCommentResDTO> boardCommentResDTOS = new ArrayList<>();
 
-        for(int i = 0 ; i < parentList.size() ; i++){
+        for (int i = 0; i < parentList.size(); i++) {
             boardCommentResDTOS.add(getBoardCommentInfo(boardComments.get(parentList.get(i))));
-            for(int j=0;j<commentMap.get(parentList.get(i)).size();j++){
+            for (int j = 0; j < commentMap.get(parentList.get(i)).size(); j++) {
                 boardCommentResDTOS.add(getBoardCommentInfo(boardComments.get(commentMap.get(parentList.get(i)).get(j))));
             }
         }
@@ -45,7 +44,7 @@ public class BoardCommentService {
         return boardCommentResDTOS;
     }
 
-    private BoardCommentResDTO getBoardCommentInfo(BoardComment boardComment){
+    private BoardCommentResDTO getBoardCommentInfo(BoardComment boardComment) {
         Long parentId = (boardComment.getParentBoardComment() == null ? -1 : boardComment.getParentBoardComment().getId());
 
         return BoardCommentResDTO.builder()

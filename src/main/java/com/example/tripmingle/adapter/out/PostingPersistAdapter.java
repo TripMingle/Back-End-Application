@@ -1,10 +1,17 @@
 package com.example.tripmingle.adapter.out;
 
+import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.port.out.PostingPersistPort;
+import com.example.tripmingle.repository.PostingRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
+@Repository
+@RequiredArgsConstructor
 public class PostingPersistAdapter implements PostingPersistPort {
 
-    //private final PostingRepository postingRepository;
+    private final PostingRepository postingRepository;
+
     @Override
     public void getRecentPostings() {
 
@@ -16,8 +23,8 @@ public class PostingPersistAdapter implements PostingPersistPort {
     }
 
     @Override
-    public void createPosting() {
-
+    public Long createPosting(Posting posting) {
+        return postingRepository.save(posting).getId();
     }
 
     @Override
