@@ -20,14 +20,6 @@ public class PostingService {
     private final PostingPersistPort postingPersistPort;
     private final UserPersistPort userPersistPort;
 
-    public void getRecentPostings() {
-        postingPersistPort.getRecentPostings();
-    }
-
-    public void getAllPostings() {
-        postingPersistPort.getAllPostings();
-    }
-
     public PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO) {
         User user = userPersistPort.findCurrentUserByEmail();
         Posting posting = Posting.builder()
@@ -66,7 +58,4 @@ public class PostingService {
                 .build();
     }
 
-    public void getPostingInfo() {
-//        postingPersistPort.getPostingById();
-    }
 }
