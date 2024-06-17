@@ -2,6 +2,7 @@ package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.BoardCommentService;
 import com.example.tripmingle.application.service.BoardService;
+import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
@@ -17,20 +18,23 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final BoardService boardService;
     private final BoardCommentService boardCommentService;
     private final UserPersistPort userPersistPort;
+    private final CommonUtils commonUtils;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
-        List<Board> boardList = boardService.getRecentBoards(countryName);
+        List<Board> boardList = boardService.getRecentBoardsByCountryName(countryName);
         User currentUser = userPersistPort.findCurrentUserByEmail();
 
         return boardList
@@ -40,6 +44,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .startDate(board.getStartDate())
                         .endDate(board.getEndDate())
                         .language(board.getLanguage())
+                        .commentCount(board.getCommentCount())
                         .nickName(board.getUser().getNickName())
                         .ageRange(board.getUser().getAgeRange())
                         .gender(board.getUser().getGender())
@@ -48,11 +53,6 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .build())
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void getClusteredBoards() {
-        boardService.getBoardsByIdList();
     }
 
     @Override
@@ -66,6 +66,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .startDate(board.getStartDate())
                 .endDate(board.getEndDate())
                 .language(board.getLanguage())
+                .commentCount(board.getCommentCount())
                 .nickName(board.getUser().getNickName())
                 .ageRange(board.getUser().getAgeRange())
                 .gender(board.getUser().getGender())
@@ -86,13 +87,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .title(board.getTitle())
                 .content(board.getContent())
                 .language(board.getLanguage())
-                .traits(board.getTraits())
-                .types(board.getTypes())
+                .traits(commonUtils.convertStringToArray(board.getTraits()))
+                .types(commonUtils.convertStringToArray(board.getTypes()))
                 .startDate(board.getStartDate())
                 .endDate(board.getEndDate())
                 .currentCount(board.getCurrentCount())
                 .maxCount(board.getMaxCount())
                 .createdAt(board.getCreatedAt())
+                .commentCount(board.getCommentCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .boardCommentResDTOS(boardComments)
                 .userId(board.getUser().getId())
@@ -105,12 +107,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
         Long boardId = boardService.createBoard(createBoardReqDTO);
         return PostBoardResDTO.builder().boardId(boardId).build();
     }
 
     @Override
+    @Transactional(readOnly = false)
     public UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
         //내가 쓴 글인지 맞는지 확인하는 로직
         Long resultBoardId = boardService.updateBoard(boardId, patchBoardReqDTO);
@@ -119,9 +123,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteBoard(Long boardId) {
         //내가 쓴 글인지 맞는지 확인하는 로직
-        //boardComment 삭제로직
         boardCommentService.deleteBoardCommentByBoardId(boardId);
         boardService.deleteBoard(boardId);
     }
@@ -142,12 +146,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .ageRange(board.getUser().getAgeRange())
                         .gender(board.getUser().getGender())
                         .nationality(board.getUser().getNationality())
+                        .commentCount(board.getCommentCount())
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .build()).collect(Collectors.toList());
     }
 
 
     @Override
+    @Transactional(readOnly = false)
     public CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
         Board board = boardService.getBoardById(createBoardCommentReqDTO.getBoardId());
         BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board);
@@ -164,12 +170,17 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteBoardComment(Long commentId) {
         //내가 쓴 글인지 맞는지 확인하는 로직
-        boardCommentService.deleteBoardComment(commentId);
+        Board board = boardCommentService.getBoardByCommentId(commentId);
+        int commentCount = boardCommentService.deleteBoardComment(commentId);
+        boardService.updateCommentCount(board, -commentCount);
+
     }
 
     @Override
+    @Transactional(readOnly = false)
     public UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
         //내가 단 댓글이 맞는지 확인하는 로직
         BoardComment boardComment = boardCommentService.updateBoardComment(updateBoardCommentReqDTO, commentId);
@@ -179,5 +190,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public void getBoardsWithinRange() {
         boardService.getBoardsWithinRange();
+    }
+
+    @Override
+    public void getClusteredBoards() {
+        boardService.getBoardsByIdList();
     }
 }

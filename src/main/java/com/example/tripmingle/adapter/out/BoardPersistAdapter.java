@@ -33,7 +33,6 @@ public class BoardPersistAdapter implements BoardPersistPort {
         Board board = boardRepository.findById(boardId)
                         .orElseThrow(()-> new BoardNotFoundException("Board not found",ErrorCode.BOARD_NOT_FOUND));
         board.delete();
-        boardRepository.save(board);
     }
 
 
@@ -43,8 +42,8 @@ public class BoardPersistAdapter implements BoardPersistPort {
     }
 
     @Override
-    public List<Board> getRecentBoards(String countryName) {
-        return boardRepository.findRecentBoards(countryName);
+    public List<Board> getRecentBoardsByCountryName(String countryName) {
+        return boardRepository.findRecentBoardsByCountryName(countryName);
     }
 
     @Override

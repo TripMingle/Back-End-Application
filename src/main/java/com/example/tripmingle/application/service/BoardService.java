@@ -22,8 +22,8 @@ public class BoardService {
     private final UserPersistPort userPersistPort;
     private final CommonUtils commonUtils;
 
-    public List<Board> getRecentBoards(String countryName) {
-        return boardPersistPort.getRecentBoards(countryName);
+    public List<Board> getRecentBoardsByCountryName(String countryName) {
+        return boardPersistPort.getRecentBoardsByCountryName(countryName);
     }
 
     public void getBoardsByIdList() {
@@ -55,10 +55,10 @@ public class BoardService {
                 .startDate(createBoardReqDTO.getStartDate())
                 .endDate(createBoardReqDTO.getEndDate())
                 .language(createBoardReqDTO.getLanguage())
+                .commentCount(0)
                 .build();
 
-        Long pk = boardPersistPort.saveBoard(board);
-        return pk;
+        return boardPersistPort.saveBoard(board);
     }
 
 
@@ -91,5 +91,13 @@ public class BoardService {
 
     public void getBoardsWithinRange() {
         boardPersistPort.getBoardsWithinRange();
+    }
+
+    public void saveBoard(Board board) {
+        boardPersistPort.saveBoard(board);
+    }
+
+    public void updateCommentCount(Board board, int commentCount) {
+        board.updateCommentCount(commentCount);
     }
 }
