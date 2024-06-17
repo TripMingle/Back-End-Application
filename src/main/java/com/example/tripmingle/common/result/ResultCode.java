@@ -29,6 +29,7 @@ public enum ResultCode {
     UPDATED_POSTING(202, "P002", "포스팅이 수정되었습니다."),
     DELETE_POSTING(203, "P003", "포스팅이 삭제되었습니다."),
     POSTING_PREVIEW_SUCCESS(204, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
+    GET_ONE_POSTING_SUCCESS(205, "P005", "포스팅 상세조회 성공했습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),

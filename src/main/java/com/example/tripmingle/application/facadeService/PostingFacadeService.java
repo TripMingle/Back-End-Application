@@ -5,10 +5,8 @@ import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
-import com.example.tripmingle.dto.res.DeletePostingResDTO;
-import com.example.tripmingle.dto.res.GetPreviewPostingResDTO;
-import com.example.tripmingle.dto.res.PatchPostingResDTO;
-import com.example.tripmingle.dto.res.PostPostingResDTO;
+import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -49,4 +47,22 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
         return postingService.getPreviewPostings();
     }
 
+    @Override
+    public GetOnePostingResDTO getOnePosting(Long postingId) {
+        Posting posting = postingService.getOnePosting(postingId);
+        List<GetOnePostingCommentsResDTO> comments = postingCommentService.getPostingComments(postingId);
+        return GetOnePostingResDTO.builder()
+                .title(posting.getTitle())
+                .content(posting.getContent())
+                .createAt(posting.getCreatedAt())
+                .heartCount(0L)
+                .postingComments(comments)
+                .userNickName(posting.getUser().getNickName())
+                .userAgeRange(posting.getUser().getAgeRange())
+                .userGender(posting.getUser().getGender())
+                .userNationality(posting.getUser().getNationality())
+                .selfIntroduce(posting.getUser().getSelfIntroduction())
+                .userTemperature("0")
+                .build();
+    }
 }

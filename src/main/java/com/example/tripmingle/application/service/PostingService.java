@@ -77,4 +77,7 @@ public class PostingService {
                 .collect(Collectors.toList());
     }
 
+    public Posting getOnePosting(Long postingId) {
+        return postingPersistPort.getPostingById(postingId);
+    }
 }
