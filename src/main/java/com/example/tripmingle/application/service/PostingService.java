@@ -96,4 +96,20 @@ public class PostingService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    public List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
+        Slice<Posting> getSearchPostings = postingPersistPort.getSearchPostings(keyword, pageable);
+        return getSearchPostings.stream()
+                .filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
+                .map(posting -> GetSearchPostingsResDTO.builder()
+                        .postingId(posting.getId())
+                        .title(posting.getTitle())
+                        .content(posting.getContent())
+                        .userNickName(posting.getUser().getNickName())
+                        .userAgeRange(posting.getUser().getAgeRange())
+                        .userGender(posting.getUser().getGender())
+                        .userNationality(posting.getUser().getNationality())
+                        .build())
+                .collect(Collectors.toList());
+    }
 }

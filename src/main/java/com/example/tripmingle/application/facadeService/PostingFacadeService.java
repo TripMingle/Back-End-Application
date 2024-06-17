@@ -71,4 +71,9 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     public List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable) {
         return postingService.getAllPostings(postingType, pageable);
     }
+
+    @Override
+    public List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
+        return postingService.getSearchPostings(keyword, pageable);
+    }
 }

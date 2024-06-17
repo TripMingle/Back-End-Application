@@ -38,4 +38,10 @@ public class PostingPersistAdapter implements PostingPersistPort {
     public Slice<Posting> getAllPostings(PostingType postingType, Pageable pageable) {
         return postingRepository.findAllByPostingType(postingType, pageable);
     }
+
+    @Override
+    public Slice<Posting> getSearchPostings(String keyword, Pageable pageable) {
+        return postingRepository.findAllBySearching(keyword, pageable);
+    }
+
 }

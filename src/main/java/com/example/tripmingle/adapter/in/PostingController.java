@@ -67,4 +67,11 @@ public class PostingController {
         return ResponseEntity.ok().body(new ResultResponse(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
     }
 
+    @GetMapping("/get/search")
+    public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
+                                                            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<GetSearchPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
+        return ResponseEntity.ok().body(new ResultResponse(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
+    }
+
 }

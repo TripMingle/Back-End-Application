@@ -21,4 +21,6 @@ public interface PostingUseCase {
     GetOnePostingResDTO getOnePosting(Long postingId);
 
     List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable);
+
+    List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
 }

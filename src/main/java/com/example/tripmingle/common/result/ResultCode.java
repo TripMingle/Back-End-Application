@@ -31,6 +31,7 @@ public enum ResultCode {
     POSTING_PREVIEW_SUCCESS(204, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
     GET_ONE_POSTING_SUCCESS(205, "P005", "포스팅 상세조회 성공했습니다."),
     GET_ALL_POSTINGS_SUCCESS(206, "P006", "전체 포스팅 조회가 성공했습니다."),
+    GET_SEARCH_POSTINGS_SUCCESS(207, "P007", "검색된 포스팅 조회가 성공했습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),

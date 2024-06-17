@@ -16,4 +16,6 @@ public interface PostingPersistPort {
     List<Posting> findAllPostingForPreview();
 
     Slice<Posting> getAllPostings(PostingType postingType, Pageable pageable);
+
+    Slice<Posting> getSearchPostings(String keyword, Pageable pageable);
 }
