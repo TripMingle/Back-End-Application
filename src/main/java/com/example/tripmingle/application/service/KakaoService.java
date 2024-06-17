@@ -44,7 +44,6 @@ public class KakaoService {
     @Transactional
     public TokenDTO loginKakaoAccount(KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
         String redefineAccessToken = "Bearer " + kakaoUserAdditionDetailsReqDTO.getKakaoAccessToken();
-        log.info(redefineAccessToken);
         KakaoLoginResDTO kakaoLoginResDTO = kakaoLoginFeignClientPort.getKakaoUserInfo(redefineAccessToken);
 
         User user = joinStateCheckAndReturnUser(kakaoLoginResDTO, kakaoUserAdditionDetailsReqDTO);
@@ -60,8 +59,6 @@ public class KakaoService {
                 .build();
     }
 
-    // TODO 닉네임, 국가에 대한 입력을 어떻게 할지 논의 필요 -> 카카오 액세스 토큰을 주면서 해당 데이터를 같이 넘겨줄지,
-    //  아니면 나중에 해당 유저 정보를 수정하는 걸로 할지에 대해서
     private User joinStateCheckAndReturnUser(KakaoLoginResDTO kakaoLoginResDTO, KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
         KakaoUserInfo kakaoUserInfo = kakaoLoginResDTO.getKakaoUserInfo();
         User user = null;

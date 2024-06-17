@@ -8,7 +8,6 @@ import lombok.Setter;
 public class KakaoUserAdditionDetailsReqDTO {
 
     private String kakaoAccessToken;
-
     private String nickName;
     private String nationality;
 
