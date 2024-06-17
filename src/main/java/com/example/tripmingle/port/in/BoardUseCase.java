@@ -1,8 +1,10 @@
 package com.example.tripmingle.port.in;
 
-import com.example.tripmingle.dto.req.PostBoardReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.CreateBoardReqDTO;
 import com.example.tripmingle.dto.res.GetBoardInfoResDTO;
 import com.example.tripmingle.dto.res.GetBoardsResDTO;
+import com.example.tripmingle.dto.res.UpdateBoardResDTO;
 import com.example.tripmingle.dto.res.PostBoardResDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +20,13 @@ public interface BoardUseCase {
 
     GetBoardInfoResDTO getBoard(Long boardId);
 
-    PostBoardResDTO createBoard(PostBoardReqDTO postBoardReqDTO);
+    PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO);
 
-    void updateBoard();
+    UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO);
 
-    void deleteBoard();
+    void deleteBoard(Long boardId);
 
-    void searchBoard();
+    List<GetBoardsResDTO> searchBoard(String keyword);
 
     void getBoardsWithinRange();
 }

@@ -23,4 +23,6 @@ public class GetBoardsResDTO {
     private String gender;
     private String nationality;
 
+    private boolean isMine;
+
 }

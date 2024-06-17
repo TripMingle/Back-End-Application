@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -22,9 +23,8 @@ public class GetBoardInfoResDTO {
     private LocalDate endDate;
     private int currentCount;
     private int maxCount;
-
-    //댓글
-    private List<BoardCommentResDTO> boardCommentResDTOS;
+    private LocalDateTime createdAt;
+    private boolean isMine;
 
     //게시글 작성자
     private Long userId;
@@ -33,8 +33,12 @@ public class GetBoardInfoResDTO {
     private String gender;
     private String nationality;
     private String selfIntroduction;
-    //온도
-    //사진
+        //온도
+        //사진
+
+    //댓글
+    private List<ParentBoardCommentResDTO> boardCommentResDTOS;
+
 
     //일정
 }

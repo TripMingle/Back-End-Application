@@ -1,5 +1,8 @@
 package com.example.tripmingle.port.out;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public interface PostingCommentPersistPort {
     void createPostingComment();
 

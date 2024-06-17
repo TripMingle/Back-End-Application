@@ -11,4 +11,6 @@ import java.util.List;
 public interface BoardCommentRepository extends JpaRepository<BoardComment,Long> {
     @Query("SELECT bc FROM BoardComment bc WHERE bc.board.id = :boardId ORDER BY bc.createdAt ASC")
     List<BoardComment> findBoardCommentsByBoardIdOOrderByCreatedAtAsc(Long boardId);
+
+    List<BoardComment> findBoardCommentsByParentBoardCommentId(Long parentBoardId);
 }

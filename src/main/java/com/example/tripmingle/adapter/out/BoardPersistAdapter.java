@@ -1,15 +1,18 @@
 package com.example.tripmingle.adapter.out;
 
+import com.example.tripmingle.common.error.ErrorCode;
+import com.example.tripmingle.common.exception.BoardNotFoundException;
 import com.example.tripmingle.repository.BoardRepository;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.port.out.BoardPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
+@Component
 @RequiredArgsConstructor
 public class BoardPersistAdapter implements BoardPersistPort {
 
@@ -20,14 +23,19 @@ public class BoardPersistAdapter implements BoardPersistPort {
     }
 
     @Override
-    public Optional<Board> getBoardById(Long boardId) {
-        return boardRepository.findById(boardId);
+    public Board getBoardById(Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(()->new BoardNotFoundException("Board not found", ErrorCode.BOARD_NOT_FOUND));
     }
 
     @Override
-    public void deleteBoardById() {
-
+    public void deleteBoardById(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                        .orElseThrow(()-> new BoardNotFoundException("Board not found",ErrorCode.BOARD_NOT_FOUND));
+        board.delete();
+        boardRepository.save(board);
     }
+
 
     @Override
     public void getAllBoardsByIds() {
@@ -41,13 +49,12 @@ public class BoardPersistAdapter implements BoardPersistPort {
 
     @Override
     public Long saveBoard(Board board) {
-        Board persistBoard = boardRepository.save(board);
-        return persistBoard.getId();
+        return boardRepository.save(board).getId();
     }
 
     @Override
-    public void searchBoard() {
-
+    public List<Board> searchBoard(String keyword) {
+        return boardRepository.searchByTitleOrContent(keyword);
     }
 
     @Override

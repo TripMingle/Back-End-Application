@@ -1,9 +1,14 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.res.CreateBoardCommentResDTO;
+import com.example.tripmingle.dto.res.UpdateBoardCommentResDTO;
+
 public interface BoardCommentUseCase {
-    void createBoardComment();
+    CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO);
 
-    void deleteBoardComment();
+    void deleteBoardComment(Long commentId);
 
-    void updateBoardComment();
+    UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId);
 }

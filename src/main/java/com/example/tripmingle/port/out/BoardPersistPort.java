@@ -3,16 +3,17 @@ package com.example.tripmingle.port.out;
 import com.example.tripmingle.entity.Board;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
+@Component
 public interface BoardPersistPort {
     Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable);
 
-    Optional<Board> getBoardById(Long boardId);
+    Board getBoardById(Long boardId);
 
-    void deleteBoardById();
+    void deleteBoardById(Long boardId);
 
     void getAllBoardsByIds();
 
@@ -20,7 +21,7 @@ public interface BoardPersistPort {
 
     Long saveBoard(Board board);
 
-    void searchBoard();
+    List<Board> searchBoard(String keyword);
 
     void getBoardsWithinRange();
 
