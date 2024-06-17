@@ -6,6 +6,7 @@ import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
+import com.example.tripmingle.entity.PostingType;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
@@ -81,8 +82,8 @@ public class PostingService {
         return postingPersistPort.getPostingById(postingId);
     }
 
-    public List<GetAllPostingsResDTO> getAllPostings(Pageable pageable) {
-        Slice<Posting> getAllPostings = postingPersistPort.getAllPostings(pageable);
+    public List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable) {
+        Slice<Posting> getAllPostings = postingPersistPort.getAllPostings(PostingType.valueOf(postingType), pageable);
         return getAllPostings.stream()
                 .map(posting -> GetAllPostingsResDTO.builder()
                         .postingId(posting.getId())

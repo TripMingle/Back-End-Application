@@ -3,6 +3,7 @@ package com.example.tripmingle.adapter.out;
 import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.PostingNotFoundException;
 import com.example.tripmingle.entity.Posting;
+import com.example.tripmingle.entity.PostingType;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class PostingPersistAdapter implements PostingPersistPort {
     }
 
     @Override
-    public Slice<Posting> getAllPostings(Pageable pageable) {
-        return postingRepository.findAll(pageable);
+    public Slice<Posting> getAllPostings(PostingType postingType, Pageable pageable) {
+        return postingRepository.findAllByPostingType(postingType, pageable);
     }
 }

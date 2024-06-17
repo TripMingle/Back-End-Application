@@ -20,5 +20,5 @@ public interface PostingUseCase {
 
     GetOnePostingResDTO getOnePosting(Long postingId);
 
-    List<GetAllPostingsResDTO> getAllPostings(Pageable pageable);
+    List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable);
 }

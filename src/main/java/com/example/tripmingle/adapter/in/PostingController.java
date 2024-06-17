@@ -61,8 +61,9 @@ public class PostingController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<ResultResponse> getAllPostings(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(pageable);
+    public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("postingType") String postingType,
+                                                         @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(postingType, pageable);
         return ResponseEntity.ok().body(new ResultResponse(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
     }
 
