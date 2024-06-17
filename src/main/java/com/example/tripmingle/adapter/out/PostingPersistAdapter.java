@@ -6,9 +6,11 @@ import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+import java.util.List;
+
+@Component
 @RequiredArgsConstructor
 public class PostingPersistAdapter implements PostingPersistPort {
 
@@ -24,4 +26,8 @@ public class PostingPersistAdapter implements PostingPersistPort {
         return postingRepository.findById(postingId).orElseThrow(() -> new PostingNotFoundException("Posting Not Found.", ErrorCode.POSING_NOT_FOUND));
     }
 
+    @Override
+    public List<Posting> findAllPostingForPreview() {
+        return postingRepository.findTop10ByOrderByCreatedAtDesc();
+    }
 }

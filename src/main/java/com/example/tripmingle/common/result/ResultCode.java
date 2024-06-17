@@ -23,9 +23,12 @@ public enum ResultCode {
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),
     OAUTH_TOKEN_ISSUE_SUCCESS(200, "O002", "소셜 로그인 토큰 발급이 성공하였습니다."),
+
+    // posting
     CREATED_POSTING(201, "P001", "포스팅이 작성되었습니다."),
     UPDATED_POSTING(202, "P002", "포스팅이 수정되었습니다."),
     DELETE_POSTING(203, "P003", "포스팅이 삭제되었습니다."),
+    POSTING_PREVIEW_SUCCESS(204, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),

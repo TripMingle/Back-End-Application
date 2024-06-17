@@ -1,9 +1,9 @@
 package com.example.tripmingle.adapter.out;
 
 import com.example.tripmingle.port.out.PostingCommentPersistPort;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class PostingCommentPersistAdapter implements PostingCommentPersistPort {
 
     //private final PostingCommentRepository postingCommentRepository;

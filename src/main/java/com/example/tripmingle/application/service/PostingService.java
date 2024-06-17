@@ -5,6 +5,7 @@ import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.DeletePostingResDTO;
+import com.example.tripmingle.dto.res.GetPreviewPostingResDTO;
 import com.example.tripmingle.dto.res.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.PostPostingResDTO;
 import com.example.tripmingle.entity.Posting;
@@ -13,6 +14,9 @@ import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +60,21 @@ public class PostingService {
         return DeletePostingResDTO.builder()
                 .postingId(posting.getId())
                 .build();
+    }
+
+    public List<GetPreviewPostingResDTO> getPreviewPostings() {
+        List<Posting> postings = postingPersistPort.findAllPostingForPreview();
+
+        return postings.stream()
+                .map(posting -> GetPreviewPostingResDTO.builder()
+                        .title(posting.getTitle())
+                        .content(posting.getContent())
+                        .userNickName(posting.getUser().getNickName())
+                        .userAgeRange(posting.getUser().getAgeRange())
+                        .userGender(posting.getUser().getGender())
+                        .userNationality(posting.getUser().getNationality())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 }
