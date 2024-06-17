@@ -2,6 +2,7 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.etc.TokenDTO;
+import com.example.tripmingle.dto.req.KakaoUserAdditionDetailsReqDTO;
 import com.example.tripmingle.dto.res.KakaoTokenResDTO;
 import com.example.tripmingle.port.in.KakaoAuthUseCase;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,9 @@ public class KakaoAuthController {
     private final KakaoAuthUseCase kakaoAuthUseCase;
 
     @PostMapping("/login")
-    public ResponseEntity<ResultResponse> loginKakaoAccount(@RequestHeader("Kakao-Authorization") String kakaoAccessToken) {
-        TokenDTO tokenDTO = kakaoAuthUseCase.loginKakaoAccount(kakaoAccessToken);
+    public ResponseEntity<ResultResponse> loginKakaoAccount(@RequestHeader("Kakao-Authorization") String kakaoAccessToken, @RequestBody KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
+        kakaoUserAdditionDetailsReqDTO.setKakaoAccessToken(kakaoAccessToken);
+        TokenDTO tokenDTO = kakaoAuthUseCase.loginKakaoAccount(kakaoUserAdditionDetailsReqDTO);
         HttpHeaders tokenHeaders = new HttpHeaders();
         tokenHeaders.add("access-token", tokenDTO.getAccessToken());
         tokenHeaders.add("refresh-token", tokenDTO.getRefreshToken());
