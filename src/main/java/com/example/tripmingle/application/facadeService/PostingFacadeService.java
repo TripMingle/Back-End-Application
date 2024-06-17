@@ -10,6 +10,7 @@ import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,5 +65,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                 .selfIntroduce(posting.getUser().getSelfIntroduction())
                 .userTemperature("0")
                 .build();
+    }
+
+    @Override
+    public List<GetAllPostingsResDTO> getAllPostings(Pageable pageable) {
+        return postingService.getAllPostings(pageable);
     }
 }

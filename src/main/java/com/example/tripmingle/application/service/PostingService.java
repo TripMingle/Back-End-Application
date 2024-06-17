@@ -4,15 +4,14 @@ package com.example.tripmingle.application.service;
 import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
-import com.example.tripmingle.dto.res.DeletePostingResDTO;
-import com.example.tripmingle.dto.res.GetPreviewPostingResDTO;
-import com.example.tripmingle.dto.res.PatchPostingResDTO;
-import com.example.tripmingle.dto.res.PostPostingResDTO;
+import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -67,6 +66,7 @@ public class PostingService {
 
         return postings.stream()
                 .map(posting -> GetPreviewPostingResDTO.builder()
+                        .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
                         .userNickName(posting.getUser().getNickName())
@@ -79,5 +79,20 @@ public class PostingService {
 
     public Posting getOnePosting(Long postingId) {
         return postingPersistPort.getPostingById(postingId);
+    }
+
+    public List<GetAllPostingsResDTO> getAllPostings(Pageable pageable) {
+        Slice<Posting> getAllPostings = postingPersistPort.getAllPostings(pageable);
+        return getAllPostings.stream()
+                .map(posting -> GetAllPostingsResDTO.builder()
+                        .postingId(posting.getId())
+                        .title(posting.getTitle())
+                        .content(posting.getContent())
+                        .userNickName(posting.getUser().getNickName())
+                        .userAgeRange(posting.getUser().getAgeRange())
+                        .userGender(posting.getUser().getGender())
+                        .userNationality(posting.getUser().getNationality())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

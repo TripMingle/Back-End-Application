@@ -4,6 +4,7 @@ import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,4 +19,6 @@ public interface PostingUseCase {
     List<GetPreviewPostingResDTO> getPreviewPostings();
 
     GetOnePostingResDTO getOnePosting(Long postingId);
+
+    List<GetAllPostingsResDTO> getAllPostings(Pageable pageable);
 }

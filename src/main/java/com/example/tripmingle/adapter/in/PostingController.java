@@ -8,6 +8,10 @@ import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +22,7 @@ import static com.example.tripmingle.common.result.ResultCode.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/postings")
+@Slf4j
 public class PostingController {
     private final PostingUseCase postingUseCase;
     private final PostingCommentUseCase postingCommentUseCase;
@@ -53,6 +58,12 @@ public class PostingController {
     public ResponseEntity<ResultResponse> getOnePosting(@PathVariable("postingId") Long postingId) {
         GetOnePostingResDTO getOnePostingResDTO = postingUseCase.getOnePosting(postingId);
         return ResponseEntity.ok().body(new ResultResponse(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<ResultResponse> getAllPostings(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(pageable);
+        return ResponseEntity.ok().body(new ResultResponse(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
     }
 
 }

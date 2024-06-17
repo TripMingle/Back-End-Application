@@ -6,6 +6,8 @@ import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -29,5 +31,10 @@ public class PostingPersistAdapter implements PostingPersistPort {
     @Override
     public List<Posting> findAllPostingForPreview() {
         return postingRepository.findTop10ByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public Slice<Posting> getAllPostings(Pageable pageable) {
+        return postingRepository.findAll(pageable);
     }
 }

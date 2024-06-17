@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GetPreviewPostingResDTO {
+public class GetAllPostingsResDTO {
 
     private Long postingId;
     private String title;
