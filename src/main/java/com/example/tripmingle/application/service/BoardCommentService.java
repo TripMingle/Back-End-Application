@@ -12,7 +12,10 @@ import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,7 @@ public class BoardCommentService {
     //추후 부모댓글이 없어질경우 등을 고려하여 리팩터링 필요
     public List<ParentBoardCommentResDTO> getStructureBoardComment(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
-        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        User currentUser = userPersistPort.findCurrentUserByEmail();
         Map<Long, List<BoardComment>> commentMap = new HashMap<>();
         List<BoardComment> parentList = new ArrayList<>();
 
@@ -44,11 +47,11 @@ public class BoardCommentService {
 
         for (BoardComment parentBoardComment : parentList) {
             Long parentId = parentBoardComment.getId();
-            ParentBoardCommentResDTO parentBoardCommentResDTO = getParentBoardCommentInfo(parentBoardComment, currentUser.get());
+            ParentBoardCommentResDTO parentBoardCommentResDTO = getParentBoardCommentInfo(parentBoardComment, currentUser);
             List<ChildBoardCommentDTO> childBoardCommentDTOS = new ArrayList<>();
 
             for (BoardComment childBoardComment : commentMap.get(parentId)) {
-                childBoardCommentDTOS.add(getChildBoardCommentInfo(childBoardComment, parentId, currentUser.get()));
+                childBoardCommentDTOS.add(getChildBoardCommentInfo(childBoardComment, parentId, currentUser));
             }
 
             parentBoardCommentResDTO.setChildBoards(childBoardCommentDTOS);
@@ -87,7 +90,7 @@ public class BoardCommentService {
 
     public BoardComment createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board) {
         BoardComment parentBoardComment;
-        Optional<User> user = userPersistPort.getCurrentUser();
+        User user = userPersistPort.findCurrentUserByEmail();
         if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
             parentBoardComment = null;
         } else {
@@ -97,7 +100,7 @@ public class BoardCommentService {
 
         return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
                 .parentBoardComment(parentBoardComment)
-                .user(user.get())
+                .user(user)
                 .board(board)
                 .content(createBoardCommentReqDTO.getContent())
                 .build());

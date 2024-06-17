@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +31,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
         List<Board> boardList = boardService.getRecentBoards(countryName);
-        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        User currentUser = userPersistPort.findCurrentUserByEmail();
 
         return boardList
                 .stream().map(board -> GetBoardsResDTO.builder()
@@ -46,7 +45,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .gender(board.getUser().getGender())
                         .nationality(board.getUser().getNationality())
                         .maxCount(board.getMaxCount())
-                        .isMine(currentUser.get().getId().equals(board.getUser().getId()))
+                        .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -59,7 +58,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public Page<GetBoardsResDTO> getAllBoards(String countryName, String gender, String language, Pageable pageable) {
         Page<Board> boardPage = boardService.getAllBoards(countryName, gender, language, pageable);
-        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        User currentUser = userPersistPort.findCurrentUserByEmail();
 
         return boardPage.map(board -> GetBoardsResDTO.builder()
                 .boardId(board.getId())
@@ -72,7 +71,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .gender(board.getUser().getGender())
                 .nationality(board.getUser().getNationality())
                 .maxCount(board.getMaxCount())
-                .isMine(currentUser.get().getId().equals(board.getUser().getId()))
+                .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .build());
     }
 
@@ -80,7 +79,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     public GetBoardInfoResDTO getBoard(Long boardId) {
         Board board = boardService.getBoardById(boardId);
         List<ParentBoardCommentResDTO> boardComments = boardCommentService.getStructureBoardComment(board.getId());
-        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        User currentUser = userPersistPort.findCurrentUserByEmail();
 
         return GetBoardInfoResDTO.builder()
                 .boardId(board.getId())
@@ -94,7 +93,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .currentCount(board.getCurrentCount())
                 .maxCount(board.getMaxCount())
                 .createdAt(board.getCreatedAt())
-                .isMine(currentUser.get().getId().equals(board.getUser().getId()))
+                .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .boardCommentResDTOS(boardComments)
                 .userId(board.getUser().getId())
                 .nickName(board.getUser().getNickName())
@@ -130,7 +129,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public List<GetBoardsResDTO> searchBoard(String keyword) {
         List<Board> boardList = boardService.searchBoard(keyword);
-        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        User currentUser = userPersistPort.findCurrentUserByEmail();
         return boardList.stream()
                 .map(board -> GetBoardsResDTO.builder()
                         .boardId(board.getId())
@@ -143,7 +142,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .ageRange(board.getUser().getAgeRange())
                         .gender(board.getUser().getGender())
                         .nationality(board.getUser().getNationality())
-                        .isMine(currentUser.get().getId().equals(board.getUser().getId()))
+                        .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .build()).collect(Collectors.toList());
     }
 

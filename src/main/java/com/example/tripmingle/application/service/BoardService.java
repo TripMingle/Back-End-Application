@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +40,10 @@ public class BoardService {
     }
 
     public Long createBoard(CreateBoardReqDTO createBoardReqDTO) {
-        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        User currentUser = userPersistPort.findCurrentUserByEmail();
 
         Board board = Board.builder()
-                .user(currentUser.get())
+                .user(currentUser)
                 .title(createBoardReqDTO.getTitle())
                 .content(createBoardReqDTO.getContent())
                 .continent(createBoardReqDTO.getContinent())
