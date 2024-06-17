@@ -1,13 +1,14 @@
 package com.example.tripmingle.port.out;
 
+import com.example.tripmingle.entity.PostingComment;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+@Component
 public interface PostingCommentPersistPort {
-    void createPostingComment();
 
-    void updatePostingComment();
+    List<PostingComment> getPostingCommentsByPostingId(Long postingId);
 
-    void deletePostingCommentById();
-
-    void getPostingCommentsByPostingId();
+    List<PostingComment> getPostingCoCommentByParentCommentId(Long id);
 }

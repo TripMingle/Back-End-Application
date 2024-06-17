@@ -1,30 +1,26 @@
 package com.example.tripmingle.adapter.out;
 
+import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.port.out.PostingCommentPersistPort;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+import com.example.tripmingle.repository.PostingCommentRepository;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class PostingCommentPersistAdapter implements PostingCommentPersistPort {
 
-    //private final PostingCommentRepository postingCommentRepository;
-    @Override
-    public void createPostingComment() {
+    private final PostingCommentRepository postingCommentRepository;
 
+    @Override
+    public List<PostingComment> getPostingCommentsByPostingId(Long postingId) {
+        return postingCommentRepository.findAllByPostingId(postingId);
     }
 
     @Override
-    public void updatePostingComment() {
-
-    }
-
-    @Override
-    public void deletePostingCommentById() {
-
-    }
-
-    @Override
-    public void getPostingCommentsByPostingId() {
-
+    public List<PostingComment> getPostingCoCommentByParentCommentId(Long parentCommentId) {
+        return postingCommentRepository.findCoCommentsByParentCommentId(parentCommentId);
     }
 }

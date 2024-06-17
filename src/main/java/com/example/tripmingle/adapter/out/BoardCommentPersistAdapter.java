@@ -7,7 +7,6 @@ import com.example.tripmingle.port.out.BoardCommentPersistPort;
 import com.example.tripmingle.repository.BoardCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class BoardCommentPersistAdapter implements BoardCommentPersistPort {
     @Override
     public BoardComment getBoardCommentById(Long boardId) {
         return boardCommentRepository.findById(boardId)
-                .orElseThrow(()-> new BoardCommentNotFoundException("board comment not found", ErrorCode.BOARD_COMMENT_NOT_FOUND));
+                .orElseThrow(() -> new BoardCommentNotFoundException("board comment not found", ErrorCode.BOARD_COMMENT_NOT_FOUND));
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.example.tripmingle.port.out.RefreshPort;
 import com.example.tripmingle.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 @Component
 @RequiredArgsConstructor
