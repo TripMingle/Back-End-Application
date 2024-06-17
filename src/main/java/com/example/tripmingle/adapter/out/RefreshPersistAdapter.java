@@ -4,9 +4,9 @@ import com.example.tripmingle.entity.Refresh;
 import com.example.tripmingle.port.out.RefreshPort;
 import com.example.tripmingle.repository.RefreshRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class RefreshPersistAdapter implements RefreshPort {
 
