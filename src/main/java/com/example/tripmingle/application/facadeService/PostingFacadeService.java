@@ -1,16 +1,19 @@
 package com.example.tripmingle.application.facadeService;
 
+
 import com.example.tripmingle.application.Service.PostingCommentService;
 import com.example.tripmingle.application.Service.PostingService;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class PostingFacadeService implements PostingUseCase, PostingCommentUseCase {
-
-    private final PostingService postingService;
     private final PostingCommentService postingCommentService;
+    private final PostingService postingService;
+
 
     @Override
     public void getRecentPostings() {
@@ -57,4 +60,6 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     public void deletePostingComment() {
         postingCommentService.deletePostingComment();
     }
+
+
 }

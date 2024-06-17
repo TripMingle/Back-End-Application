@@ -1,75 +1,139 @@
 package com.example.tripmingle.application.Service;
 
-import com.example.tripmingle.dto.res.BoardCommentResDTO;
+import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
+import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.res.ParentBoardCommentResDTO;
+import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardComment;
+import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardCommentPersistPort;
+import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Service
 @RequiredArgsConstructor
 public class BoardCommentService {
     private final BoardCommentPersistPort boardCommentPersistPort;
+    private final UserPersistPort userPersistPort;
 
-    public List<BoardCommentResDTO> getStructureBoardComment(Long boardId) {
+    //추후 부모댓글이 없어질경우 등을 고려하여 리팩터링 필요
+    public List<ParentBoardCommentResDTO> getStructureBoardComment(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
+        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        Map<Long, List<BoardComment>> commentMap = new HashMap<>();
+        List<BoardComment> parentList = new ArrayList<>();
 
-        Map<Integer, List<Integer>> commentMap = new HashMap<>();
-        List<Integer> parentList = new ArrayList<>();
 
-        for(int i = 0 ; i < boardComments.size() ; i++){
-            Long commentId = boardComments.get(i).getId();
+        for(BoardComment boardComment : boardComments){
+            Long commentId = boardComment.getId();
 
-            if(boardComments.get(i).getParentBoardComment() == null){
-                commentMap.put(i, new ArrayList<>());
-                parentList.add(i);
+            if(boardComment.isParentBoardCommentNull()){
+                commentMap.put(commentId, new ArrayList<>());
+                parentList.add(boardComment);
             }
             else{
-                Long parentId = boardComments.get(i).getParentBoardComment().getId();
-                commentMap.get(parentId).add(i);
+                Long parentId = boardComment.getParentBoardComment().getId();
+                commentMap.get(parentId).add(boardComment);
             }
         }
 
-        List<BoardCommentResDTO> boardCommentResDTOS = new ArrayList<>();
+        List<ParentBoardCommentResDTO> boardCommentResDTOS = new ArrayList<>();
 
-        for(int i = 0 ; i < parentList.size() ; i++){
-            boardCommentResDTOS.add(getBoardCommentInfo(boardComments.get(parentList.get(i))));
-            for(int j=0;j<commentMap.get(parentList.get(i)).size();j++){
-                boardCommentResDTOS.add(getBoardCommentInfo(boardComments.get(commentMap.get(parentList.get(i)).get(j))));
+        for(BoardComment parentBoardComment : parentList){
+            Long parentId = parentBoardComment.getId();
+            ParentBoardCommentResDTO parentBoardCommentResDTO = getParentBoardCommentInfo(parentBoardComment, currentUser.get());
+            List<ChildBoardCommentDTO> childBoardCommentDTOS = new ArrayList<>();
+
+            for (BoardComment childBoardComment : commentMap.get(parentId)) {
+                childBoardCommentDTOS.add(getChildBoardCommentInfo(childBoardComment, parentId, currentUser.get()));
             }
+
+            parentBoardCommentResDTO.setChildBoards(childBoardCommentDTOS);
+            boardCommentResDTOS.add(parentBoardCommentResDTO);
         }
 
         return boardCommentResDTOS;
     }
 
-    private BoardCommentResDTO getBoardCommentInfo(BoardComment boardComment){
-        Long parentId = (boardComment.getParentBoardComment() == null ? -1 : boardComment.getParentBoardComment().getId());
+    private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser){
 
-        return BoardCommentResDTO.builder()
-                .boardId(boardComment.getId())
-                .parentCommentId(parentId)
+        return ParentBoardCommentResDTO.builder()
+                .boardId(boardComment.getBoard().getId())
+                .boardCommentId(boardComment.getId())
                 .content(boardComment.getContent())
                 .registeredDate(boardComment.getCreatedAt())
                 .userId(boardComment.getUser().getId())
                 .userNickname(boardComment.getUser().getNickName())
+                .isMine(currentUser.getId() == boardComment.getUser().getId())
                 .build();
     }
 
-    public void createBoardComment() {
-        boardCommentPersistPort.saveBoardComment();
+    private ChildBoardCommentDTO getChildBoardCommentInfo(BoardComment boardComment, Long parentId, User currentUser){
+
+        return ChildBoardCommentDTO.builder()
+                .boardId(boardComment.getBoard().getId())
+                .boardCommentId(boardComment.getId())
+                .parentId(parentId)
+                .content(boardComment.getContent())
+                .registeredDate(boardComment.getCreatedAt())
+                .userId(boardComment.getUser().getId())
+                .userNickname(boardComment.getUser().getNickName())
+                .isMine(currentUser.getId() == boardComment.getUser().getId())
+                .build();
     }
 
-    public void deleteBoardComment() {
-        boardCommentPersistPort.deleteBoardCommentById();
+    public BoardComment createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board) {
+        BoardComment parentBoardComment;
+        Optional<User> user = userPersistPort.getCurrentUser();
+        if(isParent(createBoardCommentReqDTO.getParentBoardCommentId())){
+            parentBoardComment = null;
+        }
+        else{
+            parentBoardComment = boardCommentPersistPort
+                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
+        }
+
+        return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
+                .parentBoardComment(parentBoardComment)
+                .user(user.get())
+                .board(board)
+                .content(createBoardCommentReqDTO.getContent())
+                .build());
     }
 
-    public void getBoardCommentById() {
-        boardCommentPersistPort.getBoardCommentsById();
+    private boolean isParent(Long id){
+        if(id==-1)return true;
+        else return false;
     }
 
-    public void updateBoardComment() {
+    public void deleteBoardComment(Long commentId) {
+        BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
+        if(boardComment.isParentBoardCommentNull()){
+            List<BoardComment> childBoardComments = boardCommentPersistPort.getBoardCommentByParentBoardId(boardComment.getId());
+
+            childBoardComments.stream()
+                    .forEach(childComment -> boardCommentPersistPort.deleteBoardCommentById(childComment.getId()));
+
+        }
+
+        boardCommentPersistPort.deleteBoardCommentById(commentId);
+    }
+
+    public BoardComment updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
+        BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
+        boardComment.update(updateBoardCommentReqDTO);
+
+        return boardCommentPersistPort.saveBoardComment(boardComment);
+    }
+
+
+    public void deleteBoardCommentByBoardId(Long boardId) {
+        List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
+        boardComments.stream()
+                .forEach(comments -> boardCommentPersistPort.deleteBoardCommentById(comments.getId()));
     }
 }

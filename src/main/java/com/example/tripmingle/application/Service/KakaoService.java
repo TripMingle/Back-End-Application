@@ -35,7 +35,6 @@ import static com.example.tripmingle.common.error.ErrorCode.*;
 @Transactional(readOnly = true)
 @Slf4j
 public class KakaoService {
-
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
     private final WebClient webClient;

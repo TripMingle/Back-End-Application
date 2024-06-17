@@ -1,31 +1,39 @@
 package com.example.tripmingle.application.facadeService;
 
-import com.example.tripmingle.dto.req.PostBoardReqDTO;
-import com.example.tripmingle.dto.res.BoardCommentResDTO;
-import com.example.tripmingle.dto.res.GetBoardInfoResDTO;
-import com.example.tripmingle.dto.res.GetBoardsResDTO;
-import com.example.tripmingle.dto.res.PostBoardResDTO;
+import com.example.tripmingle.application.Service.BoardCommentService;
+import com.example.tripmingle.application.Service.BoardService;
+import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.CreateBoardReqDTO;
+import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.entity.BoardComment;
+import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.in.BoardUseCase;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
-import com.example.tripmingle.application.Service.BoardService;
-import com.example.tripmingle.application.Service.BoardCommentService;
+
+import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 @RequiredArgsConstructor
 public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final BoardService boardService;
     private final BoardCommentService boardCommentService;
+    private final UserPersistPort userPersistPort;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
         List<Board>boardList = boardService.getRecentBoards(countryName);
+        Optional<User> currentUser = userPersistPort.getCurrentUser();
 
         return boardList
                 .stream().map(board -> GetBoardsResDTO.builder()
@@ -39,6 +47,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .gender(board.getUser().getGender())
                         .nationality(board.getUser().getNationality())
                         .maxCount(board.getMaxCount())
+                        .isMine(currentUser.get().getId().equals(board.getUser().getId()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -51,6 +60,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public Page<GetBoardsResDTO> getAllBoards(String countryName, String gender, String language, Pageable pageable) {
         Page<Board>boardPage = boardService.getAllBoards(countryName,gender,language,pageable);
+        Optional<User> currentUser = userPersistPort.getCurrentUser();
 
         return boardPage.map(board -> GetBoardsResDTO.builder()
                 .boardId(board.getId())
@@ -63,73 +73,112 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .gender(board.getUser().getGender())
                 .nationality(board.getUser().getNationality())
                 .maxCount(board.getMaxCount())
+                .isMine(currentUser.get().getId().equals(board.getUser().getId()))
                 .build());
     }
     @Override
     public GetBoardInfoResDTO getBoard(Long boardId) {
-        Optional<Board> board = boardService.getBoardById(boardId);
-        List<BoardCommentResDTO> boardComments = boardCommentService.getStructureBoardComment(board.get().getId());
+        Board board = boardService.getBoardById(boardId);
+        List<ParentBoardCommentResDTO> boardComments = boardCommentService.getStructureBoardComment(board.getId());
+        Optional<User> currentUser = userPersistPort.getCurrentUser();
 
         return GetBoardInfoResDTO.builder()
-                .boardId(board.get().getId())
-                .title(board.get().getTitle())
-                .content(board.get().getContent())
-                .language(board.get().getLanguage())
-                .traits(board.get().getTraits())
-                .types(board.get().getTypes())
-                .startDate(board.get().getStartDate())
-                .endDate(board.get().getEndDate())
-                .currentCount(board.get().getCurrentCount())
-                .maxCount(board.get().getMaxCount())
+                .boardId(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .language(board.getLanguage())
+                .traits(board.getTraits())
+                .types(board.getTypes())
+                .startDate(board.getStartDate())
+                .endDate(board.getEndDate())
+                .currentCount(board.getCurrentCount())
+                .maxCount(board.getMaxCount())
+                .createdAt(board.getCreatedAt())
+                .isMine(currentUser.get().getId().equals(board.getUser().getId()))
                 .boardCommentResDTOS(boardComments)
-                .userId(board.get().getUser().getId())
-                .nickName(board.get().getUser().getNickName())
-                .ageRange(board.get().getUser().getAgeRange())
-                .gender(board.get().getUser().getGender())
-                .nationality(board.get().getUser().getNationality())
-                .selfIntroduction(board.get().getUser().getSelfIntroduction())
+                .userId(board.getUser().getId())
+                .nickName(board.getUser().getNickName())
+                .ageRange(board.getUser().getAgeRange())
+                .gender(board.getUser().getGender())
+                .nationality(board.getUser().getNationality())
+                .selfIntroduction(board.getUser().getSelfIntroduction())
                 .build();
     }
 
     @Override
-    public PostBoardResDTO createBoard(PostBoardReqDTO postBoardReqDTO) {
-        Long boardId = boardService.createBoard(postBoardReqDTO);
+    public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
+        Long boardId = boardService.createBoard(createBoardReqDTO);
         return PostBoardResDTO.builder().boardId(boardId).build();
     }
 
     @Override
-    public void updateBoard() {
-        boardService.updateBoard();
+    public UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
+        //내가 쓴 글인지 맞는지 확인하는 로직
+        Long resultBoardId = boardService.updateBoard(boardId, patchBoardReqDTO);
+        return UpdateBoardResDTO.builder().boardId(resultBoardId)
+                .build();
     }
 
     @Override
-    public void deleteBoard() {
-        boardService.deleteBoard();
+    public void deleteBoard(Long boardId) {
+        //내가 쓴 글인지 맞는지 확인하는 로직
+        //boardComment 삭제로직
+        boardCommentService.deleteBoardCommentByBoardId(boardId);
+        boardService.deleteBoard(boardId);
     }
 
     @Override
-    public void searchBoard() {
-        boardService.searchBoard();
+    public List<GetBoardsResDTO> searchBoard(String keyword) {
+        List<Board> boardList = boardService.searchBoard(keyword);
+        Optional<User> currentUser = userPersistPort.getCurrentUser();
+        return boardList.stream()
+                .map(board -> GetBoardsResDTO.builder()
+                .boardId(board.getId())
+                .title(board.getTitle())
+                .startDate(board.getStartDate())
+                .endDate(board.getEndDate())
+                .maxCount(board.getMaxCount())
+                .language(board.getLanguage())
+                .nickName(board.getUser().getNickName())
+                .ageRange(board.getUser().getAgeRange())
+                .gender(board.getUser().getGender())
+                .nationality(board.getUser().getNationality())
+                .isMine(currentUser.get().getId().equals(board.getUser().getId()))
+                .build()).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
+        Board board = boardService.getBoardById(createBoardCommentReqDTO.getBoardId());
+        BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board);
+        Long parentBoardCommentId = boardComment.isParentBoardCommentNull()?-1:boardComment.getParentBoardComment().getId();
+
+        return CreateBoardCommentResDTO.builder()
+                .parentBoardCommentId(parentBoardCommentId)
+                .BoardCommentId(boardComment.getId())
+                .content(boardComment.getContent())
+                .userId(boardComment.getUser().getId())
+                .userNickname(boardComment.getUser().getNickName())
+                .createdAt(boardComment.getCreatedAt())
+                .build();
+    }
+
+    @Override
+    public void deleteBoardComment(Long commentId) {
+        //내가 쓴 글인지 맞는지 확인하는 로직
+        boardCommentService.deleteBoardComment(commentId);
+    }
+
+    @Override
+    public UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
+        //내가 단 댓글이 맞는지 확인하는 로직
+        BoardComment boardComment = boardCommentService.updateBoardComment(updateBoardCommentReqDTO, commentId);
+        return UpdateBoardCommentResDTO.builder().boardCommentId(boardComment.getId()).build();
     }
 
     @Override
     public void getBoardsWithinRange() {
         boardService.getBoardsWithinRange();
-    }
-
-    @Override
-    public void createBoardComment() {
-        boardCommentService.createBoardComment();
-    }
-
-    @Override
-    public void deleteBoardComment() {
-        boardCommentService.getBoardCommentById();
-        boardCommentService.deleteBoardComment();
-    }
-
-    @Override
-    public void updateBoardComment() {
-        boardCommentService.updateBoardComment();
     }
 }

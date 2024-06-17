@@ -7,9 +7,11 @@ import java.util.List;
 public interface BoardCommentPersistPort {
     List<BoardComment> getBoardCommentsByBoardId(Long boardId);
 
-    void saveBoardComment();
+    BoardComment saveBoardComment(BoardComment boardComment);
 
-    void deleteBoardCommentById();
+    void deleteBoardCommentById(Long commentId);
 
-    void getBoardCommentsById();
+    BoardComment getBoardCommentById(Long boardId);
+
+    List<BoardComment> getBoardCommentByParentBoardId(Long parentBoardId);
 }

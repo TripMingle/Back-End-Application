@@ -1,11 +1,13 @@
 package com.example.tripmingle.application.Service;
 
-
 import com.example.tripmingle.port.out.PostingPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
-public class PostingService  {
+
+public class PostingService {
     private final PostingPersistPort postingPersistPort;
 
     public void getRecentPostings() {

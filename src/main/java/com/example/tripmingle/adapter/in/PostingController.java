@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PostingController {
+
     private final PostingUseCase postingUseCase;
     private final PostingCommentUseCase postingCommentUseCase;
 
@@ -53,6 +54,8 @@ public class PostingController {
     public void deletePostingComment(){
         postingCommentUseCase.deletePostingComment();
     }
+
+
 
 
 }

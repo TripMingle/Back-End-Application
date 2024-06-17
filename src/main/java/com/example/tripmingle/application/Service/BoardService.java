@@ -1,7 +1,9 @@
 package com.example.tripmingle.application.Service;
 
 import com.example.tripmingle.common.utils.CommonUtils;
-import com.example.tripmingle.dto.req.PostBoardReqDTO;
+import com.example.tripmingle.dto.etc.UpdateBoardDTO;
+import com.example.tripmingle.dto.req.CreateBoardReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardPersistPort;
@@ -9,11 +11,11 @@ import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-
+@Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardPersistPort boardPersistPort;
@@ -32,49 +34,62 @@ public class BoardService {
         return boardPersistPort.getAllBoards(country,gender,language,pageable);
     }
 
-    public Optional<Board> getBoardById(Long boardId) {
+    public Board getBoardById(Long boardId) {
 
         return boardPersistPort.getBoardById(boardId);
     }
 
-    public Long createBoard(PostBoardReqDTO postBoardReqDTO) {
+    public Long createBoard(CreateBoardReqDTO createBoardReqDTO) {
         Optional<User> currentUser = userPersistPort.getCurrentUser();
 
         Board board = Board.builder()
                 .user(currentUser.get())
-                .title(postBoardReqDTO.getTitle())
-                .content(postBoardReqDTO.getContent())
-                .continent(postBoardReqDTO.getContinent())
-                .countryName(postBoardReqDTO.getCountryName())
-                .traits(commonUtils.convertListToString(postBoardReqDTO.getTraits()))
-                .types(commonUtils.convertListToString(postBoardReqDTO.getTypes()))
+                .title(createBoardReqDTO.getTitle())
+                .content(createBoardReqDTO.getContent())
+                .continent(createBoardReqDTO.getContinent())
+                .countryName(createBoardReqDTO.getCountryName())
+                .traits(commonUtils.convertListToString(createBoardReqDTO.getTraits()))
+                .types(commonUtils.convertListToString(createBoardReqDTO.getTypes()))
                 .currentCount(1)
-                .maxCount(postBoardReqDTO.getMaxCount())
-                .startDate(postBoardReqDTO.getStartDate())
-                .endDate(postBoardReqDTO.getEndDate())
-                .language(postBoardReqDTO.getLanguage())
+                .maxCount(createBoardReqDTO.getMaxCount())
+                .startDate(createBoardReqDTO.getStartDate())
+                .endDate(createBoardReqDTO.getEndDate())
+                .language(createBoardReqDTO.getLanguage())
                 .build();
 
+        Long pk = boardPersistPort.saveBoard(board);
+        return pk;
+    }
+
+
+    public Long updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO) {
+        Board board = boardPersistPort.getBoardById(boardId);
+        UpdateBoardDTO updateBoardDTO = UpdateBoardDTO.builder()
+                .continent(updateBoardReqDTO.getContinent())
+                .countryName(updateBoardReqDTO.getCountryName())
+                .startDate(updateBoardReqDTO.getStartDate())
+                .endDate(updateBoardReqDTO.getEndDate())
+                .language(updateBoardReqDTO.getLanguage())
+                .maxCount(updateBoardReqDTO.getMaxCount())
+                .types(commonUtils.convertListToString(updateBoardReqDTO.getTypes()))
+                .traits(commonUtils.convertListToString(updateBoardReqDTO.getTraits()))
+                .title(updateBoardReqDTO.getTitle())
+                .content(updateBoardReqDTO.getContent())
+                .build();
+        board.update(updateBoardDTO);
         return boardPersistPort.saveBoard(board);
     }
 
-
-    public void updateBoard() {
-
-    }
-
-    public void deleteBoard() {
-
-        boardPersistPort.deleteBoardById();
+    public void deleteBoard(Long boardId) {
+        boardPersistPort.deleteBoardById(boardId);
     }
 
 
-    public void searchBoard() {
-        boardPersistPort.searchBoard();
+    public List<Board> searchBoard(String keyword) {
+        return boardPersistPort.searchBoard(keyword);
     }
 
     public void getBoardsWithinRange() {
         boardPersistPort.getBoardsWithinRange();
     }
-
 }

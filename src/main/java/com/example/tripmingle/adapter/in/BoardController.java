@@ -2,20 +2,26 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.PostBoardReqDTO;
-import com.example.tripmingle.dto.res.GetBoardInfoResDTO;
-import com.example.tripmingle.dto.res.GetBoardsResDTO;
-import com.example.tripmingle.dto.res.PostBoardResDTO;
+import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.CreateBoardReqDTO;
+import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.port.in.BoardUseCase;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
@@ -34,12 +40,12 @@ public class BoardController {
     public ResponseEntity<ResultResponse> getAllBoards(@PathVariable(value = "country-name")String countryName
                                                        ,@RequestParam(value = "gender", required = false) String gender,
                                                        @RequestParam(value = "language", required = false) String language,
-                                                       Pageable pageable){
+                                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getAllBoards(countryName,gender,language,pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_BOARD_SUCCESS,getBoardsResDTOS));
     }
 
-    @GetMapping("/{board-id}")
+    @GetMapping("/show/{board-id}")
     //단일게시물 조회 (상세내용 + 댓글까지 + 유저정보 + 태그)
     public ResponseEntity<ResultResponse> getBoard(@PathVariable(value="board-id")Long boardId){
         GetBoardInfoResDTO getBoardInfoResDTO = boardUseCase.getBoard(boardId);
@@ -48,39 +54,53 @@ public class BoardController {
 
     @PostMapping()
     //게시글 작성
-    public ResponseEntity<ResultResponse> createBoard(@RequestBody PostBoardReqDTO postBoardReqDTO){
-        PostBoardResDTO postBoardResDTO = boardUseCase.createBoard(postBoardReqDTO);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.EXAMPLE, postBoardResDTO));
+    public ResponseEntity<ResultResponse> createBoard(@RequestBody CreateBoardReqDTO createBoardReqDTO){
+        PostBoardResDTO postBoardResDTO = boardUseCase.createBoard(createBoardReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SUCCESS, postBoardResDTO));
     }
 
+    @PatchMapping("/{board-id}")
     //게시글 수정
-    public void updateBoard(){
-        boardUseCase.updateBoard();
+    public ResponseEntity<ResultResponse> updateBoard(@PathVariable(value = "board-id")Long boardId,
+                                                      @RequestBody UpdateBoardReqDTO updateBoardReqDTO){
+        UpdateBoardResDTO updateBoardResDTO = boardUseCase.updateBoard(boardId, updateBoardReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_SUCCESS,updateBoardResDTO));
     }
 
+    @DeleteMapping("/{board-id}")
     //게시글 삭제
-    public void deleteBoard(){
-        boardUseCase.deleteBoard();
+    public ResponseEntity<ResultResponse> deleteBoard(@PathVariable(value = "board-id")Long boardId){
+        boardUseCase.deleteBoard(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BOARD_SUCCESS));
     }
 
+    @GetMapping("/search/{country-name}")
     //게시글 검색
-    public void searchBoard(){
-        boardUseCase.searchBoard();
+    public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name")String countryName, @RequestParam String keyword){
+        List<GetBoardsResDTO> getBoardsResDTOS =  boardUseCase.searchBoard(keyword);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
     }
 
+    @PostMapping("/comment")
     //댓글달기 (대댓글달기도 같은 API 사용)
-    public void createComment(){
-        boardCommentUseCase.createBoardComment();
+    public ResponseEntity<ResultResponse> createComment(@RequestBody CreateBoardCommentReqDTO createBoardCommentReqDTO){
+        CreateBoardCommentResDTO createBoardCommentResDTO = boardCommentUseCase.createBoardComment(createBoardCommentReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_COMMENT_SUCCESS, createBoardCommentResDTO));
     }
 
+    @PatchMapping("/comment/{comment-id}")
     //댓글수정(대댓글도 같은 API 사용)
-    public void  updateComment(){
-        boardCommentUseCase.updateBoardComment();
+    public ResponseEntity<ResultResponse> updateComment(@PathVariable(value = "comment-id") Long commentId,
+                                                        @RequestBody UpdateBoardCommentReqDTO updateBoardCommentReqDTO){
+        UpdateBoardCommentResDTO updateBoardCommentResDTO = boardCommentUseCase.updateBoardComment(updateBoardCommentReqDTO, commentId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_COMMENT_SUCCESS, updateBoardCommentResDTO));
     }
 
-    //댓글삭제(status만 변경, 대댓글도 사용가능)
-    public void deleteComment(){
-        boardCommentUseCase.deleteBoardComment();
+    @DeleteMapping("/comment/{comment-id}")
+    //댓글삭제(대댓글도 사용가능)
+    public ResponseEntity<ResultResponse> deleteComment(@PathVariable(value = "comment-id")Long commentId){
+        boardCommentUseCase.deleteBoardComment(commentId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BOARD_COMMENT_SUCCESS));
     }
 
     //북마크

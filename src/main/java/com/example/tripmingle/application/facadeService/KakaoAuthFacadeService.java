@@ -5,12 +5,12 @@ import com.example.tripmingle.dto.etc.TokenDTO;
 import com.example.tripmingle.dto.res.KakaoTokenResDTO;
 import com.example.tripmingle.port.in.KakaoAuthUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+
+@Service
 @RequiredArgsConstructor
 public class KakaoAuthFacadeService implements KakaoAuthUseCase {
-
     private final KakaoService kakaoService;
 
     @Override
