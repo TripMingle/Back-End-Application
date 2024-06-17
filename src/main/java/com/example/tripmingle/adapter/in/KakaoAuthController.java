@@ -20,7 +20,7 @@ public class KakaoAuthController {
     private final KakaoAuthUseCase kakaoAuthUseCase;
 
     @PostMapping("/login")
-    public ResponseEntity<ResultResponse> loginKakaoAccount(@RequestHeader("Kakao-Authentication") String kakaoAccessToken) {
+    public ResponseEntity<ResultResponse> loginKakaoAccount(@RequestHeader("Kakao-Authorization") String kakaoAccessToken) {
         TokenDTO tokenDTO = kakaoAuthUseCase.loginKakaoAccount(kakaoAccessToken);
         HttpHeaders tokenHeaders = new HttpHeaders();
         tokenHeaders.add("access-token", tokenDTO.getAccessToken());

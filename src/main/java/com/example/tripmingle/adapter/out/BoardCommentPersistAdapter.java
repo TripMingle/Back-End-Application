@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardCommentPersistAdapter implements BoardCommentPersistPort {
     private final BoardCommentRepository boardCommentRepository;
+
     @Override
     public List<BoardComment> getBoardCommentsByBoardId(Long boardId) {
         return boardCommentRepository.findBoardCommentsByBoardIdOOrderByCreatedAtAsc(boardId);
