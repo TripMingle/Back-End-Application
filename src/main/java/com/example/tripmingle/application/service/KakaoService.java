@@ -5,6 +5,7 @@ import com.example.tripmingle.common.utils.JwtUtils;
 import com.example.tripmingle.common.utils.KakaoProperties;
 import com.example.tripmingle.dto.etc.KakaoUserInfo;
 import com.example.tripmingle.dto.etc.TokenDTO;
+import com.example.tripmingle.dto.req.KakaoUserAdditionDetailsReqDTO;
 import com.example.tripmingle.dto.res.KakaoLoginResDTO;
 import com.example.tripmingle.dto.res.KakaoTokenResDTO;
 import com.example.tripmingle.entity.Refresh;
@@ -41,11 +42,11 @@ public class KakaoService {
     private final KakaoLoginFeignClientForAccessTokenPort kakaoLoginFeignClientForAccessTokenPort;
 
     @Transactional
-    public TokenDTO loginKakaoAccount(String kakaoAccessToken) {
-        String redefineAccessToken = "Bearer " + kakaoAccessToken;
+    public TokenDTO loginKakaoAccount(KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
+        String redefineAccessToken = "Bearer " + kakaoUserAdditionDetailsReqDTO.getKakaoAccessToken();
         KakaoLoginResDTO kakaoLoginResDTO = kakaoLoginFeignClientPort.getKakaoUserInfo(redefineAccessToken);
 
-        User user = joinStateCheckAndReturnUser(kakaoLoginResDTO);
+        User user = joinStateCheckAndReturnUser(kakaoLoginResDTO, kakaoUserAdditionDetailsReqDTO);
         userNullCheck(user);
 
         String accessToken = jwtUtils.createJwtToken(user.getEmail(), user.getRole(), user.getLoginType(), ACCESS_TOKEN.getMessage(), jwtUtils.getAccessTokenExpTime());
@@ -58,9 +59,7 @@ public class KakaoService {
                 .build();
     }
 
-    // TODO 닉네임, 국가에 대한 입력을 어떻게 할지 논의 필요 -> 카카오 액세스 토큰을 주면서 해당 데이터를 같이 넘겨줄지,
-    //  아니면 나중에 해당 유저 정보를 수정하는 걸로 할지에 대해서
-    private User joinStateCheckAndReturnUser(KakaoLoginResDTO kakaoLoginResDTO) {
+    private User joinStateCheckAndReturnUser(KakaoLoginResDTO kakaoLoginResDTO, KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
         KakaoUserInfo kakaoUserInfo = kakaoLoginResDTO.getKakaoUserInfo();
         User user = null;
         if (!userPersistPort.existsByEmail(kakaoUserInfo.getEmail())) {
@@ -70,11 +69,11 @@ public class KakaoService {
                     .role("ROLE_USER")
                     .loginType(KAKAO.getLoginType())
                     .oauthId(kakaoLoginResDTO.getKakaoId())
-                    .nickName("default")
+                    .nickName(kakaoUserAdditionDetailsReqDTO.getNickName())
                     .ageRange(kakaoUserInfo.getAgeRange())
                     .gender(kakaoUserInfo.getGender())
                     .name(kakaoUserInfo.getName())
-                    .nationality("default")
+                    .nationality(kakaoUserAdditionDetailsReqDTO.getNationality())
                     .phoneNumber(kakaoUserInfo.getPhoneNumber())
                     .build());
         } else {
