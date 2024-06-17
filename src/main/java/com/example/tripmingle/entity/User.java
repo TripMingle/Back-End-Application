@@ -17,7 +17,7 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -32,7 +32,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String oauthId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
     @Column(nullable = false)
@@ -50,7 +50,7 @@ public class User extends BaseEntity {
     @Column(nullable = true)
     private String selfIntroduction;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Builder(toBuilder = true)

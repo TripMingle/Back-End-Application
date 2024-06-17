@@ -10,4 +10,6 @@ public interface UserPersistPort {
     User findByEmail(String email);
 
     User findCurrentUserByEmail();
+
+    boolean existsByNickName(String nickName);
 }

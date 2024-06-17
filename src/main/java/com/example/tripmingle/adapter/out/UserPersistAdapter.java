@@ -34,4 +34,9 @@ public class UserPersistAdapter implements UserPersistPort {
     public User findCurrentUserByEmail() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(() -> new UserNotFoundException("User Not Found.", ErrorCode.USER_NOT_FOUND));
     }
+
+    @Override
+    public boolean existsByNickName(String nickName) {
+        return userRepository.existsByNickName(nickName);
+    }
 }

@@ -13,7 +13,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
   jwt:
     secret: ${jwt.secret-key}
-    access-token-expiration: 60000000000
+    access-token-expiration: 600000
     refresh-token-expiration: 86400000
   data:
     redis:
