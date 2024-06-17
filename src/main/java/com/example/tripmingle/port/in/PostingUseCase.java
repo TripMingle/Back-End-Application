@@ -3,9 +3,10 @@ package com.example.tripmingle.port.in;
 import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
-import com.example.tripmingle.dto.res.DeletePostingResDTO;
-import com.example.tripmingle.dto.res.PatchPostingResDTO;
-import com.example.tripmingle.dto.res.PostPostingResDTO;
+import com.example.tripmingle.dto.res.*;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface PostingUseCase {
 
@@ -15,4 +16,11 @@ public interface PostingUseCase {
 
     DeletePostingResDTO deletePosting(DeletePostingReqDTO deletePostingReqDTO);
 
+    List<GetPreviewPostingResDTO> getPreviewPostings();
+
+    GetOnePostingResDTO getOnePosting(Long postingId);
+
+    List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable);
+
+    List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
 }

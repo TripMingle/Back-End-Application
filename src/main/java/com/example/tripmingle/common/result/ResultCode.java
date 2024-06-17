@@ -20,7 +20,6 @@ public enum ResultCode {
     CREATE_BOARD_COMMENT_SUCCESS(200, "BC001", "게시물 댓글 작성 성공"),
     UPDATE_BOARD_COMMENT_SUCCESS(200, "BC002", "게시물 댓글 수정 성공"),
     DELETE_BOARD_COMMENT_SUCCESS(200, "BC003", "게시물 댓글 삭제 완료"),
-
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),
     OAUTH_TOKEN_ISSUE_SUCCESS(200, "O002", "소셜 로그인 토큰 발급이 성공하였습니다."),
@@ -29,6 +28,10 @@ public enum ResultCode {
     CREATED_POSTING(201, "P001", "포스팅이 작성되었습니다."),
     UPDATED_POSTING(202, "P002", "포스팅이 수정되었습니다."),
     DELETE_POSTING(203, "P003", "포스팅이 삭제되었습니다."),
+    POSTING_PREVIEW_SUCCESS(204, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
+    GET_ONE_POSTING_SUCCESS(205, "P005", "포스팅 상세조회 성공했습니다."),
+    GET_ALL_POSTINGS_SUCCESS(206, "P006", "전체 포스팅 조회가 성공했습니다."),
+    GET_SEARCH_POSTINGS_SUCCESS(207, "P007", "검색된 포스팅 조회가 성공했습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),
