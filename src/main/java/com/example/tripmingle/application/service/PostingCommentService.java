@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.port.out.PostingCommentPersistPort;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 public class PostingCommentService {
     private final PostingCommentPersistPort postingCommentPersistPort;
+
     public void createPostingComment() {
         postingCommentPersistPort.createPostingComment();
     }

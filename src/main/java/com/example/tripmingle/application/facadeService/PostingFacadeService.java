@@ -1,8 +1,8 @@
 package com.example.tripmingle.application.facadeService;
 
 
-import com.example.tripmingle.application.Service.PostingCommentService;
-import com.example.tripmingle.application.Service.PostingService;
+import com.example.tripmingle.application.service.PostingCommentService;
+import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;

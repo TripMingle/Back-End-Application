@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import org.springframework.stereotype.Service;
 

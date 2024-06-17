@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
 import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
@@ -28,14 +28,13 @@ public class BoardCommentService {
         List<BoardComment> parentList = new ArrayList<>();
 
 
-        for(BoardComment boardComment : boardComments){
+        for (BoardComment boardComment : boardComments) {
             Long commentId = boardComment.getId();
 
-            if(boardComment.isParentBoardCommentNull()){
+            if (boardComment.isParentBoardCommentNull()) {
                 commentMap.put(commentId, new ArrayList<>());
                 parentList.add(boardComment);
-            }
-            else{
+            } else {
                 Long parentId = boardComment.getParentBoardComment().getId();
                 commentMap.get(parentId).add(boardComment);
             }
@@ -43,7 +42,7 @@ public class BoardCommentService {
 
         List<ParentBoardCommentResDTO> boardCommentResDTOS = new ArrayList<>();
 
-        for(BoardComment parentBoardComment : parentList){
+        for (BoardComment parentBoardComment : parentList) {
             Long parentId = parentBoardComment.getId();
             ParentBoardCommentResDTO parentBoardCommentResDTO = getParentBoardCommentInfo(parentBoardComment, currentUser.get());
             List<ChildBoardCommentDTO> childBoardCommentDTOS = new ArrayList<>();
@@ -59,7 +58,7 @@ public class BoardCommentService {
         return boardCommentResDTOS;
     }
 
-    private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser){
+    private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser) {
 
         return ParentBoardCommentResDTO.builder()
                 .boardId(boardComment.getBoard().getId())
@@ -72,7 +71,7 @@ public class BoardCommentService {
                 .build();
     }
 
-    private ChildBoardCommentDTO getChildBoardCommentInfo(BoardComment boardComment, Long parentId, User currentUser){
+    private ChildBoardCommentDTO getChildBoardCommentInfo(BoardComment boardComment, Long parentId, User currentUser) {
 
         return ChildBoardCommentDTO.builder()
                 .boardId(boardComment.getBoard().getId())
@@ -89,10 +88,9 @@ public class BoardCommentService {
     public BoardComment createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board) {
         BoardComment parentBoardComment;
         Optional<User> user = userPersistPort.getCurrentUser();
-        if(isParent(createBoardCommentReqDTO.getParentBoardCommentId())){
+        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
             parentBoardComment = null;
-        }
-        else{
+        } else {
             parentBoardComment = boardCommentPersistPort
                     .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
         }
@@ -105,14 +103,14 @@ public class BoardCommentService {
                 .build());
     }
 
-    private boolean isParent(Long id){
-        if(id==-1)return true;
+    private boolean isParent(Long id) {
+        if (id == -1) return true;
         else return false;
     }
 
     public void deleteBoardComment(Long commentId) {
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
-        if(boardComment.isParentBoardCommentNull()){
+        if (boardComment.isParentBoardCommentNull()) {
             List<BoardComment> childBoardComments = boardCommentPersistPort.getBoardCommentByParentBoardId(boardComment.getId());
 
             childBoardComments.stream()

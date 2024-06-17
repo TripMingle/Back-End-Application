@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.config.oauth.KakaoProperties;
 import com.example.tripmingle.common.error.ErrorResponse;

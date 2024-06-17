@@ -1,18 +1,17 @@
 package com.example.tripmingle.application.facadeService;
 
-import com.example.tripmingle.application.Service.BoardCommentService;
-import com.example.tripmingle.application.Service.BoardService;
+import com.example.tripmingle.application.service.BoardCommentService;
+import com.example.tripmingle.application.service.BoardService;
 import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.req.CreateBoardReqDTO;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardComment;
 import com.example.tripmingle.entity.User;
-import com.example.tripmingle.port.in.BoardUseCase;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
-
+import com.example.tripmingle.port.in.BoardUseCase;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,7 +31,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
-        List<Board>boardList = boardService.getRecentBoards(countryName);
+        List<Board> boardList = boardService.getRecentBoards(countryName);
         Optional<User> currentUser = userPersistPort.getCurrentUser();
 
         return boardList
@@ -59,7 +58,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public Page<GetBoardsResDTO> getAllBoards(String countryName, String gender, String language, Pageable pageable) {
-        Page<Board>boardPage = boardService.getAllBoards(countryName,gender,language,pageable);
+        Page<Board> boardPage = boardService.getAllBoards(countryName, gender, language, pageable);
         Optional<User> currentUser = userPersistPort.getCurrentUser();
 
         return boardPage.map(board -> GetBoardsResDTO.builder()
@@ -76,6 +75,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.get().getId().equals(board.getUser().getId()))
                 .build());
     }
+
     @Override
     public GetBoardInfoResDTO getBoard(Long boardId) {
         Board board = boardService.getBoardById(boardId);
@@ -133,18 +133,18 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         Optional<User> currentUser = userPersistPort.getCurrentUser();
         return boardList.stream()
                 .map(board -> GetBoardsResDTO.builder()
-                .boardId(board.getId())
-                .title(board.getTitle())
-                .startDate(board.getStartDate())
-                .endDate(board.getEndDate())
-                .maxCount(board.getMaxCount())
-                .language(board.getLanguage())
-                .nickName(board.getUser().getNickName())
-                .ageRange(board.getUser().getAgeRange())
-                .gender(board.getUser().getGender())
-                .nationality(board.getUser().getNationality())
-                .isMine(currentUser.get().getId().equals(board.getUser().getId()))
-                .build()).collect(Collectors.toList());
+                        .boardId(board.getId())
+                        .title(board.getTitle())
+                        .startDate(board.getStartDate())
+                        .endDate(board.getEndDate())
+                        .maxCount(board.getMaxCount())
+                        .language(board.getLanguage())
+                        .nickName(board.getUser().getNickName())
+                        .ageRange(board.getUser().getAgeRange())
+                        .gender(board.getUser().getGender())
+                        .nationality(board.getUser().getNationality())
+                        .isMine(currentUser.get().getId().equals(board.getUser().getId()))
+                        .build()).collect(Collectors.toList());
     }
 
 
@@ -152,7 +152,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     public CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
         Board board = boardService.getBoardById(createBoardCommentReqDTO.getBoardId());
         BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board);
-        Long parentBoardCommentId = boardComment.isParentBoardCommentNull()?-1:boardComment.getParentBoardComment().getId();
+        Long parentBoardCommentId = boardComment.isParentBoardCommentNull() ? -1 : boardComment.getParentBoardComment().getId();
 
         return CreateBoardCommentResDTO.builder()
                 .parentBoardCommentId(parentBoardCommentId)

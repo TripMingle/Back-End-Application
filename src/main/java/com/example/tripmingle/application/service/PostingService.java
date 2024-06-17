@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.port.out.PostingPersistPort;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.tripmingle.application.Service;
+package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.etc.UpdateBoardDTO;
@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -31,7 +32,7 @@ public class BoardService {
     }
 
     public Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable) {
-        return boardPersistPort.getAllBoards(country,gender,language,pageable);
+        return boardPersistPort.getAllBoards(country, gender, language, pageable);
     }
 
     public Board getBoardById(Long boardId) {

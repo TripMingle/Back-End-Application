@@ -1,6 +1,6 @@
 package com.example.tripmingle.application.facadeService;
 
-import com.example.tripmingle.application.Service.KakaoService;
+import com.example.tripmingle.application.service.KakaoService;
 import com.example.tripmingle.dto.etc.TokenDTO;
 import com.example.tripmingle.dto.res.KakaoTokenResDTO;
 import com.example.tripmingle.port.in.KakaoAuthUseCase;
