@@ -9,9 +9,9 @@ public interface BoardCommentPersistPort {
 
     BoardComment saveBoardComment(BoardComment boardComment);
 
-    void deleteBoardCommentById(Long commentId);
-
     BoardComment getBoardCommentById(Long boardId);
 
     List<BoardComment> getBoardCommentByParentBoardId(Long parentBoardId);
+
+    void deleteBoardComment(BoardComment comment);
 }

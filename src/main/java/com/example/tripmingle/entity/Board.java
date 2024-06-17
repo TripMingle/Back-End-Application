@@ -47,8 +47,13 @@ public class Board extends BaseEntity {
 
     private String language;
 
+    private int commentCount;
 
 
+
+    public void updateCommentCount(int diff){
+        this.commentCount += diff;
+    }
     public void update(UpdateBoardDTO updateBoardDTO) {
         if (updateBoardDTO.getTitle() != null) {
             this.title = updateBoardDTO.getTitle();

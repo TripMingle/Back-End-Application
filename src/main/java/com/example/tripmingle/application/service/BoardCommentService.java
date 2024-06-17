@@ -98,6 +98,8 @@ public class BoardCommentService {
                     .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
         }
 
+        board.updateCommentCount(1);
+
         return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
                 .parentBoardComment(parentBoardComment)
                 .user(user)
@@ -111,17 +113,21 @@ public class BoardCommentService {
         else return false;
     }
 
-    public void deleteBoardComment(Long commentId) {
+    public int deleteBoardComment(Long commentId) {
+        int commentCount = 0;
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
+        commentCount++;
         if (boardComment.isParentBoardCommentNull()) {
             List<BoardComment> childBoardComments = boardCommentPersistPort.getBoardCommentByParentBoardId(boardComment.getId());
+            commentCount += childBoardComments.size();
 
             childBoardComments.stream()
-                    .forEach(childComment -> boardCommentPersistPort.deleteBoardCommentById(childComment.getId()));
+                    .forEach(childComment -> boardCommentPersistPort.deleteBoardComment(childComment));
 
         }
+        boardCommentPersistPort.deleteBoardComment(boardComment);
 
-        boardCommentPersistPort.deleteBoardCommentById(commentId);
+        return commentCount;
     }
 
     public BoardComment updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
@@ -135,6 +141,11 @@ public class BoardCommentService {
     public void deleteBoardCommentByBoardId(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
         boardComments.stream()
-                .forEach(comments -> boardCommentPersistPort.deleteBoardCommentById(comments.getId()));
+                .forEach(comment -> boardCommentPersistPort.deleteBoardComment(comment));
+    }
+
+    public Board getBoardByCommentId(Long commentId) {
+        BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
+        return boardComment.getBoard();
     }
 }
