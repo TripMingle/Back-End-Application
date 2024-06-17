@@ -7,7 +7,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 public class CreateBoardCommentReqDTO {
     private Long boardId;
     private Long parentBoardCommentId;

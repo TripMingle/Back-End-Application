@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 public class UpdateBoardDTO {
     private String continent;

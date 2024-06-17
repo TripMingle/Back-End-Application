@@ -36,9 +36,9 @@ public class BoardController {
     @GetMapping("/{country-name}")
     //게시물 전체조회(나라명 입력, 성별이나 언어로 필터링, 페이징)
     public ResponseEntity<ResultResponse> getAllBoards(@PathVariable(value = "country-name") String countryName
-            , @RequestParam(value = "gender", required = false) String gender,
-                                                       @RequestParam(value = "language", required = false) String language,
-                                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                       ,@RequestParam(value = "gender", required = false) String gender
+                                                       ,@RequestParam(value = "language", required = false) String language
+                                                       ,@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getAllBoards(countryName, gender, language, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_BOARD_SUCCESS, getBoardsResDTOS));
     }
@@ -103,13 +103,18 @@ public class BoardController {
 
     //북마크
 
+    //북마크한 모든 게시물 조회
+
     //좋아요
+
+    //좋아요한 모든 게시물 조회
 
     //여행확정짓기
 
     //내가 방장인 모든 게시물 조회
 
     //내가 참여하고있는 모든 게시물 조회
+
 
 
 }

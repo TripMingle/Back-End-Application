@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter
-@Setter
 @Builder
 public class GetBoardsResDTO {
     //board info
@@ -17,6 +16,7 @@ public class GetBoardsResDTO {
     private LocalDate endDate;
     private int maxCount;
     private String language;
+    private int commentCount;
     //user info
     private String nickName;
     private String ageRange;

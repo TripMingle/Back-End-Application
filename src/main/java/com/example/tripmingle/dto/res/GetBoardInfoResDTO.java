@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
 public class GetBoardInfoResDTO {
     //게시글
@@ -17,13 +16,14 @@ public class GetBoardInfoResDTO {
     private String title;
     private String content;
     private String language;
-    private String traits;
-    private String types;
+    private List<String> traits;
+    private List<String> types;
     private LocalDate startDate;
     private LocalDate endDate;
     private int currentCount;
     private int maxCount;
     private LocalDateTime createdAt;
+    private int commentCount;
     private boolean isMine;
 
     //게시글 작성자

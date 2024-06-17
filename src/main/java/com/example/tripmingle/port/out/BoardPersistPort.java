@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 public interface BoardPersistPort {
     Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable);
 
@@ -17,7 +16,7 @@ public interface BoardPersistPort {
 
     void getAllBoardsByIds();
 
-    List<Board> getRecentBoards(String countryName);
+    List<Board> getRecentBoardsByCountryName(String countryName);
 
     Long saveBoard(Board board);
 

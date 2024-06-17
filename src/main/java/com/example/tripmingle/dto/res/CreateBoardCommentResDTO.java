@@ -7,7 +7,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @Builder
 public class CreateBoardCommentResDTO {
     private Long parentBoardCommentId;

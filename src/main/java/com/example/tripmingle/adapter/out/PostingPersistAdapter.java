@@ -6,9 +6,10 @@ import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class PostingPersistAdapter implements PostingPersistPort {
 

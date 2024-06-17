@@ -7,9 +7,10 @@ import com.example.tripmingle.port.out.UserPersistPort;
 import com.example.tripmingle.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class UserPersistAdapter implements UserPersistPort {
 
