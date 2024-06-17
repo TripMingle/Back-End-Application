@@ -20,6 +20,7 @@ public enum ResultCode {
     CREATE_BOARD_COMMENT_SUCCESS(200, "BC001", "게시물 댓글 작성 성공"),
     UPDATE_BOARD_COMMENT_SUCCESS(200, "BC002", "게시물 댓글 수정 성공"),
     DELETE_BOARD_COMMENT_SUCCESS(200, "BC003", "게시물 댓글 삭제 완료"),
+
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),
     OAUTH_TOKEN_ISSUE_SUCCESS(200, "O002", "소셜 로그인 토큰 발급이 성공하였습니다."),
@@ -35,6 +36,12 @@ public enum ResultCode {
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),
+
+
+    //language
+    GET_COUNTRIES_BY_CONTINENT_SUCCESS(200, "L001", "해당 대륙에 존재하는 나라 조회에 성공하였습니다."),
+    GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "L002", "검색어에 해당하는 나라 조회에 성공하였습니다.")
+
     ;
     private final int status;
     private final String code;
