@@ -21,6 +21,10 @@ public enum ResultCode {
     UPDATE_BOARD_COMMENT_SUCCESS(200, "BC002", "게시물 댓글 수정 성공"),
     DELETE_BOARD_COMMENT_SUCCESS(200, "BC003", "게시물 댓글 삭제 완료"),
 
+    //bookmark
+    TOGGLE_BOOK_MARK_SUCCESS(200, "BM001", "북마크 상태변경 완료"),
+    GET_MY_BOOK_MARK_BOARD_SUCCESS(200, "BM002", "내 북마크 게시판 조회 성공"),
+
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),
     OAUTH_TOKEN_ISSUE_SUCCESS(200, "O002", "소셜 로그인 토큰 발급이 성공하였습니다."),

@@ -20,4 +20,10 @@ public class BookMark {
     @ManyToOne
     @JoinColumn(name="board_id", nullable = false)
     private Board board;
+
+    private boolean isActive = true;
+
+    public void toggleBookMark(){
+        this.isActive = !this.isActive;
+    }
 }

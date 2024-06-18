@@ -2,6 +2,7 @@ package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.BoardCommentService;
 import com.example.tripmingle.application.service.BoardService;
+import com.example.tripmingle.application.service.BookMarkService;
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.CreateBoardReqDTO;
@@ -10,6 +11,7 @@ import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardComment;
+import com.example.tripmingle.entity.BookMark;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
@@ -31,6 +33,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final BoardCommentService boardCommentService;
     private final UserPersistPort userPersistPort;
     private final CommonUtils commonUtils;
+    private final BookMarkService bookMarkService;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
@@ -49,6 +52,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .ageRange(board.getUser().getAgeRange())
                         .gender(board.getUser().getGender())
                         .nationality(board.getUser().getNationality())
+                        .currentCount(board.getCurrentCount())
                         .maxCount(board.getMaxCount())
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .build())
@@ -71,6 +75,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .ageRange(board.getUser().getAgeRange())
                 .gender(board.getUser().getGender())
                 .nationality(board.getUser().getNationality())
+                .currentCount(board.getCurrentCount())
                 .maxCount(board.getMaxCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .build());
@@ -140,6 +145,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .title(board.getTitle())
                         .startDate(board.getStartDate())
                         .endDate(board.getEndDate())
+                        .currentCount(board.getCurrentCount())
                         .maxCount(board.getMaxCount())
                         .language(board.getLanguage())
                         .nickName(board.getUser().getNickName())
@@ -190,6 +196,36 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public void getBoardsWithinRange() {
         boardService.getBoardsWithinRange();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void toggleBookMark(Long boardId) {
+        Board board = boardService.getBoardById(boardId);
+        bookMarkService.toggleBookMark(board);
+    }
+
+    @Override
+    public List<GetBoardsResDTO> getMyBookMarkedBoards() {
+        User currentUser = userPersistPort.findCurrentUserByEmail();
+        List<BookMark> bookMarks = bookMarkService.getMyBookMarkedBoards(currentUser);
+
+        return bookMarks.stream()
+                .map(bookmark-> GetBoardsResDTO
+                        .builder()
+                        .title(bookmark.getBoard().getTitle())
+                        .startDate(bookmark.getBoard().getStartDate())
+                        .endDate(bookmark.getBoard().getEndDate())
+                        .currentCount(bookmark.getBoard().getCurrentCount())
+                        .maxCount(bookmark.getBoard().getMaxCount())
+                        .language(bookmark.getBoard().getLanguage())
+                        .commentCount(bookmark.getBoard().getCommentCount())
+                        .nickName(bookmark.getBoard().getUser().getNickName())
+                        .ageRange(bookmark.getBoard().getUser().getAgeRange())
+                        .gender(bookmark.getBoard().getUser().getGender())
+                        .nationality(bookmark.getBoard().getUser().getNationality())
+                        .isMine(currentUser.getId().equals(bookmark.getBoard().getUser().getId()))
+                        .build()).collect(Collectors.toList());
     }
 
     @Override

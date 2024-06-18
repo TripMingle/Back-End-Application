@@ -101,19 +101,29 @@ public class BoardController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BOARD_COMMENT_SUCCESS));
     }
 
-    //북마크
+    @PostMapping("/bookmark/{board-id}")
+    //북마크 토글
+    public ResponseEntity<ResultResponse> toggleBookmark(@PathVariable(value = "board-id") Long boardId){
+        boardUseCase.toggleBookMark(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOOK_MARK_SUCCESS));
+    }
 
-    //북마크한 모든 게시물 조회
+    @GetMapping("/bookmark")
+    //내가 북마크한 모든 게시물 조회
+    public ResponseEntity<ResultResponse> getMyBookMarkedBoards(){
+        List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOOK_MARK_BOARD_SUCCESS, getBoardsResDTO));
+    }
 
-    //좋아요
+    //좋아요 토글
 
-    //좋아요한 모든 게시물 조회
-
-    //여행확정짓기
+    //내가 좋아요한 모든 게시물 조회
 
     //내가 방장인 모든 게시물 조회
 
     //내가 참여하고있는 모든 게시물 조회
+
+    //여행확정짓기
 
 
 

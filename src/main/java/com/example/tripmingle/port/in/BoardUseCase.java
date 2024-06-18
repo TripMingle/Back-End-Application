@@ -29,4 +29,8 @@ public interface BoardUseCase {
     List<GetBoardsResDTO> searchBoard(String keyword);
 
     void getBoardsWithinRange();
+
+    void toggleBookMark(Long boardId);
+
+    List<GetBoardsResDTO> getMyBookMarkedBoards();
 }

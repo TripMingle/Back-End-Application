@@ -1,10 +1,7 @@
 package com.example.tripmingle.common.exception.handler;
 
 import com.example.tripmingle.common.error.ErrorResponse;
-import com.example.tripmingle.common.exception.BoardCommentNotFoundException;
-import com.example.tripmingle.common.exception.BoardNotFoundException;
-import com.example.tripmingle.common.exception.PostingNotFoundException;
-import com.example.tripmingle.common.exception.UserNotFoundException;
+import com.example.tripmingle.common.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +39,14 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
+
+    @ExceptionHandler(BookMarkNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBookMarkNotFoundException(PostingNotFoundException ex) {
+        log.error("handleBookMarkNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+
 
 }
