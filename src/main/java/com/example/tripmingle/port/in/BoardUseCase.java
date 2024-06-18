@@ -2,10 +2,7 @@ package com.example.tripmingle.port.in;
 
 import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
 import com.example.tripmingle.dto.req.CreateBoardReqDTO;
-import com.example.tripmingle.dto.res.GetBoardInfoResDTO;
-import com.example.tripmingle.dto.res.GetBoardsResDTO;
-import com.example.tripmingle.dto.res.UpdateBoardResDTO;
-import com.example.tripmingle.dto.res.PostBoardResDTO;
+import com.example.tripmingle.dto.res.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -30,11 +27,11 @@ public interface BoardUseCase {
 
     void getBoardsWithinRange();
 
-    void toggleBoardBookMark(Long boardId);
+    ToggleStateResDTO toggleBoardBookMark(Long boardId);
 
     List<GetBoardsResDTO> getMyBookMarkedBoards();
 
-    void toggleBoardLikes(Long boardId);
+    ToggleStateResDTO toggleBoardLikes(Long boardId);
 
     List<GetBoardsResDTO> getMyLikedBoards();
 }

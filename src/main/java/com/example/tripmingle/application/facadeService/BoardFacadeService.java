@@ -208,9 +208,12 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     @Transactional(readOnly = false)
-    public void toggleBoardBookMark(Long boardId) {
+    public ToggleStateResDTO toggleBoardBookMark(Long boardId) {
         Board board = boardService.getBoardById(boardId);
-        boardBookMarkService.toggleBoardBookMark(board);
+        boolean state = boardBookMarkService.toggleBoardBookMark(board);
+        return ToggleStateResDTO.builder()
+                .state(state)
+                .build();
     }
 
     @Override
@@ -221,6 +224,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         return boardBookMarks.stream()
                 .map(boardBookmark-> GetBoardsResDTO
                         .builder()
+                        .boardId(boardBookmark.getBoard().getId())
                         .title(boardBookmark.getBoard().getTitle())
                         .startDate(boardBookmark.getBoard().getStartDate())
                         .endDate(boardBookmark.getBoard().getEndDate())
@@ -240,9 +244,12 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     @Transactional(readOnly = false)
-    public void toggleBoardLikes(Long boardId) {
+    public ToggleStateResDTO toggleBoardLikes(Long boardId) {
         Board board = boardService.getBoardById(boardId);
-        boardLikesService.toggleBoardLikes(board);
+        boolean state = boardLikesService.toggleBoardLikes(board);
+        return ToggleStateResDTO.builder()
+                .state(state)
+                .build();
     }
 
     @Override
@@ -253,6 +260,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         return boardLikes.stream()
                 .map(boardLike-> GetBoardsResDTO
                         .builder()
+                        .boardId(boardLike.getBoard().getId())
                         .title(boardLike.getBoard().getTitle())
                         .startDate(boardLike.getBoard().getStartDate())
                         .endDate(boardLike.getBoard().getEndDate())

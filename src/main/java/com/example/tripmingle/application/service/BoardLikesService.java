@@ -1,7 +1,6 @@
 package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.entity.Board;
-import com.example.tripmingle.entity.BoardBookMark;
 import com.example.tripmingle.entity.BoardLikes;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardLikesPersistPort;
@@ -20,19 +19,22 @@ public class BoardLikesService {
         return boardLikesPersistPort.findBoardLikesByUser(currentUser);
     }
 
-    public void toggleBoardLikes(Board board) {
+    public boolean toggleBoardLikes(Board board) {
         User currentUser = userPersistPort.findCurrentUserByEmail();
+        BoardLikes boardLikes;
         if(boardLikesPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
-            boardLikesPersistPort.findByUserAndBoard(currentUser,board).toggleBoardLikes();
+            boardLikes = boardLikesPersistPort.findByUserAndBoard(currentUser,board);
+            boardLikes.toggleBoardLikes();
         }
         else{
-            BoardLikes boardLikes = BoardLikes.builder()
+            boardLikes = BoardLikes.builder()
                     .user(currentUser)
                     .board(board)
                     .isActive(true)
                     .build();
             boardLikesPersistPort.saveBoardLikes(boardLikes);
         }
+        return boardLikes.isActive();
     }
 
 

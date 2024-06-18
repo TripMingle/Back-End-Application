@@ -104,8 +104,8 @@ public class BoardController {
     @PostMapping("/bookmark/{board-id}")
     //북마크 토글
     public ResponseEntity<ResultResponse> toggleBoardBookmark(@PathVariable(value = "board-id") Long boardId){
-        boardUseCase.toggleBoardBookMark(boardId);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_BOOK_MARK_SUCCESS));
+        ToggleStateResDTO toggleStateResDTO = boardUseCase.toggleBoardBookMark(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_BOOK_MARK_SUCCESS, toggleStateResDTO));
     }
 
     @GetMapping("/bookmark")
@@ -118,8 +118,8 @@ public class BoardController {
     @PostMapping("/likes/{board-id}")
     //좋아요 토글
     public ResponseEntity<ResultResponse> toggleBoardLikes(@PathVariable(value = "board-id") Long boardId){
-        boardUseCase.toggleBoardLikes(boardId);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_LIKES_SUCCESS));
+        ToggleStateResDTO toggleStateResDTO = boardUseCase.toggleBoardLikes(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_LIKES_SUCCESS, toggleStateResDTO));
     }
 
     @GetMapping("/likes")

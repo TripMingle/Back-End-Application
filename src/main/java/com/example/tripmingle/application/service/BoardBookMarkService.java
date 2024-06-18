@@ -15,19 +15,22 @@ import java.util.List;
 public class BoardBookMarkService {
     private final UserPersistPort userPersistPort;
     private final BoardBookMarkPersistPort boardBookMarkPersistPort;
-    public void toggleBoardBookMark(Board board) {
+    public boolean toggleBoardBookMark(Board board) {
         User currentUser = userPersistPort.findCurrentUserByEmail();
+        BoardBookMark boardBookMark;
         if(boardBookMarkPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
-            boardBookMarkPersistPort.findByUserAndBoard(currentUser,board).toggleBoardBookMark();
+            boardBookMark = boardBookMarkPersistPort.findByUserAndBoard(currentUser,board);
+            boardBookMark.toggleBoardBookMark();
         }
         else{
-            BoardBookMark boardBookMark = BoardBookMark.builder()
+            boardBookMark = BoardBookMark.builder()
                     .user(currentUser)
                     .board(board)
                     .isActive(true)
                     .build();
             boardBookMarkPersistPort.saveBoardBookMark(boardBookMark);
         }
+        return boardBookMark.isActive();
     }
 
 

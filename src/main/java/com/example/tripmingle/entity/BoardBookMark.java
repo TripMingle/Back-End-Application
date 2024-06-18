@@ -21,7 +21,7 @@ public class BoardBookMark {
     @JoinColumn(name="board_id", nullable = false)
     private Board board;
 
-    private boolean isActive = true;
+    private boolean isActive;
 
     public void toggleBoardBookMark(){
         this.isActive = !this.isActive;
