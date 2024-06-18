@@ -35,12 +35,17 @@ public enum ResultCode {
 
     // posting
     CREATED_POSTING(201, "P001", "포스팅이 작성되었습니다."),
-    UPDATED_POSTING(202, "P002", "포스팅이 수정되었습니다."),
+    UPDATE_POSTING(202, "P002", "포스팅이 수정되었습니다."),
     DELETE_POSTING(203, "P003", "포스팅이 삭제되었습니다."),
     POSTING_PREVIEW_SUCCESS(204, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
     GET_ONE_POSTING_SUCCESS(205, "P005", "포스팅 상세조회 성공했습니다."),
     GET_ALL_POSTINGS_SUCCESS(206, "P006", "전체 포스팅 조회가 성공했습니다."),
     GET_SEARCH_POSTINGS_SUCCESS(207, "P007", "검색된 포스팅 조회가 성공했습니다."),
+
+    // posting comment
+    POST_POSTING_COMMENT_SUCCESS(208, "PC001", "댓글 달기가 성공했습니다."),
+    UPDATE_POSTING_COMMENT_SUCCESS(209, "PC002", "댓글 수정이 성공했습니다."),
+    DELETE_POSTING_COMMENT_SUCCESS(210, "PC003", "댓글 삭제가 성공했습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),
@@ -48,9 +53,7 @@ public enum ResultCode {
 
     //language
     GET_COUNTRIES_BY_CONTINENT_SUCCESS(200, "L001", "해당 대륙에 존재하는 나라 조회에 성공하였습니다."),
-    GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "L002", "검색어에 해당하는 나라 조회에 성공하였습니다.")
-
-    ;
+    GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "L002", "검색어에 해당하는 나라 조회에 성공하였습니다.");
     private final int status;
     private final String code;
     private final String message;

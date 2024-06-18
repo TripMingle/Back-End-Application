@@ -7,8 +7,8 @@ import com.example.tripmingle.entity.PostingType;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -35,12 +35,12 @@ public class PostingPersistAdapter implements PostingPersistPort {
     }
 
     @Override
-    public Slice<Posting> getAllPostings(PostingType postingType, Pageable pageable) {
+    public Page<Posting> getAllPostings(PostingType postingType, Pageable pageable) {
         return postingRepository.findAllByPostingType(postingType, pageable);
     }
 
     @Override
-    public Slice<Posting> getSearchPostings(String keyword, Pageable pageable) {
+    public Page<Posting> getSearchPostings(String keyword, Pageable pageable) {
         return postingRepository.findAllBySearching(keyword, pageable);
     }
 
