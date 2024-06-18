@@ -54,4 +54,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(PostingInvalidUserException.class)
+    public ResponseEntity<ErrorResponse> handlePostingInvalidUser(PostingInvalidUserException ex) {
+        log.error("handlePostingInvalidUser", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
 }

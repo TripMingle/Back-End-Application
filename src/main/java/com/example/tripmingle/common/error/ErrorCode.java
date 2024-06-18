@@ -25,6 +25,7 @@ public enum ErrorCode {
 
     // posting
     POSING_NOT_FOUND(404, "P001", "해당 포스팅글이 존재하지 않습니다."),
+    POSTING_INVALID_USER(400, "P002", "포스팅 수정 권한이 없습니다."),
 
     // posting comment
     POSTING_COMMENT_NOT_FOUND(404, "PC001", "해당 댓글이 존재하지 않습니다."),
