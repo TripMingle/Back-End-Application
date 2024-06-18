@@ -47,4 +47,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(PostingCommentInvalidUserException.class)
+    public ResponseEntity<ErrorResponse> handlePostingCommentInvalidUser(PostingCommentInvalidUserException ex) {
+        log.error("handlePostingCommentInvalidUser", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
 }

@@ -1,6 +1,6 @@
 package com.example.tripmingle.application.service;
 
-import com.example.tripmingle.common.error.ErrorResponse;
+import com.example.tripmingle.common.exception.UserNotFoundException;
 import com.example.tripmingle.common.utils.JwtUtils;
 import com.example.tripmingle.common.utils.KakaoProperties;
 import com.example.tripmingle.dto.etc.KakaoUserInfo;
@@ -84,7 +84,7 @@ public class KakaoService {
 
     private void userNullCheck(User user) {
         if (user == null) {
-            throw new ErrorResponse(KAKAO_NO_EXISTS_USER);
+            throw new UserNotFoundException("User Not Found.", KAKAO_NO_EXISTS_USER);
         }
     }
 
