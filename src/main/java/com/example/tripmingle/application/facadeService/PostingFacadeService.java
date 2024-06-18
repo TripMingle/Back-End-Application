@@ -6,7 +6,6 @@ import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.dto.req.*;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
-import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -91,9 +90,18 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
-        PostingComment postingComment = postingCommentService.updatePostingComment(patchPostingCommentReqDTO);
+        Long postingComment = postingCommentService.updatePostingComment(patchPostingCommentReqDTO);
         return PatchPostingCommentResDTO.builder()
-                .postingCommentId(postingComment.getId())
+                .postingCommentId(postingComment)
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public DeletePostingCommentResDTO deletePostingComment(Long commentId) {
+        Long postingCommentId = postingCommentService.deletePostingComment(commentId);
+        return DeletePostingCommentResDTO.builder()
+                .postingCommentId(postingCommentId)
                 .build();
     }
 }

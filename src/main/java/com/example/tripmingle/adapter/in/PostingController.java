@@ -85,4 +85,10 @@ public class PostingController {
         return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
     }
 
+    @PatchMapping("/delete/comments/{commentId}")
+    public ResponseEntity<ResultResponse> deletePostingComment(@PathVariable("commentId") Long commentId) {
+        DeletePostingCommentResDTO deletePostingCommentResDTO = postingUseCase.deletePostingComment(commentId);
+        return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
+    }
+
 }

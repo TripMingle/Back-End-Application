@@ -1,13 +1,16 @@
 package com.example.tripmingle.entity;
 
+import com.example.tripmingle.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostingComment {
+@Where(clause = "is_deleted = false")
+public class PostingComment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,5 +40,9 @@ public class PostingComment {
 
     public void updateComment(String comment) {
         this.comment = comment;
+    }
+
+    public void deleteComment() {
+        delete();
     }
 }

@@ -25,4 +25,6 @@ public interface PostingUseCase {
     PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO);
 
     PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO);
+
+    DeletePostingCommentResDTO deletePostingComment(Long commentId);
 }

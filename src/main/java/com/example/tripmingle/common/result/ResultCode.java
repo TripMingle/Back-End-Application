@@ -37,6 +37,7 @@ public enum ResultCode {
     // posting comment
     POST_POSTING_COMMENT_SUCCESS(208, "PC001", "댓글 달기가 성공했습니다."),
     UPDATE_POSTING_COMMENT_SUCCESS(209, "PC002", "댓글 수정이 성공했습니다."),
+    DELETE_POSTING_COMMENT_SUCCESS(210, "PC003", "댓글 삭제가 성공했습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),

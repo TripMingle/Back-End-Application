@@ -57,18 +57,28 @@ public class PostingCommentService {
         return postingCommentPersistPort.save(postingComment).getId();
     }
 
-    public PostingComment updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
-        User user = userPersistPort.findCurrentUserByEmail();
+    public Long updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(patchPostingCommentReqDTO.getPostingCommentId());
-        if (validateCommentMasterUser(postingComment.getUser().getId(), user.getId())) {
+        if (validateCommentMasterUser(postingComment.getUser().getId())) {
             postingComment.updateComment(patchPostingCommentReqDTO.getComment());
         } else {
             throw new ErrorResponse(ErrorCode.POSTING_COMMENT_INVALID_USER);
         }
-        return postingComment;
+        return postingComment.getId();
     }
 
-    private boolean validateCommentMasterUser(Long commentUserId, Long userId) {
-        return userId.equals(commentUserId);
+    private boolean validateCommentMasterUser(Long rawUserId) {
+        User user = userPersistPort.findCurrentUserByEmail();
+        return rawUserId.equals(user.getId());
+    }
+
+    public Long deletePostingComment(Long commentId) {
+        PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(commentId);
+        if (validateCommentMasterUser(postingComment.getUser().getId())) {
+            postingComment.deleteComment();
+        } else {
+            throw new ErrorResponse(ErrorCode.POSTING_COMMENT_INVALID_USER);
+        }
+        return postingComment.getId();
     }
 }
