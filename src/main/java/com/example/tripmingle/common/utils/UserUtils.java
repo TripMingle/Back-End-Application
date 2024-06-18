@@ -1,9 +1,9 @@
 package com.example.tripmingle.common.utils;
 
-import com.example.tripmingle.adapter.out.UserPersistAdapter;
 import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.entity.User;
+import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserUtils {
 
-    private final UserPersistAdapter userPersistAdapter;
+    private final UserPersistPort userPersistPort;
 
     public boolean validateMasterUser(Long validatingUserId) {
-        User user = userPersistAdapter.findCurrentUserByEmail();
+        User user = userPersistPort.findCurrentUserByEmail();
         if (validatingUserId.equals(user.getId())) {
             return true;
         } else {
