@@ -25,5 +25,7 @@ public class GetBoardsResDTO {
     private String nationality;
 
     private boolean isMine;
+    private boolean isLiked;
+    private boolean isBookMarked;
 
 }

@@ -39,6 +39,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         List<Board> boardList = boardService.getRecentBoardsByCountryName(countryName);
         User currentUser = userPersistPort.findCurrentUserByEmail();
 
+
         return boardList
                 .stream().map(board -> GetBoardsResDTO.builder()
                         .boardId(board.getId())
@@ -54,6 +55,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .currentCount(board.getCurrentCount())
                         .maxCount(board.getMaxCount())
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
+                        .isLiked(boardLikesService.isLikedBoard(currentUser,board))
+                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -77,6 +80,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .currentCount(board.getCurrentCount())
                 .maxCount(board.getMaxCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser,board))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
                 .build());
     }
 
@@ -100,6 +105,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .createdAt(board.getCreatedAt())
                 .commentCount(board.getCommentCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser,board))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
                 .boardCommentResDTOS(boardComments)
                 .userId(board.getUser().getId())
                 .nickName(board.getUser().getNickName())
@@ -153,6 +160,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .nationality(board.getUser().getNationality())
                         .commentCount(board.getCommentCount())
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
+                        .isLiked(boardLikesService.isLikedBoard(currentUser,board))
+                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
                         .build()).collect(Collectors.toList());
     }
 
@@ -224,6 +233,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .gender(boardBookmark.getBoard().getUser().getGender())
                         .nationality(boardBookmark.getBoard().getUser().getNationality())
                         .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
+                        .isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
+                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,boardBookmark.getBoard()))
                         .build()).collect(Collectors.toList());
     }
 
@@ -254,6 +265,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .gender(boardLike.getBoard().getUser().getGender())
                         .nationality(boardLike.getBoard().getUser().getNationality())
                         .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
+                        .isLiked(boardLikesService.isLikedBoard(currentUser,boardLike.getBoard()))
+                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,boardLike.getBoard()))
                         .build()).collect(Collectors.toList());
     }
 

@@ -34,4 +34,11 @@ public class BoardBookMarkService {
     public List<BoardBookMark> getMyBookMarkedBoards(User user) {
         return boardBookMarkPersistPort.getBoardBookMarksByUser(user);
     }
+
+    public boolean isBookMarkedBoard(User currentUser, Board board) {
+        if(boardBookMarkPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
+            return boardBookMarkPersistPort.findByUserAndBoard(currentUser,board).isActive();
+        }
+        else return false;
+    }
 }

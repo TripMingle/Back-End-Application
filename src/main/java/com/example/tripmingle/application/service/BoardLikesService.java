@@ -34,4 +34,12 @@ public class BoardLikesService {
             boardLikesPersistPort.saveBoardLikes(boardLikes);
         }
     }
+
+
+    public boolean isLikedBoard(User currentUser, Board board) {
+        if(boardLikesPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
+            return boardLikesPersistPort.findByUserAndBoard(currentUser,board).isActive();
+        }
+        else return false;
+    }
 }

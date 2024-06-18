@@ -25,6 +25,8 @@ public class GetBoardInfoResDTO {
     private LocalDateTime createdAt;
     private int commentCount;
     private boolean isMine;
+    private boolean isLiked;
+    private boolean isBookMarked;
 
     //게시글 작성자
     private Long userId;
