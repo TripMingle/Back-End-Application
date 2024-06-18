@@ -1,26 +1,17 @@
-package com.example.tripmingle.application.service;
+package com.example.tripmingle.common.utils;
 
 import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
-import com.example.tripmingle.dto.req.ValidateDuplicationReqDTO;
-import com.example.tripmingle.dto.res.ValidateDuplicationResDTO;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class AuthService {
+public class UserUtils {
 
     private final UserPersistPort userPersistPort;
-
-    public ValidateDuplicationResDTO validateDuplication(ValidateDuplicationReqDTO validateDuplicationReqDTO) {
-        boolean duplicationStatus = userPersistPort.existsByNickName(validateDuplicationReqDTO.getNickName());
-        return ValidateDuplicationResDTO.builder()
-                .duplicationStatus(duplicationStatus)
-                .build();
-    }
 
     public boolean validateMasterUser(Long validatingUserId) {
         User user = userPersistPort.findCurrentUserByEmail();
@@ -30,4 +21,5 @@ public class AuthService {
             throw new InvalidUserAccessException("Invalid User Access.", ErrorCode.INVALID_USER_ACCESS);
         }
     }
+
 }

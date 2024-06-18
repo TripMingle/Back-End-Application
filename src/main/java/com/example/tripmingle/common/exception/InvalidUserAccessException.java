@@ -4,11 +4,11 @@ import com.example.tripmingle.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class PostingCommentInvalidUserException extends RuntimeException {
+public class InvalidUserAccessException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public PostingCommentInvalidUserException(String message, ErrorCode errorCode) {
+    public InvalidUserAccessException(String message, ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
