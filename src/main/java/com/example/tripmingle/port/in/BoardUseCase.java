@@ -30,7 +30,11 @@ public interface BoardUseCase {
 
     void getBoardsWithinRange();
 
-    void toggleBookMark(Long boardId);
+    void toggleBoardBookMark(Long boardId);
 
     List<GetBoardsResDTO> getMyBookMarkedBoards();
+
+    void toggleBoardLikes(Long boardId);
+
+    List<GetBoardsResDTO> getMyLikedBoards();
 }

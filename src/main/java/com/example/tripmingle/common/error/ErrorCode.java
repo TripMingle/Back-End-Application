@@ -14,8 +14,11 @@ public enum ErrorCode {
     //BoardComment
     BOARD_COMMENT_NOT_FOUND(400, "BC001", "게시물 댓글을 찾을 수 없습니다."),
 
-    //BookMark
-    BOOK_MARK_NOT_FOUND(400, "BM001", "북마크를 찾을 수 없습니다."),
+    //Board BookMark
+    BOARD_BOOK_MARK_NOT_FOUND(400, "BM001", "북마크를 찾을 수 없습니다."),
+
+    //Board Likes
+    BOARD_LIKES_NOT_FOUND(400,"BL001", "좋아요를 찾을 수 없습니다."),
 
     //OAuth
     KAKAO_BAD_REQUEST(400, "O001", "카카오 소셜 로그인에 잘못된 요청입니다."),

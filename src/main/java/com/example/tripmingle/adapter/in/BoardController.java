@@ -103,21 +103,31 @@ public class BoardController {
 
     @PostMapping("/bookmark/{board-id}")
     //북마크 토글
-    public ResponseEntity<ResultResponse> toggleBookmark(@PathVariable(value = "board-id") Long boardId){
-        boardUseCase.toggleBookMark(boardId);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOOK_MARK_SUCCESS));
+    public ResponseEntity<ResultResponse> toggleBoardBookmark(@PathVariable(value = "board-id") Long boardId){
+        boardUseCase.toggleBoardBookMark(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_BOOK_MARK_SUCCESS));
     }
 
     @GetMapping("/bookmark")
     //내가 북마크한 모든 게시물 조회
     public ResponseEntity<ResultResponse> getMyBookMarkedBoards(){
         List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards();
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOOK_MARK_BOARD_SUCCESS, getBoardsResDTO));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
     }
 
+    @PostMapping("/likes/{board-id}")
     //좋아요 토글
+    public ResponseEntity<ResultResponse> toggleBoardLikes(@PathVariable(value = "board-id") Long boardId){
+        boardUseCase.toggleBoardLikes(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_LIKES_SUCCESS));
+    }
 
+    @GetMapping("/likes")
     //내가 좋아요한 모든 게시물 조회
+    public ResponseEntity<ResultResponse> getMyLikedBoards(){
+        List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
+    }
 
     //내가 방장인 모든 게시물 조회
 

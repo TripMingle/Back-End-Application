@@ -1,18 +1,16 @@
 package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.BoardCommentService;
+import com.example.tripmingle.application.service.BoardLikesService;
 import com.example.tripmingle.application.service.BoardService;
-import com.example.tripmingle.application.service.BookMarkService;
+import com.example.tripmingle.application.service.BoardBookMarkService;
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
 import com.example.tripmingle.dto.res.*;
-import com.example.tripmingle.entity.Board;
-import com.example.tripmingle.entity.BoardComment;
-import com.example.tripmingle.entity.BookMark;
-import com.example.tripmingle.entity.User;
+import com.example.tripmingle.entity.*;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
 import com.example.tripmingle.port.out.UserPersistPort;
@@ -33,7 +31,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final BoardCommentService boardCommentService;
     private final UserPersistPort userPersistPort;
     private final CommonUtils commonUtils;
-    private final BookMarkService bookMarkService;
+    private final BoardBookMarkService boardBookMarkService;
+    private final BoardLikesService boardLikesService;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
@@ -200,31 +199,61 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     @Transactional(readOnly = false)
-    public void toggleBookMark(Long boardId) {
+    public void toggleBoardBookMark(Long boardId) {
         Board board = boardService.getBoardById(boardId);
-        bookMarkService.toggleBookMark(board);
+        boardBookMarkService.toggleBoardBookMark(board);
     }
 
     @Override
     public List<GetBoardsResDTO> getMyBookMarkedBoards() {
         User currentUser = userPersistPort.findCurrentUserByEmail();
-        List<BookMark> bookMarks = bookMarkService.getMyBookMarkedBoards(currentUser);
+        List<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser);
 
-        return bookMarks.stream()
-                .map(bookmark-> GetBoardsResDTO
+        return boardBookMarks.stream()
+                .map(boardBookmark-> GetBoardsResDTO
                         .builder()
-                        .title(bookmark.getBoard().getTitle())
-                        .startDate(bookmark.getBoard().getStartDate())
-                        .endDate(bookmark.getBoard().getEndDate())
-                        .currentCount(bookmark.getBoard().getCurrentCount())
-                        .maxCount(bookmark.getBoard().getMaxCount())
-                        .language(bookmark.getBoard().getLanguage())
-                        .commentCount(bookmark.getBoard().getCommentCount())
-                        .nickName(bookmark.getBoard().getUser().getNickName())
-                        .ageRange(bookmark.getBoard().getUser().getAgeRange())
-                        .gender(bookmark.getBoard().getUser().getGender())
-                        .nationality(bookmark.getBoard().getUser().getNationality())
-                        .isMine(currentUser.getId().equals(bookmark.getBoard().getUser().getId()))
+                        .title(boardBookmark.getBoard().getTitle())
+                        .startDate(boardBookmark.getBoard().getStartDate())
+                        .endDate(boardBookmark.getBoard().getEndDate())
+                        .currentCount(boardBookmark.getBoard().getCurrentCount())
+                        .maxCount(boardBookmark.getBoard().getMaxCount())
+                        .language(boardBookmark.getBoard().getLanguage())
+                        .commentCount(boardBookmark.getBoard().getCommentCount())
+                        .nickName(boardBookmark.getBoard().getUser().getNickName())
+                        .ageRange(boardBookmark.getBoard().getUser().getAgeRange())
+                        .gender(boardBookmark.getBoard().getUser().getGender())
+                        .nationality(boardBookmark.getBoard().getUser().getNationality())
+                        .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
+                        .build()).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void toggleBoardLikes(Long boardId) {
+        Board board = boardService.getBoardById(boardId);
+        boardLikesService.toggleBoardLikes(board);
+    }
+
+    @Override
+    public List<GetBoardsResDTO> getMyLikedBoards() {
+        User currentUser = userPersistPort.findCurrentUserByEmail();
+        List<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser);
+
+        return boardLikes.stream()
+                .map(boardLike-> GetBoardsResDTO
+                        .builder()
+                        .title(boardLike.getBoard().getTitle())
+                        .startDate(boardLike.getBoard().getStartDate())
+                        .endDate(boardLike.getBoard().getEndDate())
+                        .currentCount(boardLike.getBoard().getCurrentCount())
+                        .maxCount(boardLike.getBoard().getMaxCount())
+                        .language(boardLike.getBoard().getLanguage())
+                        .commentCount(boardLike.getBoard().getCommentCount())
+                        .nickName(boardLike.getBoard().getUser().getNickName())
+                        .ageRange(boardLike.getBoard().getUser().getAgeRange())
+                        .gender(boardLike.getBoard().getUser().getGender())
+                        .nationality(boardLike.getBoard().getUser().getNationality())
+                        .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
                         .build()).collect(Collectors.toList());
     }
 
