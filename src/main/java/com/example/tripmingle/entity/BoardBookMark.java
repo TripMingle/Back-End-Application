@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookMark {
+public class BoardBookMark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,4 +20,10 @@ public class BookMark {
     @ManyToOne
     @JoinColumn(name="board_id", nullable = false)
     private Board board;
+
+    private boolean isActive;
+
+    public void toggleBoardBookMark(){
+        this.isActive = !this.isActive;
+    }
 }

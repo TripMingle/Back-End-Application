@@ -101,19 +101,39 @@ public class BoardController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BOARD_COMMENT_SUCCESS));
     }
 
-    //북마크
+    @PostMapping("/bookmark/{board-id}")
+    //북마크 토글
+    public ResponseEntity<ResultResponse> toggleBoardBookmark(@PathVariable(value = "board-id") Long boardId){
+        ToggleStateResDTO toggleStateResDTO = boardUseCase.toggleBoardBookMark(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_BOOK_MARK_SUCCESS, toggleStateResDTO));
+    }
 
-    //북마크한 모든 게시물 조회
+    @GetMapping("/bookmark")
+    //내가 북마크한 모든 게시물 조회
+    public ResponseEntity<ResultResponse> getMyBookMarkedBoards(){
+        List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
+    }
 
-    //좋아요
+    @PostMapping("/likes/{board-id}")
+    //좋아요 토글
+    public ResponseEntity<ResultResponse> toggleBoardLikes(@PathVariable(value = "board-id") Long boardId){
+        ToggleStateResDTO toggleStateResDTO = boardUseCase.toggleBoardLikes(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_LIKES_SUCCESS, toggleStateResDTO));
+    }
 
-    //좋아요한 모든 게시물 조회
-
-    //여행확정짓기
+    @GetMapping("/likes")
+    //내가 좋아요한 모든 게시물 조회
+    public ResponseEntity<ResultResponse> getMyLikedBoards(){
+        List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
+    }
 
     //내가 방장인 모든 게시물 조회
 
     //내가 참여하고있는 모든 게시물 조회
+
+    //여행확정짓기
 
 
 

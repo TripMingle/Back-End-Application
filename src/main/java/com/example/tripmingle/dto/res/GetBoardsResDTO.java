@@ -14,6 +14,7 @@ public class GetBoardsResDTO {
     private String title;
     private LocalDate startDate;
     private LocalDate endDate;
+    private int currentCount;
     private int maxCount;
     private String language;
     private int commentCount;
@@ -24,5 +25,7 @@ public class GetBoardsResDTO {
     private String nationality;
 
     private boolean isMine;
+    private boolean isLiked;
+    private boolean isBookMarked;
 
 }
