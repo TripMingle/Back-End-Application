@@ -1,5 +1,8 @@
 package com.example.tripmingle.application.service;
 
+import com.example.tripmingle.common.error.ErrorCode;
+import com.example.tripmingle.common.error.ErrorResponse;
+import com.example.tripmingle.dto.req.PatchPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.res.GetOnePostingCoCommentResDTO;
 import com.example.tripmingle.dto.res.GetOnePostingCommentsResDTO;
@@ -52,5 +55,20 @@ public class PostingCommentService {
                 .comment(postPostingCommentReqDTO.getComment())
                 .build();
         return postingCommentPersistPort.save(postingComment).getId();
+    }
+
+    public PostingComment updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+        User user = userPersistPort.findCurrentUserByEmail();
+        PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(patchPostingCommentReqDTO.getPostingCommentId());
+        if (validateCommentMasterUser(postingComment.getUser().getId(), user.getId())) {
+            postingComment.updateComment(patchPostingCommentReqDTO.getComment());
+        } else {
+            throw new ErrorResponse(ErrorCode.POSTING_COMMENT_INVALID_USER);
+        }
+        return postingComment;
+    }
+
+    private boolean validateCommentMasterUser(Long commentUserId, Long userId) {
+        return userId.equals(commentUserId);
     }
 }

@@ -2,12 +2,11 @@ package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.PostingCommentService;
 import com.example.tripmingle.application.service.PostingService;
-import com.example.tripmingle.dto.req.DeletePostingReqDTO;
-import com.example.tripmingle.dto.req.PatchPostingReqDTO;
-import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
-import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.application.service.UserService;
+import com.example.tripmingle.dto.req.*;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
+import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     private final PostingService postingService;
     private final PostingCommentService postingCommentService;
+    private final UserService userService;
 
     @Transactional
     @Override
@@ -85,6 +85,15 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
         Long newPostingCommentId = postingCommentService.createPostingComment(postPostingCommentReqDTO, posting);
         return PostPostingCommentResDTO.builder()
                 .postingCommentId(newPostingCommentId)
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+        PostingComment postingComment = postingCommentService.updatePostingComment(patchPostingCommentReqDTO);
+        return PatchPostingCommentResDTO.builder()
+                .postingCommentId(postingComment.getId())
                 .build();
     }
 }

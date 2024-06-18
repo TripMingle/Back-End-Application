@@ -26,6 +26,7 @@ public enum ErrorCode {
 
     // posting
     POSTING_COMMENT_NOT_FOUND(404, "PC001", "해당 댓글이 존재하지 않습니다."),
+    POSTING_COMMENT_INVALID_USER(400, "PC002", "댓글 수정 권한이 없습니다."),
     ;
 
     final private int status;

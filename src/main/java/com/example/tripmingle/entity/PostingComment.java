@@ -34,4 +34,8 @@ public class PostingComment {
         this.postingComment = postingComment;
         this.comment = comment;
     }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
+    }
 }

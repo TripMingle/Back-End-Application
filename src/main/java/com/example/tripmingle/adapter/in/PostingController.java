@@ -1,10 +1,7 @@
 package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.DeletePostingReqDTO;
-import com.example.tripmingle.dto.req.PatchPostingReqDTO;
-import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
-import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.req.*;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
@@ -39,7 +36,7 @@ public class PostingController {
     @PatchMapping("/update")
     public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
         PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
-        return ResponseEntity.ok().body(new ResultResponse(UPDATED_POSTING, patchPostingResDTO));
+        return ResponseEntity.ok().body(new ResultResponse(UPDATE_POSTING, patchPostingResDTO));
     }
 
     //포스트 삭제하기
@@ -75,10 +72,17 @@ public class PostingController {
         return ResponseEntity.ok().body(new ResultResponse(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
     }
 
-    @PostMapping("/post/comment")
+    @PostMapping("/post/comments")
     public ResponseEntity<ResultResponse> createPostingComment(@RequestBody PostPostingCommentReqDTO postPostingCommentReqDTO) {
         PostPostingCommentResDTO postPostingCommentResDTO = postingUseCase.createPostingComment(postPostingCommentReqDTO);
         return ResponseEntity.ok().body(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
+    }
+
+    @PatchMapping("/update/comments/{commentId}")
+    public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("commentId") Long commentId, @RequestBody PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+        patchPostingCommentReqDTO.setPostingCommentId(commentId);
+        PatchPostingCommentResDTO patchPostingCommentResDTO = postingUseCase.updatePostingComment(patchPostingCommentReqDTO);
+        return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
     }
 
 }
