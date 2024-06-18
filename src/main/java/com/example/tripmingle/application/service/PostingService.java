@@ -11,8 +11,8 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,11 +69,11 @@ public class PostingService {
         return postingPersistPort.getPostingById(postingId);
     }
 
-    public Slice<Posting> getAllPostings(String postingType, Pageable pageable) {
+    public Page<Posting> getAllPostings(String postingType, Pageable pageable) {
         return postingPersistPort.getAllPostings(PostingType.valueOf(postingType), pageable);
     }
 
-    public Slice<Posting> getSearchPostings(String keyword, Pageable pageable) {
+    public Page<Posting> getSearchPostings(String keyword, Pageable pageable) {
         return postingPersistPort.getSearchPostings(keyword, pageable);
     }
 }

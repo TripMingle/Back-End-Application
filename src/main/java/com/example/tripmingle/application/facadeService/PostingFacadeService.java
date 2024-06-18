@@ -10,8 +10,8 @@ import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -109,7 +109,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     @Override
     public List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable) {
-        Slice<Posting> getAllPostings = postingService.getAllPostings(postingType, pageable);
+        Page<Posting> getAllPostings = postingService.getAllPostings(postingType, pageable);
         return getAllPostings.stream()
                 .map(posting -> GetAllPostingsResDTO.builder()
                         .postingId(posting.getId())
@@ -125,7 +125,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     @Override
     public List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
-        Slice<Posting> getSearchPostings = postingService.getSearchPostings(keyword, pageable);
+        Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, pageable);
         return getSearchPostings.stream()
                 .filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
                 .map(posting -> GetSearchPostingsResDTO.builder()

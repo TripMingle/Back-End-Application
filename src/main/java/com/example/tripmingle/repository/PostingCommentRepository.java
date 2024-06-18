@@ -11,7 +11,6 @@ import java.util.List;
 public interface PostingCommentRepository extends JpaRepository<PostingComment, Long> {
     List<PostingComment> findAllByPostingId(Long postingId);
 
-
     @Query("select pc.id, pc.comment, pc.posting, pc.user, pc.postingComment from PostingComment pc where pc.postingComment.id=:parentCommentId")
     List<PostingComment> findCoCommentsByParentCommentId(Long parentCommentId);
 }
