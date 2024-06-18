@@ -1,10 +1,7 @@
 package com.example.tripmingle.common.exception.handler;
 
 import com.example.tripmingle.common.error.ErrorResponse;
-import com.example.tripmingle.common.exception.BoardCommentNotFoundException;
-import com.example.tripmingle.common.exception.BoardNotFoundException;
-import com.example.tripmingle.common.exception.PostingNotFoundException;
-import com.example.tripmingle.common.exception.UserNotFoundException;
+import com.example.tripmingle.common.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +36,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PostingNotFoundException.class)
     public ResponseEntity<ErrorResponse> handlePostingNotFound(PostingNotFoundException ex) {
         log.error("handlePostingNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(PostingCommentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostingCommentNotFound(PostingCommentNotFoundException ex) {
+        log.error("handlePostingCommentNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(PostingCommentInvalidUserException.class)
+    public ResponseEntity<ErrorResponse> handlePostingCommentInvalidUser(PostingCommentInvalidUserException ex) {
+        log.error("handlePostingCommentInvalidUser", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(PostingInvalidUserException.class)
+    public ResponseEntity<ErrorResponse> handlePostingInvalidUser(PostingInvalidUserException ex) {
+        log.error("handlePostingInvalidUser", ex);
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
