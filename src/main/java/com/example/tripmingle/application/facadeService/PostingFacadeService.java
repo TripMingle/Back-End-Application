@@ -4,6 +4,7 @@ import com.example.tripmingle.application.service.PostingCommentService;
 import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
@@ -75,5 +76,15 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Override
     public List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
         return postingService.getSearchPostings(keyword, pageable);
+    }
+
+    @Transactional
+    @Override
+    public PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO) {
+        Posting posting = postingService.getOnePosting(postPostingCommentReqDTO.getPostingId());
+        Long newPostingCommentId = postingCommentService.createPostingComment(postPostingCommentReqDTO, posting);
+        return PostPostingCommentResDTO.builder()
+                .postingCommentId(newPostingCommentId)
+                .build();
     }
 }

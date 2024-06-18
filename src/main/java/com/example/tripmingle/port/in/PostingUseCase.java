@@ -2,6 +2,7 @@ package com.example.tripmingle.port.in;
 
 import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.*;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +24,6 @@ public interface PostingUseCase {
     List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable);
 
     List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
+
+    PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO);
 }

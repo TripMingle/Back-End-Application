@@ -25,13 +25,13 @@ public class PostingComment {
     @JoinColumn(name = "posting_comment_id")
     private PostingComment postingComment;
 
-    private String content;
+    private String comment;
 
     @Builder
-    public PostingComment(User user, Posting posting, PostingComment postingComment, String content) {
+    public PostingComment(User user, Posting posting, PostingComment postingComment, String comment) {
         this.user = user;
         this.posting = posting;
         this.postingComment = postingComment;
-        this.content = content;
+        this.comment = comment;
     }
 }

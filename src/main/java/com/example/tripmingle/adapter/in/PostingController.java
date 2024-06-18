@@ -3,6 +3,7 @@ package com.example.tripmingle.adapter.in;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.DeletePostingReqDTO;
 import com.example.tripmingle.dto.req.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
@@ -72,6 +73,12 @@ public class PostingController {
                                                             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         List<GetSearchPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
         return ResponseEntity.ok().body(new ResultResponse(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
+    }
+
+    @PostMapping("/post/comment")
+    public ResponseEntity<ResultResponse> createPostingComment(@RequestBody PostPostingCommentReqDTO postPostingCommentReqDTO) {
+        PostPostingCommentResDTO postPostingCommentResDTO = postingUseCase.createPostingComment(postPostingCommentReqDTO);
+        return ResponseEntity.ok().body(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
     }
 
 }

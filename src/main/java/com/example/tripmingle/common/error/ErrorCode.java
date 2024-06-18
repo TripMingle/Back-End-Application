@@ -22,7 +22,11 @@ public enum ErrorCode {
 
     // user
     USER_NOT_FOUND(404, "U001", "해당 유저가 존재하지 않습니다."),
-    POSING_NOT_FOUND(404, "P001", "해당 포스팅글이 존재하지 않습니다.");
+    POSING_NOT_FOUND(404, "P001", "해당 포스팅글이 존재하지 않습니다."),
+
+    // posting
+    POSTING_COMMENT_NOT_FOUND(404, "PC001", "해당 댓글이 존재하지 않습니다."),
+    ;
 
     final private int status;
     final private String ErrorCode;
