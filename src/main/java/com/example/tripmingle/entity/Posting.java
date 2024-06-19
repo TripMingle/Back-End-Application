@@ -32,6 +32,8 @@ public class Posting extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    private int commentCount;
+
     public void updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
         if (patchPostingReqDTO.getTitle() != null && !patchPostingReqDTO.getTitle().equals("")) {
             this.title = patchPostingReqDTO.getTitle();
@@ -46,5 +48,13 @@ public class Posting extends BaseEntity {
 
     public void deletePosting() {
         delete();
+    }
+
+    public void increasePostingCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public void decreasePostingCommentCount() {
+        this.commentCount -= 1;
     }
 }

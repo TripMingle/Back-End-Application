@@ -29,47 +29,47 @@ public class PostingController {
     @PostMapping("/post")
     public ResponseEntity<ResultResponse> createPosting(@RequestBody PostPostingReqDTO postPostingReqDTO) {
         PostPostingResDTO postPostingResDTO = postingUseCase.createPosting(postPostingReqDTO);
-        return ResponseEntity.ok().body(new ResultResponse(CREATED_POSTING, postPostingResDTO));
+        return ResponseEntity.ok().body(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
     }
 
     //포스트 수정하기
     @PatchMapping("/update")
     public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
         PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
-        return ResponseEntity.ok().body(new ResultResponse(UPDATE_POSTING, patchPostingResDTO));
+        return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
     }
 
     //포스트 삭제하기
     @PatchMapping("/delete")
     public ResponseEntity<ResultResponse> deletePosting(@RequestBody DeletePostingReqDTO deletePostingReqDTO) {
         DeletePostingResDTO deletePostingResDTO = postingUseCase.deletePosting(deletePostingReqDTO);
-        return ResponseEntity.ok().body(new ResultResponse(DELETE_POSTING, deletePostingResDTO));
+        return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING, deletePostingResDTO));
     }
 
     @GetMapping("/get/preview")
     public ResponseEntity<ResultResponse> getPreviewPostings() {
         List<GetPreviewPostingResDTO> getPreviewPostingResDTOList = postingUseCase.getPreviewPostings();
-        return ResponseEntity.ok().body(new ResultResponse(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
+        return ResponseEntity.ok().body(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
     }
 
     @GetMapping("/get/{postingId}")
     public ResponseEntity<ResultResponse> getOnePosting(@PathVariable("postingId") Long postingId) {
         GetOnePostingResDTO getOnePostingResDTO = postingUseCase.getOnePosting(postingId);
-        return ResponseEntity.ok().body(new ResultResponse(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
+        return ResponseEntity.ok().body(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
     }
 
     @GetMapping("/get")
     public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("postingType") String postingType,
                                                          @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(postingType, pageable);
-        return ResponseEntity.ok().body(new ResultResponse(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
+        return ResponseEntity.ok().body(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
     }
 
     @GetMapping("/get/search")
     public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
                                                             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         List<GetSearchPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
-        return ResponseEntity.ok().body(new ResultResponse(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
+        return ResponseEntity.ok().body(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
     }
 
     @PostMapping("/post/comments")

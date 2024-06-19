@@ -30,7 +30,8 @@ public class PostingLikesPersistAdapter implements PostingLikesPersistPort {
     @Override
     public PostingLikes findByPostingIdAndUserId(Long postingId, Long userId) {
         return postingLikesRepository.findByPostingIdAndUserId(postingId, userId).orElseThrow(
-                () -> new PostingLikesNotFoundException("Posting Likes Not Found", POSTING_LIKES_NOT_FOUND));
+                () -> new PostingLikesNotFoundException("Posting Likes Not Found.", POSTING_LIKES_NOT_FOUND)
+        );
     }
 
     @Override

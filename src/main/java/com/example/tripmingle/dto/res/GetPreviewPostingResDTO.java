@@ -10,6 +10,7 @@ public class GetPreviewPostingResDTO {
     private Long postingId;
     private String title;
     private String content;
+    private int commentCount;
     private String userNickName;
     private String userAgeRange;
     private String userGender;
