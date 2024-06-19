@@ -14,12 +14,13 @@ public class GetOnePostingResDTO {
     private String content;
     private LocalDateTime createAt;
     private Long heartCount;
-    private List<GetOnePostingCommentsResDTO> postingComments;
     private String userNickName;
     private String userAgeRange;
     private String userGender;
     private String userNationality;
     private String selfIntroduce;
     private String userTemperature;
+    private boolean myLikeState;
+    private List<GetOnePostingCommentsResDTO> postingComments;
 
 }

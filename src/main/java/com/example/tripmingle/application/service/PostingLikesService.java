@@ -39,4 +39,12 @@ public class PostingLikesService {
         return postingLikes;
     }
 
+    public boolean getPostingLikesState(Posting posting) {
+        User user = userPersistPort.findCurrentUserByEmail();
+        PostingLikes myPostingLike = postingLikesPersistPort.findByPostingIdAndUserId(posting.getId(), user.getId());
+        if (myPostingLike == null) {
+            return false;
+        }
+        return myPostingLike.isToggleState();
+    }
 }

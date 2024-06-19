@@ -77,6 +77,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Override
     public GetOnePostingResDTO getOnePosting(Long postingId) {
         Posting posting = postingService.getOnePosting(postingId);
+        boolean postingLikesState = postingLikesService.getPostingLikesState(posting);
         List<PostingComment> postingComments = postingCommentService.getPostingComments(postingId);
         List<GetOnePostingCommentsResDTO> commentsInOnePosting = getCommentsInPosting(postingComments);
         return GetOnePostingResDTO.builder()
@@ -90,7 +91,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                 .userGender(posting.getUser().getGender())
                 .userNationality(posting.getUser().getNationality())
                 .selfIntroduce(posting.getUser().getSelfIntroduction())
-                .userTemperature("0")
+                .userTemperature("36.5")
+                .myLikeState(postingLikesState)
                 .build();
     }
 
@@ -123,6 +125,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
+                        .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -140,6 +143,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
+                        .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -202,6 +206,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .postingId(postingLikes.getPosting().getId())
                         .title(postingLikes.getPosting().getTitle())
                         .content(postingLikes.getPosting().getContent())
+                        .myLikeState(postingLikes.isToggleState())
                         .build())
                 .collect(Collectors.toList());
     }

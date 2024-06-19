@@ -10,5 +10,6 @@ public class GetLikedPostingResDTO {
     private Long postingId;
     private String title;
     private String content;
+    private boolean myLikeState;
 
 }

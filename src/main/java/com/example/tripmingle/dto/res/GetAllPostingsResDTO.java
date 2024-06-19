@@ -14,5 +14,6 @@ public class GetAllPostingsResDTO {
     private String userAgeRange;
     private String userGender;
     private String userNationality;
+    private boolean myLikeState;
 
 }

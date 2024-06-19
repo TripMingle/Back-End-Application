@@ -14,5 +14,6 @@ public class GetSearchPostingsResDTO {
     private String userAgeRange;
     private String userGender;
     private String userNationality;
+    private boolean myLikeState;
 
 }
