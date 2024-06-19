@@ -7,11 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface PostingLikesRepository extends JpaRepository<PostingLikes, Long> {
     boolean existsByPostingIdAndUserId(Long postingId, Long userId);
 
-    PostingLikes findByPostingIdAndUserId(Long postingId, Long userId);
+    Optional<PostingLikes> findByPostingIdAndUserId(Long postingId, Long userId);
 
     @Query("select pl from PostingLikes pl where pl.user.id = :userId and pl.toggleState = true")
     Page<PostingLikes> findAllPostingsLikesByUserId(Long userId, Pageable pageable);
