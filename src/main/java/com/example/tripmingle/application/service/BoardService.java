@@ -100,4 +100,8 @@ public class BoardService {
     public void updateCommentCount(Board board, int commentCount) {
         board.updateCommentCount(commentCount);
     }
+
+    public List<Board> getBoardsByUser(User user) {
+        return boardPersistPort.getBoardByUser(user);
+    }
 }

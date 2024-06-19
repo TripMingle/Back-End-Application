@@ -2,6 +2,7 @@ package com.example.tripmingle.adapter.out;
 
 import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.BoardNotFoundException;
+import com.example.tripmingle.entity.User;
 import com.example.tripmingle.repository.BoardRepository;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.port.out.BoardPersistPort;
@@ -61,7 +62,10 @@ public class BoardPersistAdapter implements BoardPersistPort {
 
     }
 
-
+    @Override
+    public List<Board> getBoardByUser(User user) {
+        return boardRepository.findBoardsByUser(user);
+    }
 
 
 }

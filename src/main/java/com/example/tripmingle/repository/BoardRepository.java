@@ -1,6 +1,7 @@
 package com.example.tripmingle.repository;
 
 import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,5 +34,7 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     @Query("SELECT b FROM Board b WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
     List<Board> searchByTitleOrContent(String keyword);
+
+    List<Board> findBoardsByUser(User user);
 
 }

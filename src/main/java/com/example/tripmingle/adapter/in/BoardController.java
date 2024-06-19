@@ -129,7 +129,12 @@ public class BoardController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
     }
 
+    @GetMapping("/mine")
     //내가 방장인 모든 게시물 조회
+    public ResponseEntity<ResultResponse> getMyBoards(){
+        List<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyBoards();
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_SUCCESS, getBoardsResDTOS));
+    }
 
     //내가 참여하고있는 모든 게시물 조회
 
