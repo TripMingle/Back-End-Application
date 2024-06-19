@@ -12,10 +12,8 @@ import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +25,36 @@ public class BoardCommentService {
     public List<ParentBoardCommentResDTO> getStructureBoardComment(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
         User currentUser = userPersistPort.findCurrentUserByEmail();
+
+        // 댓글이 시간순으로 정렬되어 있다고 가정합니다.
+        Map<Long, List<BoardComment>> commentMap = new HashMap<>();
+        List<BoardComment> parentList = new ArrayList<>();
+
+        // 부모 댓글과 자식 댓글 분류
+        boardComments.forEach(comment -> {
+            if (comment.isParentBoardCommentNull()) {
+                commentMap.put(comment.getId(), new ArrayList<>());
+                parentList.add(comment);
+            } else {
+                Long parentId = comment.getParentBoardComment().getId();
+                commentMap.get(parentId).add(comment);
+            }
+        });
+
+        // 부모 댓글을 DTO로 변환하고 자식 댓글을 포함시키기
+        return parentList.stream()
+                .map(parent -> {
+                    Long parentId = parent.getId();
+                    ParentBoardCommentResDTO parentDTO = getParentBoardCommentInfo(parent, currentUser);
+                    List<ChildBoardCommentDTO> childDTOs = commentMap.getOrDefault(parentId, Collections.emptyList()).stream()
+                            .map(child -> getChildBoardCommentInfo(child, parentId, currentUser))
+                            .collect(Collectors.toList());
+                    parentDTO.setChildBoards(childDTOs);
+                    return parentDTO;
+                })
+                .collect(Collectors.toList());
+
+        /*
         Map<Long, List<BoardComment>> commentMap = new HashMap<>();
         List<BoardComment> parentList = new ArrayList<>();
 
@@ -59,6 +87,8 @@ public class BoardCommentService {
         }
 
         return boardCommentResDTOS;
+
+         */
     }
 
     private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser) {
@@ -70,7 +100,7 @@ public class BoardCommentService {
                 .registeredDate(boardComment.getCreatedAt())
                 .userId(boardComment.getUser().getId())
                 .userNickname(boardComment.getUser().getNickName())
-                .isMine(currentUser.getId() == boardComment.getUser().getId())
+                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
                 .build();
     }
 
@@ -84,7 +114,7 @@ public class BoardCommentService {
                 .registeredDate(boardComment.getCreatedAt())
                 .userId(boardComment.getUser().getId())
                 .userNickname(boardComment.getUser().getNickName())
-                .isMine(currentUser.getId() == boardComment.getUser().getId())
+                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
                 .build();
     }
 
