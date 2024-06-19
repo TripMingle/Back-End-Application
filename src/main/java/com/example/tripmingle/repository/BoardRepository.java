@@ -37,4 +37,6 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     Page<Board> findBoardsByUser(User user, Pageable pageable);
 
+    List<Board> findBoardsByUser(User user);
+
 }

@@ -47,16 +47,9 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
-    @ExceptionHandler(PostingCommentInvalidUserException.class)
-    public ResponseEntity<ErrorResponse> handlePostingCommentInvalidUser(PostingCommentInvalidUserException ex) {
-        log.error("handlePostingCommentInvalidUser", ex);
-        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
-    }
-
-    @ExceptionHandler(PostingInvalidUserException.class)
-    public ResponseEntity<ErrorResponse> handlePostingInvalidUser(PostingInvalidUserException ex) {
-        log.error("handlePostingInvalidUser", ex);
+    @ExceptionHandler(InvalidUserAccessException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUserAccess(InvalidUserAccessException ex) {
+        log.error("handleInvalidUserAccess", ex);
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
@@ -75,8 +68,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
-
-
+    @ExceptionHandler(PostingLikesNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostingLikesNotFoundException(PostingLikesNotFoundException ex) {
+        log.error("handlePostingLikesNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 
 
 }

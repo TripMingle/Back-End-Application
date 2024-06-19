@@ -1,7 +1,6 @@
 package com.example.tripmingle.application.service;
 
-import com.example.tripmingle.common.error.ErrorCode;
-import com.example.tripmingle.common.exception.PostingCommentInvalidUserException;
+import com.example.tripmingle.common.utils.UserUtils;
 import com.example.tripmingle.dto.req.PatchPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
 import com.example.tripmingle.entity.Posting;
@@ -20,6 +19,7 @@ public class PostingCommentService {
 
     private final PostingCommentPersistPort postingCommentPersistPort;
     private final UserPersistPort userPersistPort;
+    private final UserUtils userUtils;
 
     public List<PostingComment> getPostingComments(Long postingId) {
         return postingCommentPersistPort.getPostingCommentsByPostingId(postingId);
@@ -42,24 +42,15 @@ public class PostingCommentService {
 
     public Long updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(patchPostingCommentReqDTO.getPostingCommentId());
-        if (validateCommentMasterUser(postingComment.getUser().getId())) {
+        if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
             postingComment.updateComment(patchPostingCommentReqDTO.getComment());
         }
         return postingComment.getId();
     }
 
-    private boolean validateCommentMasterUser(Long rawUserId) {
-        User user = userPersistPort.findCurrentUserByEmail();
-        if (rawUserId.equals(user.getId())) {
-            return true;
-        } else {
-            throw new PostingCommentInvalidUserException("Invalid User For Posting Comment.", ErrorCode.POSTING_COMMENT_INVALID_USER);
-        }
-    }
-
     public Long deletePostingComment(Long commentId) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(commentId);
-        if (validateCommentMasterUser(postingComment.getUser().getId())) {
+        if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
             postingComment.deleteComment();
         }
         return postingComment.getId();
