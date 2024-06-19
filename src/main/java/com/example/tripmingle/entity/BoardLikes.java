@@ -23,6 +23,7 @@ public class BoardLikes {
 
     private boolean isActive;
 
+
     public void toggleBoardLikes(){
         this.isActive = !this.isActive;
     }

@@ -91,4 +91,16 @@ public class PostingController {
         return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
     }
 
+    @PostMapping("/likes/{postingId}")
+    public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
+        PostingToggleStateResDTO postingToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
+        return ResponseEntity.ok().body(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingToggleStateResDTO));
+    }
+
+    @GetMapping("/likes")
+    public ResponseEntity<ResultResponse> getMyLikedPostings(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        GetAllLikedPostingResDTO getAllPostingsResDTOList = postingUseCase.getMyLikedPostings(pageable);
+        return ResponseEntity.ok().body(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
+    }
+
 }
