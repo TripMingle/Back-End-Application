@@ -91,4 +91,10 @@ public class PostingController {
         return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
     }
 
+    @PostMapping("/likes/{postingId}")
+    public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
+        PostingToggleStateResDTO postingToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
+        return ResponseEntity.ok().body(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingToggleStateResDTO));
+    }
+
 }

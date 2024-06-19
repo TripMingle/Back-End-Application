@@ -1,6 +1,7 @@
 package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.PostingCommentService;
+import com.example.tripmingle.application.service.PostingLikesService;
 import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.dto.req.*;
@@ -25,6 +26,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     private final PostingService postingService;
     private final PostingCommentService postingCommentService;
+    private final PostingLikesService postingLikesService;
     private final UserService userService;
 
     @Transactional
@@ -165,6 +167,17 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
         Long postingCommentId = postingCommentService.deletePostingComment(commentId);
         return DeletePostingCommentResDTO.builder()
                 .postingCommentId(postingCommentId)
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public PostingToggleStateResDTO togglePostingLikes(Long postingId) {
+        Posting posting = postingService.getOnePosting(postingId);
+        boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
+        return PostingToggleStateResDTO.builder()
+                .postingId(postingId)
+                .postingToggleState(postingToggleState)
                 .build();
     }
 }
