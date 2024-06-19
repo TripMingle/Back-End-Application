@@ -185,14 +185,14 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     @Override
     public GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable) {
-        Page<PostingLikes> getAllLikedPostings = postingLikesService.getAllLikedPostings(pageable);
+        Page<PostingLikes> getAllPostingLikes = postingLikesService.getAllPostingLikes(pageable);
         User user = userService.getCurrentUser();
         return GetAllLikedPostingResDTO.builder()
                 .userNickName(user.getNickName())
                 .userAgeRange(user.getAgeRange())
                 .userGender(user.getGender())
                 .userNationality(user.getNationality())
-                .likedPostings(getLikedPostingsByCurrentUser(getAllLikedPostings))
+                .likedPostings(getLikedPostingsByCurrentUser(getAllPostingLikes))
                 .build();
     }
 

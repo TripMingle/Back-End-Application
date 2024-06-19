@@ -11,5 +11,5 @@ public interface PostingLikesPersistPort {
 
     PostingLikes findByPostingIdAndUserId(Long id, Long id1);
 
-    Page<PostingLikes> getAllLikedPostings(Long id, Pageable pageable);
+    Page<PostingLikes> getAllPostingLikes(Long id, Pageable pageable);
 }

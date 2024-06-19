@@ -33,10 +33,10 @@ public class PostingLikesService {
         return postingLikes.isToggleState();
     }
 
-    public Page<PostingLikes> getAllLikedPostings(Pageable pageable) {
+    public Page<PostingLikes> getAllPostingLikes(Pageable pageable) {
         User user = userPersistPort.findCurrentUserByEmail();
-        Page<PostingLikes> likedPostings = postingLikesPersistPort.getAllLikedPostings(user.getId(), pageable);
-        return likedPostings;
+        Page<PostingLikes> postingLikes = postingLikesPersistPort.getAllPostingLikes(user.getId(), pageable);
+        return postingLikes;
     }
 
 }

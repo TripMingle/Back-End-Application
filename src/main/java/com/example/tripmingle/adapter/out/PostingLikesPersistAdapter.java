@@ -34,7 +34,7 @@ public class PostingLikesPersistAdapter implements PostingLikesPersistPort {
     }
 
     @Override
-    public Page<PostingLikes> getAllLikedPostings(Long userId, Pageable pageable) {
-        return postingLikesRepository.findAllLikedPostingsByUserId(userId, pageable);
+    public Page<PostingLikes> getAllPostingLikes(Long userId, Pageable pageable) {
+        return postingLikesRepository.findAllPostingsLikesByUserId(userId, pageable);
     }
 }
