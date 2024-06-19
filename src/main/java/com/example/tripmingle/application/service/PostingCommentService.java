@@ -37,7 +37,9 @@ public class PostingCommentService {
                 .postingComment(parentPostingComment)
                 .comment(postPostingCommentReqDTO.getComment())
                 .build();
-        return postingCommentPersistPort.save(postingComment).getId();
+        Long postingCommentId = postingCommentPersistPort.save(postingComment).getId();
+        posting.increasePostingCommentCount();
+        return postingCommentId;
     }
 
     public Long updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
@@ -53,6 +55,7 @@ public class PostingCommentService {
         if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
             postingComment.deleteComment();
         }
+        postingComment.getPosting().decreasePostingCommentCount();
         return postingComment.getId();
     }
 }

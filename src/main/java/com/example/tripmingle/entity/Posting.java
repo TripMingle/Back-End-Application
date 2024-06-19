@@ -49,4 +49,12 @@ public class Posting extends BaseEntity {
     public void deletePosting() {
         delete();
     }
+
+    public void increasePostingCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public void decreasePostingCommentCount() {
+        this.commentCount -= 1;
+    }
 }
