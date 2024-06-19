@@ -74,8 +74,10 @@ public class BoardController {
 
     @GetMapping("/search/{country-name}")
     //게시글 검색
-    public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name") String countryName, @RequestParam String keyword) {
-        List<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(keyword);
+    public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name") String countryName
+                                                    , @RequestParam String keyword
+                                                    , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(keyword, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
     }
 
@@ -110,8 +112,8 @@ public class BoardController {
 
     @GetMapping("/bookmark")
     //내가 북마크한 모든 게시물 조회
-    public ResponseEntity<ResultResponse> getMyBookMarkedBoards(){
-        List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards();
+    public ResponseEntity<ResultResponse> getMyBookMarkedBoards(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
     }
 
@@ -124,15 +126,15 @@ public class BoardController {
 
     @GetMapping("/likes")
     //내가 좋아요한 모든 게시물 조회
-    public ResponseEntity<ResultResponse> getMyLikedBoards(){
-        List<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards();
+    public ResponseEntity<ResultResponse> getMyLikedBoards(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
     }
 
     @GetMapping("/mine")
     //내가 방장인 모든 게시물 조회
-    public ResponseEntity<ResultResponse> getMyBoards(){
-        List<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyBoards();
+    public ResponseEntity<ResultResponse> getMyBoards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+        Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyBoards(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_SUCCESS, getBoardsResDTOS));
     }
 

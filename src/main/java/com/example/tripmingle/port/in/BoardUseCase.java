@@ -23,17 +23,17 @@ public interface BoardUseCase {
 
     void deleteBoard(Long boardId);
 
-    List<GetBoardsResDTO> searchBoard(String keyword);
+    Page<GetBoardsResDTO> searchBoard(String keyword, Pageable pageable);
 
     void getBoardsWithinRange();
 
     ToggleStateResDTO toggleBoardBookMark(Long boardId);
 
-    List<GetBoardsResDTO> getMyBookMarkedBoards();
+    Page<GetBoardsResDTO> getMyBookMarkedBoards(Pageable pageable);
 
     ToggleStateResDTO toggleBoardLikes(Long boardId);
 
-    List<GetBoardsResDTO> getMyLikedBoards();
+    Page<GetBoardsResDTO> getMyLikedBoards(Pageable pageable);
 
-    List<GetBoardsResDTO> getMyBoards();
+    Page<GetBoardsResDTO> getMyBoards(Pageable pageable);
 }

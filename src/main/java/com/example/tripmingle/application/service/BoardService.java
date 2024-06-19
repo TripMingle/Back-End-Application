@@ -85,8 +85,8 @@ public class BoardService {
     }
 
 
-    public List<Board> searchBoard(String keyword) {
-        return boardPersistPort.searchBoard(keyword);
+    public Page<Board> searchBoard(String keyword, Pageable pageable) {
+        return boardPersistPort.searchBoard(keyword, pageable);
     }
 
     public void getBoardsWithinRange() {
@@ -101,7 +101,7 @@ public class BoardService {
         board.updateCommentCount(commentCount);
     }
 
-    public List<Board> getBoardsByUser(User user) {
-        return boardPersistPort.getBoardByUser(user);
+    public Page<Board> getBoardsByUser(User user, Pageable pageable) {
+        return boardPersistPort.getBoardByUser(user, pageable);
     }
 }

@@ -53,8 +53,8 @@ public class BoardPersistAdapter implements BoardPersistPort {
     }
 
     @Override
-    public List<Board> searchBoard(String keyword) {
-        return boardRepository.searchByTitleOrContent(keyword);
+    public Page<Board> searchBoard(String keyword, Pageable pageable) {
+        return boardRepository.searchByTitleOrContent(keyword, pageable);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class BoardPersistAdapter implements BoardPersistPort {
     }
 
     @Override
-    public List<Board> getBoardByUser(User user) {
-        return boardRepository.findBoardsByUser(user);
+    public Page<Board> getBoardByUser(User user, Pageable pageable) {
+        return boardRepository.findBoardsByUser(user, pageable);
     }
 
 

@@ -142,11 +142,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
-    public List<GetBoardsResDTO> searchBoard(String keyword) {
-        List<Board> boardList = boardService.searchBoard(keyword);
+    public Page<GetBoardsResDTO> searchBoard(String keyword, Pageable pageable) {
+        Page<Board> boardPage = boardService.searchBoard(keyword, pageable);
         User currentUser = userPersistPort.findCurrentUserByEmail();
-        return boardList.stream()
-                .map(board -> GetBoardsResDTO.builder()
+        return boardPage.map(board -> GetBoardsResDTO.builder()
                         .boardId(board.getId())
                         .title(board.getTitle())
                         .startDate(board.getStartDate())
@@ -162,7 +161,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser,board))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
-                        .build()).collect(Collectors.toList());
+                        .build());
     }
 
 
@@ -217,12 +216,11 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
-    public List<GetBoardsResDTO> getMyBookMarkedBoards() {
+    public Page<GetBoardsResDTO> getMyBookMarkedBoards(Pageable pageable) {
         User currentUser = userPersistPort.findCurrentUserByEmail();
-        List<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser);
+        Page<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser, pageable);
 
-        return boardBookMarks.stream()
-                .map(boardBookmark-> GetBoardsResDTO
+        return boardBookMarks.map(boardBookmark-> GetBoardsResDTO
                         .builder()
                         .boardId(boardBookmark.getBoard().getId())
                         .title(boardBookmark.getBoard().getTitle())
@@ -239,7 +237,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,boardBookmark.getBoard()))
-                        .build()).collect(Collectors.toList());
+                        .build());
     }
 
     @Override
@@ -253,12 +251,11 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
-    public List<GetBoardsResDTO> getMyLikedBoards() {
+    public Page<GetBoardsResDTO> getMyLikedBoards(Pageable pageable) {
         User currentUser = userPersistPort.findCurrentUserByEmail();
-        List<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser);
+        Page<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser, pageable);
 
-        return boardLikes.stream()
-                .map(boardLike-> GetBoardsResDTO
+        return boardLikes.map(boardLike-> GetBoardsResDTO
                         .builder()
                         .boardId(boardLike.getBoard().getId())
                         .title(boardLike.getBoard().getTitle())
@@ -275,15 +272,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser,boardLike.getBoard()))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,boardLike.getBoard()))
-                        .build()).collect(Collectors.toList());
+                        .build());
     }
 
     @Override
-    public List<GetBoardsResDTO> getMyBoards() {
+    public Page<GetBoardsResDTO> getMyBoards(Pageable pageable) {
         User currentUser = userPersistPort.findCurrentUserByEmail();
-        List<Board> boardList = boardService.getBoardsByUser(currentUser);
-        return boardList.stream()
-                .map(board-> GetBoardsResDTO
+        Page<Board> boardList = boardService.getBoardsByUser(currentUser, pageable);
+        return boardList.map(board-> GetBoardsResDTO
                         .builder()
                         .boardId(board.getId())
                         .title(board.getTitle())
@@ -300,7 +296,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser,board))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
-                        .build()).collect(Collectors.toList());
+                        .build());
     }
 
     @Override

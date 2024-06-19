@@ -3,8 +3,8 @@ package com.example.tripmingle.port.out;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardBookMark;
 import com.example.tripmingle.entity.User;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BoardBookMarkPersistPort {
 
@@ -14,5 +14,5 @@ public interface BoardBookMarkPersistPort {
 
     BoardBookMark findByUserAndBoard(User user, Board board);
 
-    List<BoardBookMark> getBoardBookMarksByUser(User currentUser);
+    Page<BoardBookMark> getBoardBookMarksByUser(User currentUser, Pageable pageable);
 }

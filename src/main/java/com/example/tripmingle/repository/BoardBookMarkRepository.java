@@ -3,7 +3,10 @@ package com.example.tripmingle.repository;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardBookMark;
 import com.example.tripmingle.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +18,6 @@ public interface BoardBookMarkRepository extends JpaRepository<BoardBookMark, Lo
 
     Optional<BoardBookMark> findBoardBookMarkByUserAndBoard(User user, Board board);
 
-    List<BoardBookMark> findBoardBookMarksByUser(User user);
+    @Query("select bbm from BoardBookMark bbm where bbm.user=:user and bbm.isActive=true")
+    Page<BoardBookMark> findBoardBookMarksByUser(User user, Pageable pageable);
 }

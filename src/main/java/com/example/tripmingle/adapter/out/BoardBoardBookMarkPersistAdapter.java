@@ -8,9 +8,9 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardBookMarkPersistPort;
 import com.example.tripmingle.repository.BoardBookMarkRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class BoardBoardBookMarkPersistAdapter implements BoardBookMarkPersistPor
     }
 
     @Override
-    public List<BoardBookMark> getBoardBookMarksByUser(User currentUser) {
-        return boardBookMarkRepository.findBoardBookMarksByUser(currentUser);
+    public Page<BoardBookMark> getBoardBookMarksByUser(User currentUser, Pageable pageable) {
+        return boardBookMarkRepository.findBoardBookMarksByUser(currentUser, pageable);
     }
 }
