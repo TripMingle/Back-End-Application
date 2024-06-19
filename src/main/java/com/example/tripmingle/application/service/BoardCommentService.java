@@ -12,10 +12,8 @@ import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,42 +21,34 @@ public class BoardCommentService {
     private final BoardCommentPersistPort boardCommentPersistPort;
     private final UserPersistPort userPersistPort;
 
-    //추후 부모댓글이 없어질경우 등을 고려하여 리팩터링 필요
     public List<ParentBoardCommentResDTO> getStructureBoardComment(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
         User currentUser = userPersistPort.findCurrentUserByEmail();
+
         Map<Long, List<BoardComment>> commentMap = new HashMap<>();
         List<BoardComment> parentList = new ArrayList<>();
 
-
-        for (BoardComment boardComment : boardComments) {
-            Long commentId = boardComment.getId();
-
-            if (boardComment.isParentBoardCommentNull()) {
-                commentMap.put(commentId, new ArrayList<>());
-                parentList.add(boardComment);
+        boardComments.forEach(comment -> {
+            if (comment.isParentBoardCommentNull()) {
+                commentMap.put(comment.getId(), new ArrayList<>());
+                parentList.add(comment);
             } else {
-                Long parentId = boardComment.getParentBoardComment().getId();
-                commentMap.get(parentId).add(boardComment);
+                Long parentId = comment.getParentBoardComment().getId();
+                commentMap.get(parentId).add(comment);
             }
-        }
+        });
 
-        List<ParentBoardCommentResDTO> boardCommentResDTOS = new ArrayList<>();
-
-        for (BoardComment parentBoardComment : parentList) {
-            Long parentId = parentBoardComment.getId();
-            ParentBoardCommentResDTO parentBoardCommentResDTO = getParentBoardCommentInfo(parentBoardComment, currentUser);
-            List<ChildBoardCommentDTO> childBoardCommentDTOS = new ArrayList<>();
-
-            for (BoardComment childBoardComment : commentMap.get(parentId)) {
-                childBoardCommentDTOS.add(getChildBoardCommentInfo(childBoardComment, parentId, currentUser));
-            }
-
-            parentBoardCommentResDTO.setChildBoards(childBoardCommentDTOS);
-            boardCommentResDTOS.add(parentBoardCommentResDTO);
-        }
-
-        return boardCommentResDTOS;
+        return parentList.stream()
+                .map(parent -> {
+                    Long parentId = parent.getId();
+                    ParentBoardCommentResDTO parentDTO = getParentBoardCommentInfo(parent, currentUser);
+                    List<ChildBoardCommentDTO> childDTOs = commentMap.getOrDefault(parentId, Collections.emptyList()).stream()
+                            .map(child -> getChildBoardCommentInfo(child, parentId, currentUser))
+                            .collect(Collectors.toList());
+                    parentDTO.setChildBoards(childDTOs);
+                    return parentDTO;
+                })
+                .collect(Collectors.toList());
     }
 
     private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser) {
@@ -70,7 +60,7 @@ public class BoardCommentService {
                 .registeredDate(boardComment.getCreatedAt())
                 .userId(boardComment.getUser().getId())
                 .userNickname(boardComment.getUser().getNickName())
-                .isMine(currentUser.getId() == boardComment.getUser().getId())
+                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
                 .build();
     }
 
@@ -84,7 +74,7 @@ public class BoardCommentService {
                 .registeredDate(boardComment.getCreatedAt())
                 .userId(boardComment.getUser().getId())
                 .userNickname(boardComment.getUser().getNickName())
-                .isMine(currentUser.getId() == boardComment.getUser().getId())
+                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
                 .build();
     }
 
