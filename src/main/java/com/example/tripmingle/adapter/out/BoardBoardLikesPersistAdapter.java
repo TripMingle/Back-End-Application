@@ -8,6 +8,8 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardLikesPersistPort;
 import com.example.tripmingle.repository.BoardLikesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,7 +35,7 @@ public class BoardBoardLikesPersistAdapter implements BoardLikesPersistPort {
     }
 
     @Override
-    public List<BoardLikes> findBoardLikesByUser(User user) {
-        return boardLikesRepository.findBoardLikesByUser(user);
+    public Page<BoardLikes> findBoardLikesByUser(User user, Pageable pageable) {
+        return boardLikesRepository.findBoardLikesByUser(user, pageable);
     }
 }

@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardLikes {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,8 +22,9 @@ public class BoardLikes {
     @JoinColumn(name="board_id", nullable = false)
     private Board board;
 
-    private boolean isActive;
 
+    @Column(name = "is_active")
+    private boolean isActive;
 
     public void toggleBoardLikes(){
         this.isActive = !this.isActive;

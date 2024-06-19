@@ -20,7 +20,6 @@ public enum ErrorCode {
     //Board Likes
     BOARD_LIKES_NOT_FOUND(400,"BL001", "좋아요를 찾을 수 없습니다."),
 
-
     //OAuth
     KAKAO_BAD_REQUEST(400, "O001", "카카오 소셜 로그인에 잘못된 요청입니다."),
     KAKAO_ALREADY_EXISTS_USER(400, "O002", "이미 트립밍글에 존재하는 카카오 유저입니다."),

@@ -6,9 +6,9 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardBookMarkPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +34,8 @@ public class BoardBookMarkService {
     }
 
 
-    public List<BoardBookMark> getMyBookMarkedBoards(User user) {
-        return boardBookMarkPersistPort.getBoardBookMarksByUser(user);
+    public Page<BoardBookMark> getMyBookMarkedBoards(User user, Pageable pageable) {
+        return boardBookMarkPersistPort.getBoardBookMarksByUser(user, pageable);
     }
 
     public boolean isBookMarkedBoard(User currentUser, Board board) {

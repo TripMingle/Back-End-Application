@@ -75,22 +75,5 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
-    @ExceptionHandler(BoardBookMarkNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleBookMarkNotFoundException(PostingNotFoundException ex) {
-        log.error("handleBookMarkNotFoundException", ex);
-        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
-    }
-
-    @ExceptionHandler(BoardLikesNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleBoardLikesNotFoundException(PostingNotFoundException ex) {
-        log.error("handleBoardLikesNotFoundException", ex);
-        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
-    }
-
-
-
-
 
 }

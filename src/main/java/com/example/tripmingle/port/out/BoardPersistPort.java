@@ -4,7 +4,6 @@ import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -21,9 +20,9 @@ public interface BoardPersistPort {
 
     Long saveBoard(Board board);
 
-    List<Board> searchBoard(String keyword);
+    Page<Board> searchBoard(String keyword, Pageable pageable);
 
     void getBoardsWithinRange();
 
-    List<Board> getBoardByUser(User user);
+    Page<Board> getBoardByUser(User user, Pageable pageable);
 }
