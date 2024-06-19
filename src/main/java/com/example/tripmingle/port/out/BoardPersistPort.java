@@ -1,6 +1,7 @@
 package com.example.tripmingle.port.out;
 
 import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -24,4 +25,5 @@ public interface BoardPersistPort {
 
     void getBoardsWithinRange();
 
+    List<Board> getBoardByUser(User user);
 }

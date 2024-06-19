@@ -34,4 +34,7 @@ public interface BoardUseCase {
     ToggleStateResDTO toggleBoardLikes(Long boardId);
 
     List<GetBoardsResDTO> getMyLikedBoards();
+  
+    List<GetBoardsResDTO> getMyBoards();
+
 }

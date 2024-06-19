@@ -21,7 +21,8 @@ public class BoardLikes {
     @JoinColumn(name="board_id", nullable = false)
     private Board board;
 
-    private boolean isActive = true;
+    private boolean isActive;
+
 
     public void toggleBoardLikes(){
         this.isActive = !this.isActive;

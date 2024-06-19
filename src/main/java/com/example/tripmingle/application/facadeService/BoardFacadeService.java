@@ -279,6 +279,31 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
+    public List<GetBoardsResDTO> getMyBoards() {
+        User currentUser = userPersistPort.findCurrentUserByEmail();
+        List<Board> boardList = boardService.getBoardsByUser(currentUser);
+        return boardList.stream()
+                .map(board-> GetBoardsResDTO
+                        .builder()
+                        .boardId(board.getId())
+                        .title(board.getTitle())
+                        .startDate(board.getStartDate())
+                        .endDate(board.getEndDate())
+                        .currentCount(board.getCurrentCount())
+                        .maxCount(board.getMaxCount())
+                        .language(board.getLanguage())
+                        .commentCount(board.getCommentCount())
+                        .nickName(board.getUser().getNickName())
+                        .ageRange(board.getUser().getAgeRange())
+                        .gender(board.getUser().getGender())
+                        .nationality(board.getUser().getNationality())
+                        .isMine(currentUser.getId().equals(board.getUser().getId()))
+                        .isLiked(boardLikesService.isLikedBoard(currentUser,board))
+                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
+                        .build()).collect(Collectors.toList());
+    }
+
+    @Override
     public void getClusteredBoards() {
         boardService.getBoardsByIdList();
     }

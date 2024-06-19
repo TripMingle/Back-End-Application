@@ -15,6 +15,7 @@ public enum ResultCode {
     UPDATE_BOARD_SUCCESS(200, "B005", "게시물 수정 성공"),
     DELETE_BOARD_SUCCESS(200, "B006", "게시물 삭제 완료"),
     SEARCH_BOARD_SUCCESS(200, "B007", "게시물 검색 완료"),
+    GET_MY_BOARD_SUCCESS(200,"B008","내 게시물 조회 완료"),
 
     //boardComment
     CREATE_BOARD_COMMENT_SUCCESS(200, "BC001", "게시물 댓글 작성 성공"),
