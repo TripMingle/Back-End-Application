@@ -8,6 +8,8 @@ import com.example.tripmingle.dto.req.*;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
+import com.example.tripmingle.entity.PostingLikes;
+import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -179,5 +181,28 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                 .postingId(postingId)
                 .postingToggleState(postingToggleState)
                 .build();
+    }
+
+    @Override
+    public GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable) {
+        Page<PostingLikes> getAllLikedPostings = postingLikesService.getAllLikedPostings(pageable);
+        User user = userService.getCurrentUser();
+        return GetAllLikedPostingResDTO.builder()
+                .userNickName(user.getNickName())
+                .userAgeRange(user.getAgeRange())
+                .userGender(user.getGender())
+                .userNationality(user.getNationality())
+                .likedPostings(getLikedPostingsByCurrentUser(getAllLikedPostings))
+                .build();
+    }
+
+    private List<GetLikedPostingResDTO> getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
+        return likedPostings.stream()
+                .map(postingLikes -> GetLikedPostingResDTO.builder()
+                        .postingId(postingLikes.getPosting().getId())
+                        .title(postingLikes.getPosting().getTitle())
+                        .content(postingLikes.getPosting().getContent())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

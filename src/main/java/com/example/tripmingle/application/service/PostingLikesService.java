@@ -6,6 +6,8 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingLikesPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,12 @@ public class PostingLikesService {
         postingLikes = postingLikesPersistPort.findByPostingIdAndUserId(posting.getId(), currentUser.getId());
         postingLikes.updatePostingLikeToggleState();
         return postingLikes.isToggleState();
+    }
+
+    public Page<PostingLikes> getAllLikedPostings(Pageable pageable) {
+        User user = userPersistPort.findCurrentUserByEmail();
+        Page<PostingLikes> likedPostings = postingLikesPersistPort.getAllLikedPostings(user.getId(), pageable);
+        return likedPostings;
     }
 
 }
