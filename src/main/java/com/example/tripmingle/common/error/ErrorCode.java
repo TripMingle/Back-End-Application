@@ -37,7 +37,7 @@ public enum ErrorCode {
     POSTING_COMMENT_NOT_FOUND(404, "PC001", "해당 댓글이 존재하지 않습니다."),
 
     // posting likes
-    POSTING_LIKES_NOT_FOUND(404, "PL001", "아직 좋아요가 등록되지않은 상태입니다."),
+    POSTING_LIKES_NOT_FOUND(404, "PL001", "해당 좋아요를 찾을 수 없습니다."),
     ;
 
     final private int status;

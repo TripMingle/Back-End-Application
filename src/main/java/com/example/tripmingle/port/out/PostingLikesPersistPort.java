@@ -9,7 +9,7 @@ public interface PostingLikesPersistPort {
 
     void save(PostingLikes postingLikes);
 
-    PostingLikes findByPostingIdAndUserId(Long id, Long id1);
+    PostingLikes findByPostingIdAndUserId(Long postingId, Long userId);
 
     Page<PostingLikes> getAllPostingLikes(Long id, Pageable pageable);
 }

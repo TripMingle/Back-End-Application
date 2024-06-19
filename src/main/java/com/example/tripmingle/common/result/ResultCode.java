@@ -44,9 +44,9 @@ public enum ResultCode {
     GET_ALL_LIKED_POSTING_SUCCESS(200, "P008", "좋아요 포스팅 전체 조회 성공했습니다."),
 
     // posting comment
-    POST_POSTING_COMMENT_SUCCESS(200, "PC001", "댓글 달기가 성공했습니다."),
-    UPDATE_POSTING_COMMENT_SUCCESS(200, "PC002", "댓글 수정이 성공했습니다."),
-    DELETE_POSTING_COMMENT_SUCCESS(200, "PC003", "댓글 삭제가 성공했습니다."),
+    POST_POSTING_COMMENT_SUCCESS(200, "PC001", "포스팅 댓글 달기가 성공했습니다."),
+    UPDATE_POSTING_COMMENT_SUCCESS(200, "PC002", "포스팅 댓글 수정이 성공했습니다."),
+    DELETE_POSTING_COMMENT_SUCCESS(200, "PC003", "포스팅 댓글 삭제가 성공했습니다."),
 
     // posting likes
     TOGGLE_POSTING_LIKES_SUCCESS(200, "PL001", "포스팅 좋아요의 상태 변경이 성공하였습니다."),
