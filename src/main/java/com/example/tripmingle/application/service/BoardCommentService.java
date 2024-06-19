@@ -21,16 +21,13 @@ public class BoardCommentService {
     private final BoardCommentPersistPort boardCommentPersistPort;
     private final UserPersistPort userPersistPort;
 
-    //추후 부모댓글이 없어질경우 등을 고려하여 리팩터링 필요
     public List<ParentBoardCommentResDTO> getStructureBoardComment(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
         User currentUser = userPersistPort.findCurrentUserByEmail();
 
-        // 댓글이 시간순으로 정렬되어 있다고 가정합니다.
         Map<Long, List<BoardComment>> commentMap = new HashMap<>();
         List<BoardComment> parentList = new ArrayList<>();
 
-        // 부모 댓글과 자식 댓글 분류
         boardComments.forEach(comment -> {
             if (comment.isParentBoardCommentNull()) {
                 commentMap.put(comment.getId(), new ArrayList<>());
@@ -41,7 +38,6 @@ public class BoardCommentService {
             }
         });
 
-        // 부모 댓글을 DTO로 변환하고 자식 댓글을 포함시키기
         return parentList.stream()
                 .map(parent -> {
                     Long parentId = parent.getId();
@@ -53,42 +49,6 @@ public class BoardCommentService {
                     return parentDTO;
                 })
                 .collect(Collectors.toList());
-
-        /*
-        Map<Long, List<BoardComment>> commentMap = new HashMap<>();
-        List<BoardComment> parentList = new ArrayList<>();
-
-
-        for (BoardComment boardComment : boardComments) {
-            Long commentId = boardComment.getId();
-
-            if (boardComment.isParentBoardCommentNull()) {
-                commentMap.put(commentId, new ArrayList<>());
-                parentList.add(boardComment);
-            } else {
-                Long parentId = boardComment.getParentBoardComment().getId();
-                commentMap.get(parentId).add(boardComment);
-            }
-        }
-
-        List<ParentBoardCommentResDTO> boardCommentResDTOS = new ArrayList<>();
-
-        for (BoardComment parentBoardComment : parentList) {
-            Long parentId = parentBoardComment.getId();
-            ParentBoardCommentResDTO parentBoardCommentResDTO = getParentBoardCommentInfo(parentBoardComment, currentUser);
-            List<ChildBoardCommentDTO> childBoardCommentDTOS = new ArrayList<>();
-
-            for (BoardComment childBoardComment : commentMap.get(parentId)) {
-                childBoardCommentDTOS.add(getChildBoardCommentInfo(childBoardComment, parentId, currentUser));
-            }
-
-            parentBoardCommentResDTO.setChildBoards(childBoardCommentDTOS);
-            boardCommentResDTOS.add(parentBoardCommentResDTO);
-        }
-
-        return boardCommentResDTOS;
-
-         */
     }
 
     private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser) {
