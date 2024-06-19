@@ -34,18 +34,22 @@ public enum ResultCode {
     OAUTH_TOKEN_ISSUE_SUCCESS(200, "O002", "소셜 로그인 토큰 발급이 성공하였습니다."),
 
     // posting
-    CREATED_POSTING(201, "P001", "포스팅이 작성되었습니다."),
-    UPDATE_POSTING(202, "P002", "포스팅이 수정되었습니다."),
-    DELETE_POSTING(203, "P003", "포스팅이 삭제되었습니다."),
-    POSTING_PREVIEW_SUCCESS(204, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
-    GET_ONE_POSTING_SUCCESS(205, "P005", "포스팅 상세조회 성공했습니다."),
-    GET_ALL_POSTINGS_SUCCESS(206, "P006", "전체 포스팅 조회가 성공했습니다."),
-    GET_SEARCH_POSTINGS_SUCCESS(207, "P007", "검색된 포스팅 조회가 성공했습니다."),
+    CREATED_POSTING(200, "P001", "포스팅이 작성되었습니다."),
+    UPDATE_POSTING(200, "P002", "포스팅이 수정되었습니다."),
+    DELETE_POSTING(200, "P003", "포스팅이 삭제되었습니다."),
+    POSTING_PREVIEW_SUCCESS(200, "P004", "포스팅 미리보기 불러오기 성공했습니다."),
+    GET_ONE_POSTING_SUCCESS(200, "P005", "포스팅 상세조회 성공했습니다."),
+    GET_ALL_POSTINGS_SUCCESS(200, "P006", "전체 포스팅 조회가 성공했습니다."),
+    GET_SEARCH_POSTINGS_SUCCESS(200, "P007", "검색된 포스팅 조회가 성공했습니다."),
+    GET_ALL_LIKED_POSTING_SUCCESS(200, "P008", "좋아요 포스팅 전체 조회 성공했습니다."),
 
     // posting comment
-    POST_POSTING_COMMENT_SUCCESS(208, "PC001", "댓글 달기가 성공했습니다."),
-    UPDATE_POSTING_COMMENT_SUCCESS(209, "PC002", "댓글 수정이 성공했습니다."),
-    DELETE_POSTING_COMMENT_SUCCESS(210, "PC003", "댓글 삭제가 성공했습니다."),
+    POST_POSTING_COMMENT_SUCCESS(200, "PC001", "포스팅 댓글 달기가 성공했습니다."),
+    UPDATE_POSTING_COMMENT_SUCCESS(200, "PC002", "포스팅 댓글 수정이 성공했습니다."),
+    DELETE_POSTING_COMMENT_SUCCESS(200, "PC003", "포스팅 댓글 삭제가 성공했습니다."),
+
+    // posting likes
+    TOGGLE_POSTING_LIKES_SUCCESS(200, "PL001", "포스팅 좋아요의 상태 변경이 성공하였습니다."),
 
     // auth
     VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),

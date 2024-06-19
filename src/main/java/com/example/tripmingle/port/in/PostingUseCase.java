@@ -27,4 +27,8 @@ public interface PostingUseCase {
     PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO);
 
     DeletePostingCommentResDTO deletePostingComment(Long commentId);
+
+    PostingToggleStateResDTO togglePostingLikes(Long postingId);
+
+    GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable);
 }

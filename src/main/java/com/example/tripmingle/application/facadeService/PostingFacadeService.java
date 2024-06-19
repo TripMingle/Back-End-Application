@@ -1,12 +1,15 @@
 package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.PostingCommentService;
+import com.example.tripmingle.application.service.PostingLikesService;
 import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.dto.req.*;
 import com.example.tripmingle.dto.res.*;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
+import com.example.tripmingle.entity.PostingLikes;
+import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     private final PostingService postingService;
     private final PostingCommentService postingCommentService;
+    private final PostingLikesService postingLikesService;
     private final UserService userService;
 
     @Transactional
@@ -166,5 +170,39 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
         return DeletePostingCommentResDTO.builder()
                 .postingCommentId(postingCommentId)
                 .build();
+    }
+
+    @Transactional
+    @Override
+    public PostingToggleStateResDTO togglePostingLikes(Long postingId) {
+        Posting posting = postingService.getOnePosting(postingId);
+        boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
+        return PostingToggleStateResDTO.builder()
+                .postingId(postingId)
+                .postingToggleState(postingToggleState)
+                .build();
+    }
+
+    @Override
+    public GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable) {
+        Page<PostingLikes> getAllPostingLikes = postingLikesService.getAllPostingLikes(pageable);
+        User user = userService.getCurrentUser();
+        return GetAllLikedPostingResDTO.builder()
+                .userNickName(user.getNickName())
+                .userAgeRange(user.getAgeRange())
+                .userGender(user.getGender())
+                .userNationality(user.getNationality())
+                .likedPostings(getLikedPostingsByCurrentUser(getAllPostingLikes))
+                .build();
+    }
+
+    private List<GetLikedPostingResDTO> getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
+        return likedPostings.stream()
+                .map(postingLikes -> GetLikedPostingResDTO.builder()
+                        .postingId(postingLikes.getPosting().getId())
+                        .title(postingLikes.getPosting().getTitle())
+                        .content(postingLikes.getPosting().getContent())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

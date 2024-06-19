@@ -68,8 +68,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
-
-
-
+    @ExceptionHandler(PostingLikesNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePostingLikesNotFoundException(PostingLikesNotFoundException ex) {
+        log.error("handlePostingLikesNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 
 }
