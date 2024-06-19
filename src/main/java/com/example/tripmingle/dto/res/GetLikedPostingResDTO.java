@@ -11,5 +11,6 @@ public class GetLikedPostingResDTO {
     private String title;
     private String content;
     private boolean myLikeState;
+    private int commentCount;
 
 }

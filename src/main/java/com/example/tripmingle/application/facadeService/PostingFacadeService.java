@@ -66,6 +66,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
+                        .commentCount(posting.getCommentCount())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
@@ -93,6 +94,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                 .selfIntroduce(posting.getUser().getSelfIntroduction())
                 .userTemperature("36.5")
                 .myLikeState(postingLikesState)
+                .commentCount(posting.getCommentCount())
                 .build();
     }
 
@@ -126,6 +128,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
                         .myLikeState(postingLikesService.getPostingLikesState(posting))
+                        .commentCount(posting.getCommentCount())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -144,6 +147,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
                         .myLikeState(postingLikesService.getPostingLikesState(posting))
+                        .commentCount(posting.getCommentCount())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -207,6 +211,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .title(postingLikes.getPosting().getTitle())
                         .content(postingLikes.getPosting().getContent())
                         .myLikeState(postingLikes.isToggleState())
+                        .commentCount(postingLikes.getPosting().getCommentCount())
                         .build())
                 .collect(Collectors.toList());
     }

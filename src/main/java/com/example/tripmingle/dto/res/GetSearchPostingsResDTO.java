@@ -15,5 +15,6 @@ public class GetSearchPostingsResDTO {
     private String userGender;
     private String userNationality;
     private boolean myLikeState;
+    private int commentCount;
 
 }

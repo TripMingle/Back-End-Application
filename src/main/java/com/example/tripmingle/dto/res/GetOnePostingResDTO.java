@@ -21,6 +21,7 @@ public class GetOnePostingResDTO {
     private String selfIntroduce;
     private String userTemperature;
     private boolean myLikeState;
+    private int commentCount;
     private List<GetOnePostingCommentsResDTO> postingComments;
 
 }
