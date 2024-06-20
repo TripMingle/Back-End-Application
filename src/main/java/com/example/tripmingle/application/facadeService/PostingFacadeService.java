@@ -191,10 +191,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     @Transactional
     @Override
-    public PostingToggleStateResDTO togglePostingLikes(Long postingId) {
+    public PostingLikeToggleStateResDTO togglePostingLikes(Long postingId) {
         Posting posting = postingService.getOnePosting(postingId);
         boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
-        return PostingToggleStateResDTO.builder()
+        return PostingLikeToggleStateResDTO.builder()
                 .postingId(postingId)
                 .postingToggleState(postingToggleState)
                 .build();

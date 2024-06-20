@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PostingToggleStateResDTO {
+public class PostingLikeToggleStateResDTO {
 
     private Long postingId;
     private boolean postingToggleState;

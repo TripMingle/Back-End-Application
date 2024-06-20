@@ -93,8 +93,8 @@ public class PostingController {
 
     @PostMapping("/likes/{postingId}")
     public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
-        PostingToggleStateResDTO postingToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
-        return ResponseEntity.ok(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingToggleStateResDTO));
+        PostingLikeToggleStateResDTO postingLikeToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
+        return ResponseEntity.ok(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingLikeToggleStateResDTO));
     }
 
     @GetMapping("/likes")

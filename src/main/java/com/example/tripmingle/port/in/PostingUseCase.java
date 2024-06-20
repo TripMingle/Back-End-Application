@@ -28,7 +28,7 @@ public interface PostingUseCase {
 
     DeletePostingCommentResDTO deletePostingComment(Long commentId);
 
-    PostingToggleStateResDTO togglePostingLikes(Long postingId);
+    PostingLikeToggleStateResDTO togglePostingLikes(Long postingId);
 
     GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable);
 }
