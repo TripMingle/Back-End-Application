@@ -109,13 +109,13 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     private List<GetOnePostingCommentsResDTO> getCommentsInPosting(List<PostingComment> postingComments) {
-        return postingComments.stream().filter(filter -> filter.getPostingComment().isParentComment())
+        return postingComments.stream().filter(filter -> filter.isParentComment())
                 .map(comments -> GetOnePostingCommentsResDTO.builder()
                         .commentId(comments.getId())
                         .userNickName(comments.getUser().getNickName())
                         .comment(comments.getComment())
                         .postingCoComment(postingComments.stream()
-                                .filter(filter -> !filter.getPostingComment().isParentComment() && filter.getPostingComment().getId().equals(comments.getId()))
+                                .filter(filter -> !filter.isParentComment() && filter.getPostingComment().getId().equals(comments.getId()))
                                 .map(cocomments -> GetOnePostingCoCommentResDTO.builder()
                                         .coCommentId(cocomments.getId())
                                         .parentCommentId(comments.getId())

@@ -61,7 +61,11 @@ public class Posting extends BaseEntity {
     }
 
     public void decreasePostingCommentCount(int deletedPostingCommentCount) {
-        this.commentCount -= deletedPostingCommentCount;
+        if (this.commentCount > deletedPostingCommentCount) {
+            this.commentCount -= deletedPostingCommentCount;
+        } else {
+            this.commentCount = 0;
+        }
     }
 
     public void deletePostingComments() {
