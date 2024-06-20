@@ -47,4 +47,8 @@ public class PostingLikesService {
         PostingLikes myPostingLike = postingLikesPersistPort.findByPostingIdAndUserId(posting.getId(), user.getId());
         return myPostingLike.isToggleState();
     }
+
+    public int getPostingTotalLikeCount(Long postingId) {
+        return postingLikesPersistPort.count(postingId);
+    }
 }

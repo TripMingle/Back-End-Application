@@ -11,6 +11,7 @@ public class GetPostingsResDTO {
     private String title;
     private String content;
     private int commentCount;
+    private int likeCount;
     private String country;
     private String userNickName;
     private String userAgeRange;

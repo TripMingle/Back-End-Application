@@ -17,4 +17,6 @@ public interface PostingLikesRepository extends JpaRepository<PostingLikes, Long
 
     @Query("select pl from PostingLikes pl where pl.user.id = :userId and pl.toggleState = true")
     Page<PostingLikes> findAllPostingsLikesByUserId(Long userId, Pageable pageable);
+
+    int countByPostingIdAndToggleStateTrue(Long postingId);
 }

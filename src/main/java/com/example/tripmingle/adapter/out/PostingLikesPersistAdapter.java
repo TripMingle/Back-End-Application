@@ -38,4 +38,10 @@ public class PostingLikesPersistAdapter implements PostingLikesPersistPort {
     public Page<PostingLikes> getAllPostingLikes(Long userId, Pageable pageable) {
         return postingLikesRepository.findAllPostingsLikesByUserId(userId, pageable);
     }
+
+    @Override
+    public int count(Long postingId) {
+        return postingLikesRepository.countByPostingIdAndToggleStateTrue(postingId);
+    }
+
 }

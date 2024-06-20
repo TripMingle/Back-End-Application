@@ -12,4 +12,6 @@ public interface PostingLikesPersistPort {
     PostingLikes findByPostingIdAndUserId(Long postingId, Long userId);
 
     Page<PostingLikes> getAllPostingLikes(Long id, Pageable pageable);
+
+    int count(Long postingId);
 }

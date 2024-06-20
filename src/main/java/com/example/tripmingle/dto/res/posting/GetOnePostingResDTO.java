@@ -23,6 +23,7 @@ public class GetOnePostingResDTO {
     private String userTemperature;
     private boolean myLikeState;
     private int commentCount;
+    private int likeCount;
     private List<GetOnePostingCommentsResDTO> postingComments;
 
 }

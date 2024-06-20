@@ -67,6 +67,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .title(posting.getTitle())
                         .content(posting.getContent())
                         .commentCount(posting.getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                         .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
@@ -98,6 +99,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                 .userTemperature("36.5")
                 .myLikeState(postingLikesState)
                 .commentCount(posting.getCommentCount())
+                .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                 .build();
     }
 
@@ -133,6 +135,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userNationality(posting.getUser().getNationality())
                         .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .commentCount(posting.getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -153,6 +156,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userNationality(posting.getUser().getNationality())
                         .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .commentCount(posting.getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -217,6 +221,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .content(postingLikes.getPosting().getContent())
                         .myLikeState(postingLikes.isToggleState())
                         .commentCount(postingLikes.getPosting().getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(postingLikes.getPosting().getId()))
                         .country(postingLikes.getPosting().getCountry())
                         .build())
                 .collect(Collectors.toList());
