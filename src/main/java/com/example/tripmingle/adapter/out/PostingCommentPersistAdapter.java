@@ -19,7 +19,7 @@ public class PostingCommentPersistAdapter implements PostingCommentPersistPort {
 
     @Override
     public List<PostingComment> getPostingCommentsByPostingId(Long postingId) {
-        return postingCommentRepository.findAllByPostingId(postingId);
+        return postingCommentRepository.findAllByPostingIdOrderByCreatedAt(postingId);
     }
 
     @Override
