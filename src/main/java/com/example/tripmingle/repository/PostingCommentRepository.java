@@ -13,4 +13,6 @@ public interface PostingCommentRepository extends JpaRepository<PostingComment, 
     List<PostingComment> findCoCommentsByParentCommentId(Long parentCommentId);
 
     List<PostingComment> findAllByPostingIdOrderByCreatedAt(Long postingId);
+
+    List<PostingComment> findAllByPostingCommentId(Long parentPostingCommentId);
 }

@@ -52,9 +52,13 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public DeletePostingResDTO deletePosting(Long postingId) {
-        Long deletedPostingId = postingService.deletePosting(postingId);
+        Posting deletedPosting = postingService.deletePosting(postingId);
+        postingCommentService.deletePostingWithPostingComments(postingId);
+        deletedPosting.deletePostingComments();
+        postingLikesService.deletePostingWithPostingLikes(postingId);
+        deletedPosting.deletePostingLikes();
         return DeletePostingResDTO.builder()
-                .postingId(deletedPostingId)
+                .postingId(postingId)
                 .build();
     }
 

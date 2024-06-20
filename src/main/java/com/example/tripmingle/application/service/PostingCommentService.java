@@ -52,10 +52,27 @@ public class PostingCommentService {
 
     public Long deletePostingComment(Long commentId) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(commentId);
+        int deletedPostingCommentsCount = 0;
         if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
-            postingComment.deleteComment();
+            deletedPostingCommentsCount = deleteParentOrChildPostingComments(postingComment);
         }
-        postingComment.getPosting().decreasePostingCommentCount();
+        postingComment.getPosting().decreasePostingCommentCount(deletedPostingCommentsCount);
         return postingComment.getId();
+    }
+
+    private int deleteParentOrChildPostingComments(PostingComment postingComment) {
+        if (postingComment.isParentComment()) {
+            List<PostingComment> childPostingComments = postingCommentPersistPort.getAllChildPostingCommentByParentPostingCommentId(postingComment.getId());
+            childPostingComments.forEach(PostingComment::deletePostingComment);
+            postingComment.deletePostingComment();
+            return childPostingComments.size() + 1;
+        }
+        postingComment.deletePostingComment();
+        return 1;
+    }
+
+    public void deletePostingWithPostingComments(Long postingId) {
+        List<PostingComment> postingComments = postingCommentPersistPort.getPostingCommentsByPostingId(postingId);
+        postingComments.forEach(PostingComment::deletePostingComment);
     }
 }

@@ -15,4 +15,6 @@ public interface PostingCommentPersistPort {
     PostingComment getPostingCommentById(Long parentCommentId);
 
     PostingComment save(PostingComment postingComment);
+
+    List<PostingComment> getAllChildPostingCommentByParentPostingCommentId(Long parentPostingCommentId);
 }

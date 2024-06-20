@@ -37,4 +37,8 @@ public class PostingCommentPersistAdapter implements PostingCommentPersistPort {
         return postingCommentRepository.save(postingComment);
     }
 
+    @Override
+    public List<PostingComment> getAllChildPostingCommentByParentPostingCommentId(Long parentPostingCommentId) {
+        return postingCommentRepository.findAllByPostingCommentId(parentPostingCommentId);
+    }
 }

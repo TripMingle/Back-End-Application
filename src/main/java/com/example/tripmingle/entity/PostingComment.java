@@ -42,7 +42,7 @@ public class PostingComment extends BaseEntity {
         this.comment = comment;
     }
 
-    public void deleteComment() {
+    public void deletePostingComment() {
         delete();
     }
 

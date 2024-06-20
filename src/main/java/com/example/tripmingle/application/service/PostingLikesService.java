@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostingLikesService {
@@ -35,7 +37,7 @@ public class PostingLikesService {
 
     public Page<PostingLikes> getAllPostingLikes(Pageable pageable) {
         User user = userPersistPort.findCurrentUserByEmail();
-        Page<PostingLikes> postingLikes = postingLikesPersistPort.getAllPostingLikes(user.getId(), pageable);
+        Page<PostingLikes> postingLikes = postingLikesPersistPort.getAllPostingLikesByUserId(user.getId(), pageable);
         return postingLikes;
     }
 
@@ -50,5 +52,10 @@ public class PostingLikesService {
 
     public int getPostingTotalLikeCount(Long postingId) {
         return postingLikesPersistPort.count(postingId);
+    }
+
+    public void deletePostingWithPostingLikes(Long postingId) {
+        List<PostingLikes> postingLikes = postingLikesPersistPort.getAllPostingLikes(postingId);
+        postingLikes.forEach(PostingLikes::deletePostingLikes);
     }
 }
