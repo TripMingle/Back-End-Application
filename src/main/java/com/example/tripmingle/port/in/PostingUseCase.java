@@ -12,7 +12,7 @@ public interface PostingUseCase {
 
     PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO);
 
-    DeletePostingResDTO deletePosting(DeletePostingReqDTO deletePostingReqDTO);
+    DeletePostingResDTO deletePosting(Long postingId);
 
     List<GetPreviewPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO);
 

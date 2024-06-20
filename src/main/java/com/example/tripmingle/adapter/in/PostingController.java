@@ -40,9 +40,9 @@ public class PostingController {
     }
 
     //포스트 삭제하기
-    @DeleteMapping("")
-    public ResponseEntity<ResultResponse> deletePosting(@RequestBody DeletePostingReqDTO deletePostingReqDTO) {
-        DeletePostingResDTO deletePostingResDTO = postingUseCase.deletePosting(deletePostingReqDTO);
+    @DeleteMapping("/{postingId}")
+    public ResponseEntity<ResultResponse> deletePosting(@PathVariable("postingId") Long postingId) {
+        DeletePostingResDTO deletePostingResDTO = postingUseCase.deletePosting(postingId);
         return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING, deletePostingResDTO));
     }
 

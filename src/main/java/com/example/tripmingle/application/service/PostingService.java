@@ -2,7 +2,10 @@ package com.example.tripmingle.application.service;
 
 
 import com.example.tripmingle.common.utils.UserUtils;
-import com.example.tripmingle.dto.req.*;
+import com.example.tripmingle.dto.req.GetAllPostingsReqDTO;
+import com.example.tripmingle.dto.req.GetPreviewPostingReqDTO;
+import com.example.tripmingle.dto.req.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.PostPostingReqDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;
@@ -41,8 +44,8 @@ public class PostingService {
         return posting.getId();
     }
 
-    public Long deletePosting(DeletePostingReqDTO deletePostingReqDTO) {
-        Posting posting = postingPersistPort.getPostingById(deletePostingReqDTO.getPostingId());
+    public Long deletePosting(Long postingId) {
+        Posting posting = postingPersistPort.getPostingById(postingId);
         if (userUtils.validateMasterUser(posting.getUser().getId())) {
             posting.deletePosting();
         }
