@@ -11,5 +11,6 @@ public class PostPostingReqDTO {
     private String title;
     private String content;
     private PostingType postingType;
+    private String country;
 
 }

@@ -26,81 +26,81 @@ public class PostingController {
     private final PostingCommentUseCase postingCommentUseCase;
 
     //포스트 게시하기
-    @PostMapping("/post")
+    @PostMapping("")
     public ResponseEntity<ResultResponse> createPosting(@RequestBody PostPostingReqDTO postPostingReqDTO) {
         PostPostingResDTO postPostingResDTO = postingUseCase.createPosting(postPostingReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
     }
 
     //포스트 수정하기
-    @PatchMapping("/update")
+    @PatchMapping("")
     public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
         PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
     }
 
     //포스트 삭제하기
-    @PatchMapping("/delete")
+    @DeleteMapping("")
     public ResponseEntity<ResultResponse> deletePosting(@RequestBody DeletePostingReqDTO deletePostingReqDTO) {
         DeletePostingResDTO deletePostingResDTO = postingUseCase.deletePosting(deletePostingReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING, deletePostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING, deletePostingResDTO));
     }
 
-    @GetMapping("/get/preview")
+    @GetMapping("/preview")
     public ResponseEntity<ResultResponse> getPreviewPostings() {
         List<GetPreviewPostingResDTO> getPreviewPostingResDTOList = postingUseCase.getPreviewPostings();
-        return ResponseEntity.ok().body(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
+        return ResponseEntity.ok(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
     }
 
-    @GetMapping("/get/{postingId}")
+    @GetMapping("/{postingId}")
     public ResponseEntity<ResultResponse> getOnePosting(@PathVariable("postingId") Long postingId) {
         GetOnePostingResDTO getOnePostingResDTO = postingUseCase.getOnePosting(postingId);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
     }
 
-    @GetMapping("/get")
+    @GetMapping("")
     public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("postingType") String postingType,
                                                          @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(postingType, pageable);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
+        return ResponseEntity.ok(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
     }
 
-    @GetMapping("/get/search")
+    @GetMapping("/search")
     public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
                                                             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         List<GetSearchPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
+        return ResponseEntity.ok(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
     }
 
-    @PostMapping("/post/comments")
+    @PostMapping("/comments")
     public ResponseEntity<ResultResponse> createPostingComment(@RequestBody PostPostingCommentReqDTO postPostingCommentReqDTO) {
         PostPostingCommentResDTO postPostingCommentResDTO = postingUseCase.createPostingComment(postPostingCommentReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
+        return ResponseEntity.ok(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
     }
 
-    @PatchMapping("/update/comments/{commentId}")
+    @PatchMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("commentId") Long commentId, @RequestBody PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
         patchPostingCommentReqDTO.setPostingCommentId(commentId);
         PatchPostingCommentResDTO patchPostingCommentResDTO = postingUseCase.updatePostingComment(patchPostingCommentReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
+        return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
     }
 
-    @PatchMapping("/delete/comments/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> deletePostingComment(@PathVariable("commentId") Long commentId) {
         DeletePostingCommentResDTO deletePostingCommentResDTO = postingUseCase.deletePostingComment(commentId);
-        return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
+        return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
     }
 
     @PostMapping("/likes/{postingId}")
     public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
         PostingToggleStateResDTO postingToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
-        return ResponseEntity.ok().body(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingToggleStateResDTO));
+        return ResponseEntity.ok(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingToggleStateResDTO));
     }
 
     @GetMapping("/likes")
     public ResponseEntity<ResultResponse> getMyLikedPostings(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         GetAllLikedPostingResDTO getAllPostingsResDTOList = postingUseCase.getMyLikedPostings(pageable);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
+        return ResponseEntity.ok(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
     }
 
 }

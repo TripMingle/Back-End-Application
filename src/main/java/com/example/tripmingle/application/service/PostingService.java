@@ -30,6 +30,7 @@ public class PostingService {
                 .title(postPostingReqDTO.getTitle())
                 .content(postPostingReqDTO.getContent())
                 .postingType(postPostingReqDTO.getPostingType())
+                .country(postPostingReqDTO.getCountry())
                 .user(user)
                 .build();
         return postingPersistPort.createPosting(posting);
