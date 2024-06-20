@@ -1,9 +1,9 @@
 package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
-import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
-import com.example.tripmingle.dto.res.ParentBoardCommentResDTO;
+import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.res.board.ParentBoardCommentResDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardComment;
 import com.example.tripmingle.entity.User;

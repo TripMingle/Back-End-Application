@@ -1,7 +1,7 @@
 package com.example.tripmingle.port.in;
 
-import com.example.tripmingle.dto.req.*;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.posting.*;
+import com.example.tripmingle.dto.res.posting.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -14,13 +14,13 @@ public interface PostingUseCase {
 
     DeletePostingResDTO deletePosting(Long postingId);
 
-    List<GetPreviewPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO);
+    List<GetPostingsResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO);
 
     GetOnePostingResDTO getOnePosting(Long postingId);
 
-    List<GetAllPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
+    List<GetPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
 
-    List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
+    List<GetPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
 
     PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO);
 

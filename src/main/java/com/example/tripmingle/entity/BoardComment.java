@@ -1,7 +1,7 @@
 package com.example.tripmingle.entity;
 
 import com.example.tripmingle.common.entity.BaseEntity;
-import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -31,11 +31,11 @@ public class BoardComment extends BaseEntity {
 
     private String content;
 
-    public boolean isParentBoardCommentNull(){
-        return this.parentBoardComment==null?true:false;
+    public boolean isParentBoardCommentNull() {
+        return this.parentBoardComment == null ? true : false;
     }
 
-    public void update(UpdateBoardCommentReqDTO updateBoardCommentReqDTO){
+    public void update(UpdateBoardCommentReqDTO updateBoardCommentReqDTO) {
         this.content = updateBoardCommentReqDTO.getContent();
     }
 

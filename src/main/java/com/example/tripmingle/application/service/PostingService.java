@@ -2,10 +2,10 @@ package com.example.tripmingle.application.service;
 
 
 import com.example.tripmingle.common.utils.UserUtils;
-import com.example.tripmingle.dto.req.GetAllPostingsReqDTO;
-import com.example.tripmingle.dto.req.GetPreviewPostingReqDTO;
-import com.example.tripmingle.dto.req.PatchPostingReqDTO;
-import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.req.posting.GetAllPostingsReqDTO;
+import com.example.tripmingle.dto.req.posting.GetPreviewPostingReqDTO;
+import com.example.tripmingle.dto.req.posting.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.posting.PostPostingReqDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;

@@ -1,8 +1,8 @@
 package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.*;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.posting.*;
+import com.example.tripmingle.dto.res.posting.*;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -48,8 +48,8 @@ public class PostingController {
 
     @GetMapping("/preview")
     public ResponseEntity<ResultResponse> getPreviewPostings(@RequestBody GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
-        List<GetPreviewPostingResDTO> getPreviewPostingResDTOList = postingUseCase.getPreviewPostings(getPreviewPostingReqDTO);
-        return ResponseEntity.ok(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
+        List<GetPostingsResDTO> getPreviewPostingsResDTOList = postingUseCase.getPreviewPostings(getPreviewPostingReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingsResDTOList));
     }
 
     @GetMapping("/{postingId}")
@@ -61,14 +61,14 @@ public class PostingController {
     @GetMapping("")
     public ResponseEntity<ResultResponse> getAllPostings(@RequestBody GetAllPostingsReqDTO getAllPostingsReqDTO,
                                                          @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(getAllPostingsReqDTO, pageable);
-        return ResponseEntity.ok(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
+        List<GetPostingsResDTO> getAllPostingsResDTOList = postingUseCase.getAllPostings(getAllPostingsReqDTO, pageable);
+        return ResponseEntity.ok(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOList));
     }
 
     @GetMapping("/search")
     public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
                                                             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<GetSearchPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
+        List<GetPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
         return ResponseEntity.ok(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
     }
 

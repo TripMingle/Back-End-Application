@@ -4,8 +4,8 @@ import com.example.tripmingle.application.service.PostingCommentService;
 import com.example.tripmingle.application.service.PostingLikesService;
 import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.application.service.UserService;
-import com.example.tripmingle.dto.req.*;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.posting.*;
+import com.example.tripmingle.dto.res.posting.*;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.entity.PostingLikes;
@@ -59,10 +59,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     @Override
-    public List<GetPreviewPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+    public List<GetPostingsResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
         List<Posting> postings = postingService.getPreviewPostings(getPreviewPostingReqDTO);
         return postings.stream()
-                .map(posting -> GetPreviewPostingResDTO.builder()
+                .map(posting -> GetPostingsResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
@@ -72,6 +72,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
+                        .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -118,13 +119,14 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     @Override
-    public List<GetAllPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {
+    public List<GetPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {
         Page<Posting> getAllPostings = postingService.getAllPostings(getAllPostingsReqDTO, pageable);
         return getAllPostings.stream()
-                .map(posting -> GetAllPostingsResDTO.builder()
+                .map(posting -> GetPostingsResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
+                        .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
@@ -136,14 +138,15 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     @Override
-    public List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
+    public List<GetPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
         Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, pageable);
         return getSearchPostings.stream()
                 .filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
-                .map(posting -> GetSearchPostingsResDTO.builder()
+                .map(posting -> GetPostingsResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
+                        .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())

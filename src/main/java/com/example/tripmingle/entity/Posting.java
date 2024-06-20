@@ -1,7 +1,7 @@
 package com.example.tripmingle.entity;
 
 import com.example.tripmingle.common.entity.BaseEntity;
-import com.example.tripmingle.dto.req.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.posting.PatchPostingReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;

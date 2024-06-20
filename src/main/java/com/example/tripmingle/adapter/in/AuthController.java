@@ -2,8 +2,8 @@ package com.example.tripmingle.adapter.in;
 
 
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.ValidateDuplicationReqDTO;
-import com.example.tripmingle.dto.res.ValidateDuplicationResDTO;
+import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
+import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
 import com.example.tripmingle.port.in.AuthUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

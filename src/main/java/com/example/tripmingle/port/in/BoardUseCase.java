@@ -1,8 +1,8 @@
 package com.example.tripmingle.port.in;
 
-import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.req.CreateBoardReqDTO;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
+import com.example.tripmingle.dto.res.board.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,8 +1,8 @@
 package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.utils.UserUtils;
-import com.example.tripmingle.dto.req.PatchPostingCommentReqDTO;
-import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
+import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
+import com.example.tripmingle.dto.req.posting.PostPostingCommentReqDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.entity.User;

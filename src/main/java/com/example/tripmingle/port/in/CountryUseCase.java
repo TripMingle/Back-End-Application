@@ -1,6 +1,6 @@
 package com.example.tripmingle.port.in;
 
-import com.example.tripmingle.dto.res.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.count.GetCountriesResDTO;
 
 import java.util.List;
 

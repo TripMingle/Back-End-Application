@@ -1,7 +1,7 @@
 package com.example.tripmingle.port.in;
 
-import com.example.tripmingle.dto.req.ValidateDuplicationReqDTO;
-import com.example.tripmingle.dto.res.ValidateDuplicationResDTO;
+import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
+import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
 
 public interface AuthUseCase {
 

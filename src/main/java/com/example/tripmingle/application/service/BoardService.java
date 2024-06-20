@@ -2,8 +2,8 @@ package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.etc.UpdateBoardDTO;
-import com.example.tripmingle.dto.req.CreateBoardReqDTO;
-import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardPersistPort;
