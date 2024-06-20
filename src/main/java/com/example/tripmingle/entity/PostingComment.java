@@ -45,4 +45,8 @@ public class PostingComment extends BaseEntity {
     public void deleteComment() {
         delete();
     }
+
+    public boolean isParentComment() {
+        return postingComment == null;
+    }
 }

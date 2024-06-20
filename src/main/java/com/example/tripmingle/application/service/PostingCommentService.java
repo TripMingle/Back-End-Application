@@ -28,7 +28,7 @@ public class PostingCommentService {
     public Long createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO, Posting posting) {
         User user = userPersistPort.findCurrentUserByEmail();
         PostingComment parentPostingComment = null;
-        if (postPostingCommentReqDTO.getParentCommentId() != null) {
+        if (postPostingCommentReqDTO.getParentCommentId() != -1) {
             parentPostingComment = postingCommentPersistPort.getPostingCommentById(postPostingCommentReqDTO.getParentCommentId());
         }
         PostingComment postingComment = PostingComment.builder()
