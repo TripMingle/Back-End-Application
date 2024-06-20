@@ -44,12 +44,10 @@ public class PostingService {
         return posting.getId();
     }
 
-    public Posting deletePosting(Long postingId) {
-        Posting posting = postingPersistPort.getPostingById(postingId);
+    public void deletePosting(Posting posting) {
         if (userUtils.validateMasterUser(posting.getUser().getId())) {
             posting.deletePosting();
         }
-        return posting;
     }
 
     public List<Posting> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
