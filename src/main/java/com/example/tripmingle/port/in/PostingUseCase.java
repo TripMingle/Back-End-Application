@@ -14,11 +14,11 @@ public interface PostingUseCase {
 
     DeletePostingResDTO deletePosting(DeletePostingReqDTO deletePostingReqDTO);
 
-    List<GetPreviewPostingResDTO> getPreviewPostings();
+    List<GetPreviewPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO);
 
     GetOnePostingResDTO getOnePosting(Long postingId);
 
-    List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable);
+    List<GetAllPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
 
     List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
 

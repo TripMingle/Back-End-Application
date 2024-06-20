@@ -59,14 +59,15 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     @Override
-    public List<GetPreviewPostingResDTO> getPreviewPostings() {
-        List<Posting> postings = postingService.getPreviewPostings();
+    public List<GetPreviewPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+        List<Posting> postings = postingService.getPreviewPostings(getPreviewPostingReqDTO);
         return postings.stream()
                 .map(posting -> GetPreviewPostingResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
                         .commentCount(posting.getCommentCount())
+                        .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
@@ -84,6 +85,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
         return GetOnePostingResDTO.builder()
                 .title(posting.getTitle())
                 .content(posting.getContent())
+                .country(posting.getCountry())
                 .createAt(posting.getCreatedAt())
                 .heartCount(0L)
                 .postingComments(commentsInOnePosting)
@@ -116,8 +118,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     @Override
-    public List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable) {
-        Page<Posting> getAllPostings = postingService.getAllPostings(postingType, pageable);
+    public List<GetAllPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {
+        Page<Posting> getAllPostings = postingService.getAllPostings(getAllPostingsReqDTO, pageable);
         return getAllPostings.stream()
                 .map(posting -> GetAllPostingsResDTO.builder()
                         .postingId(posting.getId())
@@ -212,6 +214,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .content(postingLikes.getPosting().getContent())
                         .myLikeState(postingLikes.isToggleState())
                         .commentCount(postingLikes.getPosting().getCommentCount())
+                        .country(postingLikes.getPosting().getCountry())
                         .build())
                 .collect(Collectors.toList());
     }

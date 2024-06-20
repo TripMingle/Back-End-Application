@@ -12,6 +12,7 @@ public class GetOnePostingResDTO {
 
     private String title;
     private String content;
+    private String country;
     private LocalDateTime createAt;
     private Long heartCount;
     private String userNickName;

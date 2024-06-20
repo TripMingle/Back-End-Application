@@ -13,9 +13,9 @@ public interface PostingPersistPort {
 
     Posting getPostingById(Long postingId);
 
-    List<Posting> findAllPostingForPreview();
+    List<Posting> findAllPostingForPreview(String country, PostingType postingType);
 
-    Page<Posting> getAllPostings(PostingType postingType, Pageable pageable);
+    Page<Posting> getAllPostings(String country, PostingType postingType, Pageable pageable);
 
     Page<Posting> getSearchPostings(String keyword, Pageable pageable);
 }

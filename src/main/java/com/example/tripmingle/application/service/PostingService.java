@@ -2,11 +2,8 @@ package com.example.tripmingle.application.service;
 
 
 import com.example.tripmingle.common.utils.UserUtils;
-import com.example.tripmingle.dto.req.DeletePostingReqDTO;
-import com.example.tripmingle.dto.req.PatchPostingReqDTO;
-import com.example.tripmingle.dto.req.PostPostingReqDTO;
+import com.example.tripmingle.dto.req.*;
 import com.example.tripmingle.entity.Posting;
-import com.example.tripmingle.entity.PostingType;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;
 import com.example.tripmingle.port.out.UserPersistPort;
@@ -52,16 +49,16 @@ public class PostingService {
         return posting.getId();
     }
 
-    public List<Posting> getPreviewPostings() {
-        return postingPersistPort.findAllPostingForPreview();
+    public List<Posting> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+        return postingPersistPort.findAllPostingForPreview(getPreviewPostingReqDTO.getCountry(), getPreviewPostingReqDTO.getPostingType());
     }
 
     public Posting getOnePosting(Long postingId) {
         return postingPersistPort.getPostingById(postingId);
     }
 
-    public Page<Posting> getAllPostings(String postingType, Pageable pageable) {
-        return postingPersistPort.getAllPostings(PostingType.valueOf(postingType), pageable);
+    public Page<Posting> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {
+        return postingPersistPort.getAllPostings(getAllPostingsReqDTO.getCountry(), getAllPostingsReqDTO.getPostingType(), pageable);
     }
 
     public Page<Posting> getSearchPostings(String keyword, Pageable pageable) {

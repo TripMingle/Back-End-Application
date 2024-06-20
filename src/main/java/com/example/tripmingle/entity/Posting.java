@@ -47,6 +47,9 @@ public class Posting extends BaseEntity {
         if (patchPostingReqDTO.getPostingType() != null && !patchPostingReqDTO.getPostingType().equals("")) {
             this.postingType = patchPostingReqDTO.getPostingType();
         }
+        if (patchPostingReqDTO.getCountry() != null && !patchPostingReqDTO.getCountry().equals("")) {
+            this.country = patchPostingReqDTO.getCountry();
+        }
     }
 
     public void deletePosting() {

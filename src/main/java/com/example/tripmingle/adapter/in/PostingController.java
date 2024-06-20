@@ -47,8 +47,8 @@ public class PostingController {
     }
 
     @GetMapping("/preview")
-    public ResponseEntity<ResultResponse> getPreviewPostings() {
-        List<GetPreviewPostingResDTO> getPreviewPostingResDTOList = postingUseCase.getPreviewPostings();
+    public ResponseEntity<ResultResponse> getPreviewPostings(@RequestBody GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+        List<GetPreviewPostingResDTO> getPreviewPostingResDTOList = postingUseCase.getPreviewPostings(getPreviewPostingReqDTO);
         return ResponseEntity.ok(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
     }
 
@@ -59,9 +59,9 @@ public class PostingController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("postingType") String postingType,
+    public ResponseEntity<ResultResponse> getAllPostings(@RequestBody GetAllPostingsReqDTO getAllPostingsReqDTO,
                                                          @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(postingType, pageable);
+        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(getAllPostingsReqDTO, pageable);
         return ResponseEntity.ok(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
     }
 

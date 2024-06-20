@@ -6,12 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PatchPostingReqDTO {
+public class GetPreviewPostingReqDTO {
 
-    private Long postingId;
-    private String title;
-    private String content;
-    private PostingType postingType;
     private String country;
+    private PostingType postingType;
 
 }
