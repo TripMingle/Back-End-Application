@@ -1,14 +1,12 @@
 package com.example.tripmingle.application.service;
 
-import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
+import com.example.tripmingle.common.utils.UserUtils;
 import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
-import com.example.tripmingle.dto.res.board.ParentBoardCommentResDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardComment;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardCommentPersistPort;
-import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class BoardCommentService {
     private final BoardCommentPersistPort boardCommentPersistPort;
+    private final UserUtils userUtils;
 
     public List<BoardComment> getBoardCommentsByBoardId(Long boardId) {
         return boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
@@ -48,9 +47,10 @@ public class BoardCommentService {
         else return false;
     }
 
-    public int deleteBoardComment(Long commentId) {
+    public int deleteBoardComment(Long commentId, User currentUser) {
         int commentCount = 0;
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
+        userUtils.validateMasterUser(boardComment.getId(), currentUser.getId());
         commentCount++;
         if (boardComment.isParentBoardCommentNull()) {
             List<BoardComment> childBoardComments = boardCommentPersistPort.getBoardCommentByParentBoardId(boardComment.getId());
@@ -65,8 +65,9 @@ public class BoardCommentService {
         return commentCount;
     }
 
-    public BoardComment updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
+    public BoardComment updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId, User currentUser) {
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
+        userUtils.validateMasterUser(boardComment.getId(),currentUser.getId());
         boardComment.update(updateBoardCommentReqDTO);
 
         return boardCommentPersistPort.saveBoardComment(boardComment);

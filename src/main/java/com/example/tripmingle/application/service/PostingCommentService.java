@@ -7,7 +7,6 @@ import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingCommentPersistPort;
-import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +15,20 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostingCommentService {
-
     private final PostingCommentPersistPort postingCommentPersistPort;
-    private final UserPersistPort userPersistPort;
     private final UserUtils userUtils;
 
     public List<PostingComment> getPostingComments(Long postingId) {
         return postingCommentPersistPort.getPostingCommentsByPostingId(postingId);
     }
 
-    public Long createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO, Posting posting) {
-        User user = userPersistPort.findCurrentUserByEmail();
+    public Long createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO, Posting posting, User currentUser) {
         PostingComment parentPostingComment = null;
         if (postPostingCommentReqDTO.getParentCommentId() != -1) {
             parentPostingComment = postingCommentPersistPort.getPostingCommentById(postPostingCommentReqDTO.getParentCommentId());
         }
         PostingComment postingComment = PostingComment.builder()
-                .user(user)
+                .user(currentUser)
                 .posting(posting)
                 .postingComment(parentPostingComment)
                 .comment(postPostingCommentReqDTO.getComment())
@@ -42,20 +38,19 @@ public class PostingCommentService {
         return postingCommentId;
     }
 
-    public Long updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+    public Long updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO, User currentUser) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(patchPostingCommentReqDTO.getPostingCommentId());
-        if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
-            postingComment.updateComment(patchPostingCommentReqDTO.getComment());
-        }
+        userUtils.validateMasterUser(postingComment.getUser().getId(), currentUser.getId());
+        postingComment.updateComment(patchPostingCommentReqDTO.getComment());
+
         return postingComment.getId();
     }
 
-    public Long deletePostingComment(Long commentId) {
+    public Long deletePostingComment(Long commentId, User currentUser) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(commentId);
         int deletedPostingCommentsCount = 0;
-        if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
-            deletedPostingCommentsCount = deleteParentOrChildPostingComments(postingComment);
-        }
+        userUtils.validateMasterUser(postingComment.getUser().getId(),currentUser.getId());
+        deletedPostingCommentsCount = deleteParentOrChildPostingComments(postingComment);
         postingComment.getPosting().decreasePostingCommentCount(deletedPostingCommentsCount);
         return postingComment.getId();
     }

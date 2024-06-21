@@ -178,8 +178,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
-        //내가 쓴 글인지 맞는지 확인하는 로직
-        Long resultBoardId = boardService.updateBoard(boardId, patchBoardReqDTO);
+        User currentUser = userService.getCurrentUser();
+        Long resultBoardId = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
         return UpdateBoardResDTO.builder().boardId(resultBoardId)
                 .build();
     }
@@ -187,11 +187,11 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public void deleteBoard(Long boardId) {
-        //내가 쓴 글인지 맞는지 확인하는 로직
+        User currentUser = userService.getCurrentUser();
         boardCommentService.deleteBoardCommentByBoardId(boardId);
         boardLikesService.deleteBoardLikesByBoardId(boardId);
         boardBookMarkService.deleteBoardBookMarksByBoardId(boardId);
-        boardService.deleteBoard(boardId);
+        boardService.deleteBoard(boardId, currentUser);
     }
 
     @Override
@@ -239,9 +239,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public void deleteBoardComment(Long commentId) {
-        //내가 쓴 글인지 맞는지 확인하는 로직
+        User currentUser = userService.getCurrentUser();
         Board board = boardCommentService.getBoardByCommentId(commentId);
-        int commentCount = boardCommentService.deleteBoardComment(commentId);
+        int commentCount = boardCommentService.deleteBoardComment(commentId, currentUser);
         boardService.updateCommentCount(board, -commentCount);
 
     }
@@ -249,8 +249,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
-        //내가 단 댓글이 맞는지 확인하는 로직
-        BoardComment boardComment = boardCommentService.updateBoardComment(updateBoardCommentReqDTO, commentId);
+        User currentUser = userService.getCurrentUser();
+        BoardComment boardComment = boardCommentService.updateBoardComment(updateBoardCommentReqDTO, commentId, currentUser);
         return UpdateBoardCommentResDTO.builder().boardCommentId(boardComment.getId()).build();
     }
 

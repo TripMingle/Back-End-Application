@@ -1,6 +1,7 @@
 package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.utils.CommonUtils;
+import com.example.tripmingle.common.utils.UserUtils;
 import com.example.tripmingle.dto.etc.UpdateBoardDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
@@ -8,7 +9,6 @@ import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardPersistPort;
-import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardPersistPort boardPersistPort;
+    private final UserUtils userUtils;
     private final CommonUtils commonUtils;
 
     public List<Board> getRecentBoardsByCountryName(String countryName) {
@@ -64,8 +65,9 @@ public class BoardService {
     }
 
 
-    public Long updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO) {
+    public Long updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {
         Board board = boardPersistPort.getBoardById(boardId);
+        userUtils.validateMasterUser(board.getId(),currentUser.getId());
         UpdateBoardDTO updateBoardDTO = UpdateBoardDTO.builder()
                 .continent(updateBoardReqDTO.getContinent())
                 .countryName(updateBoardReqDTO.getCountryName())
@@ -82,7 +84,8 @@ public class BoardService {
         return boardPersistPort.saveBoard(board);
     }
 
-    public void deleteBoard(Long boardId) {
+    public void deleteBoard(Long boardId, User currentUser) {
+        userUtils.validateMasterUser(boardId,currentUser.getId());
         boardPersistPort.deleteBoardById(boardId);
     }
 
