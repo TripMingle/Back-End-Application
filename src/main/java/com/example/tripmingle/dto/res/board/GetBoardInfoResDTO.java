@@ -15,8 +15,8 @@ public class GetBoardInfoResDTO {
     private String title;
     private String content;
     private String language;
-    private List<String> traits;
-    private List<String> types;
+    private List<String> personalType;
+    private List<String> tripType;
     private LocalDate startDate;
     private LocalDate endDate;
     private int currentCount;

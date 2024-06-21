@@ -31,10 +31,10 @@ public class Board extends BaseEntity {
     private String countryName;
 
     //동행자 특성 list
-    private String traits;
+    private String personalType;
 
     //여행 타입 list
-    private String types;
+    private String tripType;
 
     //인원수
     private int currentCount;
@@ -65,11 +65,11 @@ public class Board extends BaseEntity {
         if (updateBoardDTO.getCountryName() != null) {
             this.countryName = updateBoardDTO.getCountryName();
         }
-        if (updateBoardDTO.getTraits() != null) {
-            this.traits = updateBoardDTO.getTraits();
+        if (updateBoardDTO.getPersonalType() != null) {
+            this.personalType = updateBoardDTO.getPersonalType();
         }
-        if (updateBoardDTO.getTypes() != null) {
-            this.types = updateBoardDTO.getTypes();
+        if (updateBoardDTO.getTripType() != null) {
+            this.tripType = updateBoardDTO.getTripType();
         }
         if (updateBoardDTO.getMaxCount() > 0) {
             this.maxCount = updateBoardDTO.getMaxCount();
