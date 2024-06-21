@@ -32,7 +32,7 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
 
     Optional<Board> findById(Long Id);
 
-    @Query("SELECT b FROM Board b WHERE b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
+    @Query("SELECT b FROM Board b WHERE lower(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR lower(b.content) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Board> searchByTitleOrContent(String keyword, Pageable pageable);
 
     Page<Board> findBoardsByUser(User user, Pageable pageable);
