@@ -33,7 +33,7 @@ public class BoardLikesService {
                     .isActive(true)
                     .build();
             boardLikesPersistPort.saveBoardLikes(boardLikes);
-            board.increaseBookMarkCount();
+            board.increaseLikeCount();
         }
         return boardLikes.isActive();
     }
