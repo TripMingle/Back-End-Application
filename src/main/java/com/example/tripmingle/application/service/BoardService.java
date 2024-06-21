@@ -3,6 +3,7 @@ package com.example.tripmingle.application.service;
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.etc.UpdateBoardDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
@@ -29,8 +30,11 @@ public class BoardService {
         boardPersistPort.getAllBoardsByIds();
     }
 
-    public Page<Board> getAllBoards(String country, String gender, String language, Pageable pageable) {
-        return boardPersistPort.getAllBoards(country, gender, language, pageable);
+    public Page<Board> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
+        return boardPersistPort.getAllBoards(getAllBoardReqDTO.getCountryName()
+                ,getAllBoardReqDTO.getGender()
+                ,getAllBoardReqDTO.getLanguage()
+                ,pageable);
     }
 
     public Board getBoardById(Long boardId) {

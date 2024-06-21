@@ -3,10 +3,7 @@ package com.example.tripmingle.application.facadeService;
 import com.example.tripmingle.application.service.*;
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
-import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
-import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.*;
 import com.example.tripmingle.dto.res.board.*;
 import com.example.tripmingle.entity.*;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
@@ -59,8 +56,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
-    public Page<GetBoardsResDTO> getAllBoards(String countryName, String gender, String language, Pageable pageable) {
-        Page<Board> boardPage = boardService.getAllBoards(countryName, gender, language, pageable);
+    public Page<GetBoardsResDTO> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
+        Page<Board> boardPage = boardService.getAllBoards(getAllBoardReqDTO, pageable);
         User currentUser = userService.getCurrentUser();
 
         return boardPage.map(board -> GetBoardsResDTO.builder()

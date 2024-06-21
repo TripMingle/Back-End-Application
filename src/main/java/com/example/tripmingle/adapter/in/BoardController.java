@@ -2,10 +2,7 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
-import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.*;
 import com.example.tripmingle.dto.res.board.*;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
@@ -39,7 +36,12 @@ public class BoardController {
             , @RequestParam(value = "gender", required = false) String gender
             , @RequestParam(value = "language", required = false) String language
             , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getAllBoards(countryName, gender, language, pageable);
+        GetAllBoardReqDTO getAllBoardReqDTO = GetAllBoardReqDTO.builder()
+                .language(language)
+                .gender(gender)
+                .countryName(countryName)
+                .build();
+        Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getAllBoards(getAllBoardReqDTO, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_BOARD_SUCCESS, getBoardsResDTOS));
     }
 
