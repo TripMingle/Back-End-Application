@@ -20,4 +20,6 @@ public interface BoardBookMarkRepository extends JpaRepository<BoardBookMark, Lo
 
     @Query("select bbm from BoardBookMark bbm where bbm.user=:user and bbm.isActive=true")
     Page<BoardBookMark> findBoardBookMarksByUser(User user, Pageable pageable);
+
+    List<BoardBookMark> findBoardBookMarksByBoardId(Long boardId);
 }

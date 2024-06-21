@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class BoardBoardBookMarkPersistAdapter implements BoardBookMarkPersistPort {
@@ -35,5 +37,10 @@ public class BoardBoardBookMarkPersistAdapter implements BoardBookMarkPersistPor
     @Override
     public Page<BoardBookMark> getBoardBookMarksByUser(User currentUser, Pageable pageable) {
         return boardBookMarkRepository.findBoardBookMarksByUser(currentUser, pageable);
+    }
+
+    @Override
+    public List<BoardBookMark> findBoardBookMarksByBoardId(Long boardId) {
+        return boardBookMarkRepository.findBoardBookMarksByBoardId(boardId);
     }
 }

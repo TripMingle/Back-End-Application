@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardBookMarkService {
@@ -43,5 +45,10 @@ public class BoardBookMarkService {
             return boardBookMarkPersistPort.findByUserAndBoard(currentUser,board).isActive();
         }
         else return false;
+    }
+
+    public void deleteBoardBookMarksByBoardId(Long boardId) {
+        boardBookMarkPersistPort.findBoardBookMarksByBoardId(boardId).stream()
+                .forEach(boardBookMark -> boardBookMark.delete());
     }
 }

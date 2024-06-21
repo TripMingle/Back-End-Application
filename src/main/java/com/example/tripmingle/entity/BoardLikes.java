@@ -29,4 +29,8 @@ public class BoardLikes {
     public void toggleBoardLikes(){
         this.isActive = !this.isActive;
     }
+
+    public void delete(){
+        this.isActive = false;
+    }
 }

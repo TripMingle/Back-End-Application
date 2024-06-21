@@ -138,6 +138,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     public void deleteBoard(Long boardId) {
         //내가 쓴 글인지 맞는지 확인하는 로직
         boardCommentService.deleteBoardCommentByBoardId(boardId);
+        boardLikesService.deleteBoardLikesByBoardId(boardId);
+        boardBookMarkService.deleteBoardBookMarksByBoardId(boardId);
         boardService.deleteBoard(boardId);
     }
 

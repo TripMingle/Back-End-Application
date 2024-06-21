@@ -27,4 +27,8 @@ public class BoardBookMark {
     public void toggleBoardBookMark(){
         this.isActive = !this.isActive;
     }
+
+    public void delete(){
+        this.isActive = false;
+    }
 }

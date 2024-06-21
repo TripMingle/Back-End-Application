@@ -10,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BoardLikesService {
@@ -43,5 +45,10 @@ public class BoardLikesService {
             return boardLikesPersistPort.findByUserAndBoard(currentUser,board).isActive();
         }
         else return false;
+    }
+
+    public void deleteBoardLikesByBoardId(Long boardId) {
+        boardLikesPersistPort.findBoardLikesByBoardId(boardId).stream()
+                .forEach(boardLikes -> boardLikes.delete());
     }
 }
