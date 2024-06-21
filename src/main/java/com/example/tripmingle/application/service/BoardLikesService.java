@@ -15,14 +15,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardLikesService {
-    private final UserPersistPort userPersistPort;
     private final BoardLikesPersistPort boardLikesPersistPort;
     public Page<BoardLikes> getMyLikedBoards(User currentUser, Pageable pageable) {
         return boardLikesPersistPort.findBoardLikesByUser(currentUser, pageable);
     }
 
-    public boolean toggleBoardLikes(Board board) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+    public boolean toggleBoardLikes(Board board, User currentUser) {
         BoardLikes boardLikes;
         if(boardLikesPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
             boardLikes = boardLikesPersistPort.findByUserAndBoard(currentUser,board);

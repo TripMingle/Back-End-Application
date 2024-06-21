@@ -1,10 +1,8 @@
 package com.example.tripmingle.application.facadeService;
 
-import com.example.tripmingle.application.service.BoardCommentService;
-import com.example.tripmingle.application.service.BoardLikesService;
-import com.example.tripmingle.application.service.BoardService;
-import com.example.tripmingle.application.service.BoardBookMarkService;
+import com.example.tripmingle.application.service.*;
 import com.example.tripmingle.common.utils.CommonUtils;
+import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
@@ -13,14 +11,13 @@ import com.example.tripmingle.dto.res.board.*;
 import com.example.tripmingle.entity.*;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
-import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
 public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final BoardService boardService;
     private final BoardCommentService boardCommentService;
-    private final UserPersistPort userPersistPort;
+    private final UserService userService;
     private final CommonUtils commonUtils;
     private final BoardBookMarkService boardBookMarkService;
     private final BoardLikesService boardLikesService;
@@ -37,7 +34,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
         List<Board> boardList = boardService.getRecentBoardsByCountryName(countryName);
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
 
 
         return boardList
@@ -64,7 +61,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public Page<GetBoardsResDTO> getAllBoards(String countryName, String gender, String language, Pageable pageable) {
         Page<Board> boardPage = boardService.getAllBoards(countryName, gender, language, pageable);
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
 
         return boardPage.map(board -> GetBoardsResDTO.builder()
                 .boardId(board.getId())
@@ -88,8 +85,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public GetBoardInfoResDTO getBoard(Long boardId) {
         Board board = boardService.getBoardById(boardId);
-        List<ParentBoardCommentResDTO> boardComments = boardCommentService.getStructureBoardComment(board.getId());
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
+        List<ParentBoardCommentResDTO> boardComments
+                = structureBoardComment(boardCommentService.getBoardCommentsByBoardId(board.getId()), currentUser);
+
 
         return GetBoardInfoResDTO.builder()
                 .boardId(board.getId())
@@ -117,10 +116,65 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .build();
     }
 
+    private List<ParentBoardCommentResDTO> structureBoardComment(List<BoardComment> boardComments, User currentUser){
+        Map<Long, List<BoardComment>> commentMap = new HashMap<>();
+        List<BoardComment> parentList = new ArrayList<>();
+
+        boardComments.forEach(comment -> {
+            if (comment.isParentBoardCommentNull()) {
+                commentMap.put(comment.getId(), new ArrayList<>());
+                parentList.add(comment);
+            } else {
+                Long parentId = comment.getParentBoardComment().getId();
+                commentMap.get(parentId).add(comment);
+            }
+        });
+
+        return parentList.stream()
+                .map(parent -> {
+                    Long parentId = parent.getId();
+                    ParentBoardCommentResDTO parentDTO = getParentBoardCommentInfo(parent, currentUser);
+                    List<ChildBoardCommentDTO> childDTOs = commentMap.getOrDefault(parentId, Collections.emptyList()).stream()
+                            .map(child -> getChildBoardCommentInfo(child, parentId, currentUser))
+                            .collect(Collectors.toList());
+                    parentDTO.setChildBoards(childDTOs);
+                    return parentDTO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser) {
+
+        return ParentBoardCommentResDTO.builder()
+                .boardId(boardComment.getBoard().getId())
+                .boardCommentId(boardComment.getId())
+                .content(boardComment.getContent())
+                .registeredDate(boardComment.getCreatedAt())
+                .userId(boardComment.getUser().getId())
+                .userNickname(boardComment.getUser().getNickName())
+                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
+                .build();
+    }
+
+    private ChildBoardCommentDTO getChildBoardCommentInfo(BoardComment boardComment, Long parentId, User currentUser) {
+
+        return ChildBoardCommentDTO.builder()
+                .boardId(boardComment.getBoard().getId())
+                .boardCommentId(boardComment.getId())
+                .parentId(parentId)
+                .content(boardComment.getContent())
+                .registeredDate(boardComment.getCreatedAt())
+                .userId(boardComment.getUser().getId())
+                .userNickname(boardComment.getUser().getNickName())
+                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
+                .build();
+    }
+
     @Override
     @Transactional(readOnly = false)
     public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
-        Long boardId = boardService.createBoard(createBoardReqDTO);
+        User currentUser = userService.getCurrentUser();
+        Long boardId = boardService.createBoard(createBoardReqDTO,currentUser);
         return PostBoardResDTO.builder().boardId(boardId).build();
     }
 
@@ -146,7 +200,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     public Page<GetBoardsResDTO> searchBoard(String keyword, Pageable pageable) {
         Page<Board> boardPage = boardService.searchBoard(keyword, pageable);
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
         return boardPage.map(board -> GetBoardsResDTO.builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
@@ -170,8 +224,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
+        User currentUser = userService.getCurrentUser();
         Board board = boardService.getBoardById(createBoardCommentReqDTO.getBoardId());
-        BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board);
+        BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board, currentUser);
         Long parentBoardCommentId = boardComment.isParentBoardCommentNull() ? -1 : boardComment.getParentBoardComment().getId();
 
         return CreateBoardCommentResDTO.builder()
@@ -210,8 +265,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public ToggleStateResDTO toggleBoardBookMark(Long boardId) {
+        User currentUser = userService.getCurrentUser();
         Board board = boardService.getBoardById(boardId);
-        boolean state = boardBookMarkService.toggleBoardBookMark(board);
+        boolean state = boardBookMarkService.toggleBoardBookMark(board, currentUser);
         return ToggleStateResDTO.builder()
                 .state(state)
                 .build();
@@ -219,7 +275,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public Page<GetBoardsResDTO> getMyBookMarkedBoards(Pageable pageable) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
         Page<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser, pageable);
 
         return boardBookMarks.map(boardBookmark -> GetBoardsResDTO
@@ -245,8 +301,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Override
     @Transactional(readOnly = false)
     public ToggleStateResDTO toggleBoardLikes(Long boardId) {
+        User currentUser = userService.getCurrentUser();
         Board board = boardService.getBoardById(boardId);
-        boolean state = boardLikesService.toggleBoardLikes(board);
+        boolean state = boardLikesService.toggleBoardLikes(board, currentUser);
         return ToggleStateResDTO.builder()
                 .state(state)
                 .build();
@@ -254,7 +311,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public Page<GetBoardsResDTO> getMyLikedBoards(Pageable pageable) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
         Page<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser, pageable);
 
         return boardLikes.map(boardLike -> GetBoardsResDTO
@@ -279,7 +336,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
     @Override
     public Page<GetBoardsResDTO> getMyBoards(Pageable pageable) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+        User currentUser = userService.getCurrentUser();
         Page<Board> boardList = boardService.getBoardsByUser(currentUser, pageable);
         return boardList.map(board -> GetBoardsResDTO
                 .builder()

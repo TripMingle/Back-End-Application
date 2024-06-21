@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardPersistPort boardPersistPort;
-    private final UserPersistPort userPersistPort;
     private final CommonUtils commonUtils;
 
     public List<Board> getRecentBoardsByCountryName(String countryName) {
@@ -39,8 +38,7 @@ public class BoardService {
         return boardPersistPort.getBoardById(boardId);
     }
 
-    public Long createBoard(CreateBoardReqDTO createBoardReqDTO) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+    public Long createBoard(CreateBoardReqDTO createBoardReqDTO, User currentUser) {
 
         Board board = Board.builder()
                 .user(currentUser)

@@ -13,74 +13,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BoardCommentService {
     private final BoardCommentPersistPort boardCommentPersistPort;
-    private final UserPersistPort userPersistPort;
 
-    public List<ParentBoardCommentResDTO> getStructureBoardComment(Long boardId) {
-        List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
-        User currentUser = userPersistPort.findCurrentUserByEmail();
-
-        Map<Long, List<BoardComment>> commentMap = new HashMap<>();
-        List<BoardComment> parentList = new ArrayList<>();
-
-        boardComments.forEach(comment -> {
-            if (comment.isParentBoardCommentNull()) {
-                commentMap.put(comment.getId(), new ArrayList<>());
-                parentList.add(comment);
-            } else {
-                Long parentId = comment.getParentBoardComment().getId();
-                commentMap.get(parentId).add(comment);
-            }
-        });
-
-        return parentList.stream()
-                .map(parent -> {
-                    Long parentId = parent.getId();
-                    ParentBoardCommentResDTO parentDTO = getParentBoardCommentInfo(parent, currentUser);
-                    List<ChildBoardCommentDTO> childDTOs = commentMap.getOrDefault(parentId, Collections.emptyList()).stream()
-                            .map(child -> getChildBoardCommentInfo(child, parentId, currentUser))
-                            .collect(Collectors.toList());
-                    parentDTO.setChildBoards(childDTOs);
-                    return parentDTO;
-                })
-                .collect(Collectors.toList());
+    public List<BoardComment> getBoardCommentsByBoardId(Long boardId) {
+        return boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
     }
 
-    private ParentBoardCommentResDTO getParentBoardCommentInfo(BoardComment boardComment, User currentUser) {
 
-        return ParentBoardCommentResDTO.builder()
-                .boardId(boardComment.getBoard().getId())
-                .boardCommentId(boardComment.getId())
-                .content(boardComment.getContent())
-                .registeredDate(boardComment.getCreatedAt())
-                .userId(boardComment.getUser().getId())
-                .userNickname(boardComment.getUser().getNickName())
-                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
-                .build();
-    }
-
-    private ChildBoardCommentDTO getChildBoardCommentInfo(BoardComment boardComment, Long parentId, User currentUser) {
-
-        return ChildBoardCommentDTO.builder()
-                .boardId(boardComment.getBoard().getId())
-                .boardCommentId(boardComment.getId())
-                .parentId(parentId)
-                .content(boardComment.getContent())
-                .registeredDate(boardComment.getCreatedAt())
-                .userId(boardComment.getUser().getId())
-                .userNickname(boardComment.getUser().getNickName())
-                .isMine(currentUser.getId().equals(boardComment.getUser().getId()))
-                .build();
-    }
-
-    public BoardComment createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board) {
+    public BoardComment createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
         BoardComment parentBoardComment;
-        User user = userPersistPort.findCurrentUserByEmail();
         if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
             parentBoardComment = null;
         } else {
@@ -92,7 +37,7 @@ public class BoardCommentService {
 
         return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
                 .parentBoardComment(parentBoardComment)
-                .user(user)
+                .user(currentUser)
                 .board(board)
                 .content(createBoardCommentReqDTO.getContent())
                 .build());

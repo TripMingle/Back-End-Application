@@ -15,10 +15,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BoardBookMarkService {
-    private final UserPersistPort userPersistPort;
     private final BoardBookMarkPersistPort boardBookMarkPersistPort;
-    public boolean toggleBoardBookMark(Board board) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+    public boolean toggleBoardBookMark(Board board, User currentUser) {
         BoardBookMark boardBookMark;
         if(boardBookMarkPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
             boardBookMark = boardBookMarkPersistPort.findByUserAndBoard(currentUser,board);
