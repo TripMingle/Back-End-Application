@@ -4,8 +4,8 @@ import com.example.tripmingle.application.service.PostingCommentService;
 import com.example.tripmingle.application.service.PostingLikesService;
 import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.application.service.UserService;
-import com.example.tripmingle.dto.req.*;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.posting.*;
+import com.example.tripmingle.dto.res.posting.*;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.entity.PostingLikes;
@@ -51,26 +51,34 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     @Transactional
     @Override
-    public DeletePostingResDTO deletePosting(DeletePostingReqDTO deletePostingReqDTO) {
-        Long postingId = postingService.deletePosting(deletePostingReqDTO);
+    public DeletePostingResDTO deletePosting(Long postingId) {
+        Posting posting = postingService.getOnePosting(postingId);
+        postingCommentService.deletePostingCommentsWithPosting(postingId);
+        posting.deletePostingComments();
+        postingLikesService.deletePostingLikesWithPosting(postingId);
+        posting.deletePostingLikes();
+        postingService.deletePosting(posting);
         return DeletePostingResDTO.builder()
                 .postingId(postingId)
                 .build();
     }
 
     @Override
-    public List<GetPreviewPostingResDTO> getPreviewPostings() {
-        List<Posting> postings = postingService.getPreviewPostings();
+    public List<GetPostingsResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+        List<Posting> postings = postingService.getPreviewPostings(getPreviewPostingReqDTO);
         return postings.stream()
-                .map(posting -> GetPreviewPostingResDTO.builder()
+                .map(posting -> GetPostingsResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
                         .commentCount(posting.getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
+                        .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
+                        .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -84,6 +92,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
         return GetOnePostingResDTO.builder()
                 .title(posting.getTitle())
                 .content(posting.getContent())
+                .country(posting.getCountry())
                 .createAt(posting.getCreatedAt())
                 .heartCount(0L)
                 .postingComments(commentsInOnePosting)
@@ -95,17 +104,18 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                 .userTemperature("36.5")
                 .myLikeState(postingLikesState)
                 .commentCount(posting.getCommentCount())
+                .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                 .build();
     }
 
     private List<GetOnePostingCommentsResDTO> getCommentsInPosting(List<PostingComment> postingComments) {
-        return postingComments.stream().filter(filter -> filter.getPostingComment() == null)
+        return postingComments.stream().filter(filter -> filter.isParentComment())
                 .map(comments -> GetOnePostingCommentsResDTO.builder()
                         .commentId(comments.getId())
                         .userNickName(comments.getUser().getNickName())
                         .comment(comments.getComment())
                         .postingCoComment(postingComments.stream()
-                                .filter(filter -> filter.getPostingComment() != null && filter.getPostingComment().getId().equals(comments.getId()))
+                                .filter(filter -> !filter.isParentComment() && filter.getPostingComment().getId().equals(comments.getId()))
                                 .map(cocomments -> GetOnePostingCoCommentResDTO.builder()
                                         .coCommentId(cocomments.getId())
                                         .parentCommentId(comments.getId())
@@ -116,38 +126,42 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     }
 
     @Override
-    public List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable) {
-        Page<Posting> getAllPostings = postingService.getAllPostings(postingType, pageable);
+    public List<GetPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {
+        Page<Posting> getAllPostings = postingService.getAllPostings(getAllPostingsReqDTO, pageable);
         return getAllPostings.stream()
-                .map(posting -> GetAllPostingsResDTO.builder()
+                .map(posting -> GetPostingsResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
+                        .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
                         .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .commentCount(posting.getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                         .build())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
+    public List<GetPostingsResDTO> getSearchPostings(String keyword, Pageable pageable) {
         Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, pageable);
         return getSearchPostings.stream()
                 .filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
-                .map(posting -> GetSearchPostingsResDTO.builder()
+                .map(posting -> GetPostingsResDTO.builder()
                         .postingId(posting.getId())
                         .title(posting.getTitle())
                         .content(posting.getContent())
+                        .country(posting.getCountry())
                         .userNickName(posting.getUser().getNickName())
                         .userAgeRange(posting.getUser().getAgeRange())
                         .userGender(posting.getUser().getGender())
                         .userNationality(posting.getUser().getNationality())
                         .myLikeState(postingLikesService.getPostingLikesState(posting))
                         .commentCount(posting.getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -182,10 +196,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
     @Transactional
     @Override
-    public PostingToggleStateResDTO togglePostingLikes(Long postingId) {
+    public PostingLikeToggleStateResDTO togglePostingLikes(Long postingId) {
         Posting posting = postingService.getOnePosting(postingId);
         boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
-        return PostingToggleStateResDTO.builder()
+        return PostingLikeToggleStateResDTO.builder()
                 .postingId(postingId)
                 .postingToggleState(postingToggleState)
                 .build();
@@ -212,6 +226,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
                         .content(postingLikes.getPosting().getContent())
                         .myLikeState(postingLikes.isToggleState())
                         .commentCount(postingLikes.getPosting().getCommentCount())
+                        .likeCount(postingLikesService.getPostingTotalLikeCount(postingLikes.getPosting().getId()))
+                        .country(postingLikes.getPosting().getCountry())
                         .build())
                 .collect(Collectors.toList());
     }

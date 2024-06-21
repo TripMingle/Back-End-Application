@@ -30,18 +30,18 @@ public class PostingPersistAdapter implements PostingPersistPort {
     }
 
     @Override
-    public List<Posting> findAllPostingForPreview() {
-        return postingRepository.findTop10ByOrderByCreatedAtDesc();
+    public List<Posting> findAllPostingForPreview(String country, PostingType postingType) {
+        return postingRepository.findTop10ByCountryAndPostingTypeOrderByCreatedAtDesc(country, postingType);
     }
 
     @Override
-    public Page<Posting> getAllPostings(PostingType postingType, Pageable pageable) {
-        return postingRepository.findAllByPostingType(postingType, pageable);
+    public Page<Posting> getAllPostings(String country, PostingType postingType, Pageable pageable) {
+        return postingRepository.findAllByCountryAndPostingType(country, postingType, pageable);
     }
 
     @Override
     public Page<Posting> getSearchPostings(String keyword, Pageable pageable) {
-        return postingRepository.findAllBySearching(keyword, pageable);
+        return postingRepository.findAllBySearching(keyword.toLowerCase(), pageable);
     }
 
 }

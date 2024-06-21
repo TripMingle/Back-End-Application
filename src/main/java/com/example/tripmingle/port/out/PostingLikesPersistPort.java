@@ -4,6 +4,8 @@ import com.example.tripmingle.entity.PostingLikes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface PostingLikesPersistPort {
     boolean existsByPostingIdAndUserId(Long postingId, Long id);
 
@@ -11,5 +13,9 @@ public interface PostingLikesPersistPort {
 
     PostingLikes findByPostingIdAndUserId(Long postingId, Long userId);
 
-    Page<PostingLikes> getAllPostingLikes(Long id, Pageable pageable);
+    Page<PostingLikes> getAllPostingLikesByUserId(Long userId, Pageable pageable);
+
+    int count(Long postingId);
+
+    List<PostingLikes> getAllPostingLikes(Long postingId);
 }

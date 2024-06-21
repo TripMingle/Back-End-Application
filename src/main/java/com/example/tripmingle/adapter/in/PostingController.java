@@ -1,8 +1,8 @@
 package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.*;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.posting.*;
+import com.example.tripmingle.dto.res.posting.*;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 import lombok.RequiredArgsConstructor;
@@ -26,81 +26,90 @@ public class PostingController {
     private final PostingCommentUseCase postingCommentUseCase;
 
     //포스트 게시하기
-    @PostMapping("/post")
+    @PostMapping("")
     public ResponseEntity<ResultResponse> createPosting(@RequestBody PostPostingReqDTO postPostingReqDTO) {
         PostPostingResDTO postPostingResDTO = postingUseCase.createPosting(postPostingReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
     }
 
     //포스트 수정하기
-    @PatchMapping("/update")
+    @PatchMapping("")
     public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
         PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
     }
 
     //포스트 삭제하기
-    @PatchMapping("/delete")
-    public ResponseEntity<ResultResponse> deletePosting(@RequestBody DeletePostingReqDTO deletePostingReqDTO) {
-        DeletePostingResDTO deletePostingResDTO = postingUseCase.deletePosting(deletePostingReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING, deletePostingResDTO));
+    @DeleteMapping("/{postingId}")
+    public ResponseEntity<ResultResponse> deletePosting(@PathVariable("postingId") Long postingId) {
+        DeletePostingResDTO deletePostingResDTO = postingUseCase.deletePosting(postingId);
+        return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING, deletePostingResDTO));
     }
 
-    @GetMapping("/get/preview")
-    public ResponseEntity<ResultResponse> getPreviewPostings() {
-        List<GetPreviewPostingResDTO> getPreviewPostingResDTOList = postingUseCase.getPreviewPostings();
-        return ResponseEntity.ok().body(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingResDTOList));
+    // 포스트 미리보기
+    @GetMapping("/preview")
+    public ResponseEntity<ResultResponse> getPreviewPostings(@RequestBody GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+        List<GetPostingsResDTO> getPreviewPostingsResDTOList = postingUseCase.getPreviewPostings(getPreviewPostingReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(POSTING_PREVIEW_SUCCESS, getPreviewPostingsResDTOList));
     }
 
-    @GetMapping("/get/{postingId}")
+    // 포스트 상세조회
+    @GetMapping("/{postingId}")
     public ResponseEntity<ResultResponse> getOnePosting(@PathVariable("postingId") Long postingId) {
         GetOnePostingResDTO getOnePostingResDTO = postingUseCase.getOnePosting(postingId);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
+        return ResponseEntity.ok(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
     }
 
-    @GetMapping("/get")
-    public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("postingType") String postingType,
+    // 포스트 전체조회
+    @GetMapping("")
+    public ResponseEntity<ResultResponse> getAllPostings(@RequestBody GetAllPostingsReqDTO getAllPostingsReqDTO,
                                                          @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<GetAllPostingsResDTO> getAllPostingsResDTOSlice = postingUseCase.getAllPostings(postingType, pageable);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOSlice));
+        List<GetPostingsResDTO> getAllPostingsResDTOList = postingUseCase.getAllPostings(getAllPostingsReqDTO, pageable);
+        return ResponseEntity.ok(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOList));
     }
 
-    @GetMapping("/get/search")
+    // 포스트 검색 조회
+    @GetMapping("/search")
     public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
                                                             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<GetSearchPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
+        List<GetPostingsResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword, pageable);
+        return ResponseEntity.ok(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
     }
 
-    @PostMapping("/post/comments")
+    // 포스트 댓글 달기
+    @PostMapping("/comments")
     public ResponseEntity<ResultResponse> createPostingComment(@RequestBody PostPostingCommentReqDTO postPostingCommentReqDTO) {
         PostPostingCommentResDTO postPostingCommentResDTO = postingUseCase.createPostingComment(postPostingCommentReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
+        return ResponseEntity.ok(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
     }
 
-    @PatchMapping("/update/comments/{commentId}")
+    // 포스트 댓글 수정
+    @PatchMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("commentId") Long commentId, @RequestBody PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
         patchPostingCommentReqDTO.setPostingCommentId(commentId);
         PatchPostingCommentResDTO patchPostingCommentResDTO = postingUseCase.updatePostingComment(patchPostingCommentReqDTO);
-        return ResponseEntity.ok().body(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
+        return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
     }
 
-    @PatchMapping("/delete/comments/{commentId}")
+    // 포스트 댓글 삭제
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ResultResponse> deletePostingComment(@PathVariable("commentId") Long commentId) {
         DeletePostingCommentResDTO deletePostingCommentResDTO = postingUseCase.deletePostingComment(commentId);
-        return ResponseEntity.ok().body(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
+        return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
     }
 
+    // 포스트 좋아요
     @PostMapping("/likes/{postingId}")
     public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
-        PostingToggleStateResDTO postingToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
-        return ResponseEntity.ok().body(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingToggleStateResDTO));
+        PostingLikeToggleStateResDTO postingLikeToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
+        return ResponseEntity.ok(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingLikeToggleStateResDTO));
     }
 
+    // 내가 좋아요한 포스트 조회
     @GetMapping("/likes")
     public ResponseEntity<ResultResponse> getMyLikedPostings(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         GetAllLikedPostingResDTO getAllPostingsResDTOList = postingUseCase.getMyLikedPostings(pageable);
-        return ResponseEntity.ok().body(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
+        return ResponseEntity.ok(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
     }
 
 }

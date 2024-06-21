@@ -1,8 +1,8 @@
 package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.utils.UserUtils;
-import com.example.tripmingle.dto.req.PatchPostingCommentReqDTO;
-import com.example.tripmingle.dto.req.PostPostingCommentReqDTO;
+import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
+import com.example.tripmingle.dto.req.posting.PostPostingCommentReqDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.entity.User;
@@ -28,7 +28,7 @@ public class PostingCommentService {
     public Long createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO, Posting posting) {
         User user = userPersistPort.findCurrentUserByEmail();
         PostingComment parentPostingComment = null;
-        if (postPostingCommentReqDTO.getParentCommentId() != null) {
+        if (postPostingCommentReqDTO.getParentCommentId() != -1) {
             parentPostingComment = postingCommentPersistPort.getPostingCommentById(postPostingCommentReqDTO.getParentCommentId());
         }
         PostingComment postingComment = PostingComment.builder()
@@ -52,10 +52,27 @@ public class PostingCommentService {
 
     public Long deletePostingComment(Long commentId) {
         PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(commentId);
+        int deletedPostingCommentsCount = 0;
         if (userUtils.validateMasterUser(postingComment.getUser().getId())) {
-            postingComment.deleteComment();
+            deletedPostingCommentsCount = deleteParentOrChildPostingComments(postingComment);
         }
-        postingComment.getPosting().decreasePostingCommentCount();
+        postingComment.getPosting().decreasePostingCommentCount(deletedPostingCommentsCount);
         return postingComment.getId();
+    }
+
+    private int deleteParentOrChildPostingComments(PostingComment postingComment) {
+        if (postingComment.isParentComment()) {
+            List<PostingComment> childPostingComments = postingCommentPersistPort.getAllChildPostingCommentByParentPostingCommentId(postingComment.getId());
+            childPostingComments.forEach(PostingComment::deletePostingComment);
+            postingComment.deletePostingComment();
+            return childPostingComments.size() + 1;
+        }
+        postingComment.deletePostingComment();
+        return 1;
+    }
+
+    public void deletePostingCommentsWithPosting(Long postingId) {
+        List<PostingComment> postingComments = postingCommentPersistPort.getPostingCommentsByPostingId(postingId);
+        postingComments.forEach(PostingComment::deletePostingComment);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.tripmingle.application.service;
 
-import com.example.tripmingle.dto.res.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.count.GetCountriesResDTO;
 import com.example.tripmingle.entity.Country;
 import com.example.tripmingle.port.in.CountryUseCase;
 import com.example.tripmingle.port.out.CountryPersistPort;
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CountryService implements CountryUseCase {
     private final CountryPersistPort countryPersistPort;
+
     @Override
     public List<GetCountriesResDTO> getCountries(String continent) {
         List<Country> countries = countryPersistPort.getCountriesByContinent(continent);

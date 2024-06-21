@@ -2,13 +2,11 @@ package com.example.tripmingle.entity;
 
 import com.example.tripmingle.common.entity.BaseEntity;
 import com.example.tripmingle.dto.etc.UpdateBoardDTO;
-import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Getter
@@ -23,7 +21,7 @@ public class Board extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     private String title;
@@ -50,10 +48,10 @@ public class Board extends BaseEntity {
     private int commentCount;
 
 
-
-    public void updateCommentCount(int diff){
+    public void updateCommentCount(int diff) {
         this.commentCount += diff;
     }
+
     public void update(UpdateBoardDTO updateBoardDTO) {
         if (updateBoardDTO.getTitle() != null) {
             this.title = updateBoardDTO.getTitle();

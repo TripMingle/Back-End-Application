@@ -33,4 +33,8 @@ public class PostingLikes {
     public void updatePostingLikeToggleState() {
         this.toggleState = !this.toggleState;
     }
+
+    public void deletePostingLikes() {
+        this.toggleState = false;
+    }
 }

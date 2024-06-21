@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static com.example.tripmingle.common.error.ErrorCode.POSTING_LIKES_NOT_FOUND;
 
 @Component
@@ -35,7 +37,17 @@ public class PostingLikesPersistAdapter implements PostingLikesPersistPort {
     }
 
     @Override
-    public Page<PostingLikes> getAllPostingLikes(Long userId, Pageable pageable) {
+    public Page<PostingLikes> getAllPostingLikesByUserId(Long userId, Pageable pageable) {
         return postingLikesRepository.findAllPostingsLikesByUserId(userId, pageable);
+    }
+
+    @Override
+    public int count(Long postingId) {
+        return postingLikesRepository.countByPostingIdAndToggleStateTrue(postingId);
+    }
+
+    @Override
+    public List<PostingLikes> getAllPostingLikes(Long postingId) {
+        return postingLikesRepository.findAllByPostingId(postingId);
     }
 }

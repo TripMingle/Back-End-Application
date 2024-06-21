@@ -5,11 +5,11 @@ import com.example.tripmingle.application.service.BoardLikesService;
 import com.example.tripmingle.application.service.BoardService;
 import com.example.tripmingle.application.service.BoardBookMarkService;
 import com.example.tripmingle.common.utils.CommonUtils;
-import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.CreateBoardReqDTO;
-import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.res.board.*;
 import com.example.tripmingle.entity.*;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
@@ -55,8 +55,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .currentCount(board.getCurrentCount())
                         .maxCount(board.getMaxCount())
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
-                        .isLiked(boardLikesService.isLikedBoard(currentUser,board))
-                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
+                        .isLiked(boardLikesService.isLikedBoard(currentUser, board))
+                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -80,8 +80,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .currentCount(board.getCurrentCount())
                 .maxCount(board.getMaxCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
-                .isLiked(boardLikesService.isLikedBoard(currentUser,board))
-                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, board))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
                 .build());
     }
 
@@ -105,8 +105,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .createdAt(board.getCreatedAt())
                 .commentCount(board.getCommentCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
-                .isLiked(boardLikesService.isLikedBoard(currentUser,board))
-                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, board))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
                 .boardCommentResDTOS(boardComments)
                 .userId(board.getUser().getId())
                 .nickName(board.getUser().getNickName())
@@ -146,22 +146,22 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         Page<Board> boardPage = boardService.searchBoard(keyword, pageable);
         User currentUser = userPersistPort.findCurrentUserByEmail();
         return boardPage.map(board -> GetBoardsResDTO.builder()
-                        .boardId(board.getId())
-                        .title(board.getTitle())
-                        .startDate(board.getStartDate())
-                        .endDate(board.getEndDate())
-                        .currentCount(board.getCurrentCount())
-                        .maxCount(board.getMaxCount())
-                        .language(board.getLanguage())
-                        .nickName(board.getUser().getNickName())
-                        .ageRange(board.getUser().getAgeRange())
-                        .gender(board.getUser().getGender())
-                        .nationality(board.getUser().getNationality())
-                        .commentCount(board.getCommentCount())
-                        .isMine(currentUser.getId().equals(board.getUser().getId()))
-                        .isLiked(boardLikesService.isLikedBoard(currentUser,board))
-                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
-                        .build());
+                .boardId(board.getId())
+                .title(board.getTitle())
+                .startDate(board.getStartDate())
+                .endDate(board.getEndDate())
+                .currentCount(board.getCurrentCount())
+                .maxCount(board.getMaxCount())
+                .language(board.getLanguage())
+                .nickName(board.getUser().getNickName())
+                .ageRange(board.getUser().getAgeRange())
+                .gender(board.getUser().getGender())
+                .nationality(board.getUser().getNationality())
+                .commentCount(board.getCommentCount())
+                .isMine(currentUser.getId().equals(board.getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, board))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .build());
     }
 
 
@@ -220,24 +220,24 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         User currentUser = userPersistPort.findCurrentUserByEmail();
         Page<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser, pageable);
 
-        return boardBookMarks.map(boardBookmark-> GetBoardsResDTO
-                        .builder()
-                        .boardId(boardBookmark.getBoard().getId())
-                        .title(boardBookmark.getBoard().getTitle())
-                        .startDate(boardBookmark.getBoard().getStartDate())
-                        .endDate(boardBookmark.getBoard().getEndDate())
-                        .currentCount(boardBookmark.getBoard().getCurrentCount())
-                        .maxCount(boardBookmark.getBoard().getMaxCount())
-                        .language(boardBookmark.getBoard().getLanguage())
-                        .commentCount(boardBookmark.getBoard().getCommentCount())
-                        .nickName(boardBookmark.getBoard().getUser().getNickName())
-                        .ageRange(boardBookmark.getBoard().getUser().getAgeRange())
-                        .gender(boardBookmark.getBoard().getUser().getGender())
-                        .nationality(boardBookmark.getBoard().getUser().getNationality())
-                        .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
-                        .isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
-                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,boardBookmark.getBoard()))
-                        .build());
+        return boardBookMarks.map(boardBookmark -> GetBoardsResDTO
+                .builder()
+                .boardId(boardBookmark.getBoard().getId())
+                .title(boardBookmark.getBoard().getTitle())
+                .startDate(boardBookmark.getBoard().getStartDate())
+                .endDate(boardBookmark.getBoard().getEndDate())
+                .currentCount(boardBookmark.getBoard().getCurrentCount())
+                .maxCount(boardBookmark.getBoard().getMaxCount())
+                .language(boardBookmark.getBoard().getLanguage())
+                .commentCount(boardBookmark.getBoard().getCommentCount())
+                .nickName(boardBookmark.getBoard().getUser().getNickName())
+                .ageRange(boardBookmark.getBoard().getUser().getAgeRange())
+                .gender(boardBookmark.getBoard().getUser().getGender())
+                .nationality(boardBookmark.getBoard().getUser().getNationality())
+                .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardBookmark.getBoard()))
+                .build());
     }
 
     @Override
@@ -255,48 +255,48 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         User currentUser = userPersistPort.findCurrentUserByEmail();
         Page<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser, pageable);
 
-        return boardLikes.map(boardLike-> GetBoardsResDTO
-                        .builder()
-                        .boardId(boardLike.getBoard().getId())
-                        .title(boardLike.getBoard().getTitle())
-                        .startDate(boardLike.getBoard().getStartDate())
-                        .endDate(boardLike.getBoard().getEndDate())
-                        .currentCount(boardLike.getBoard().getCurrentCount())
-                        .maxCount(boardLike.getBoard().getMaxCount())
-                        .language(boardLike.getBoard().getLanguage())
-                        .commentCount(boardLike.getBoard().getCommentCount())
-                        .nickName(boardLike.getBoard().getUser().getNickName())
-                        .ageRange(boardLike.getBoard().getUser().getAgeRange())
-                        .gender(boardLike.getBoard().getUser().getGender())
-                        .nationality(boardLike.getBoard().getUser().getNationality())
-                        .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
-                        .isLiked(boardLikesService.isLikedBoard(currentUser,boardLike.getBoard()))
-                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,boardLike.getBoard()))
-                        .build());
+        return boardLikes.map(boardLike -> GetBoardsResDTO
+                .builder()
+                .boardId(boardLike.getBoard().getId())
+                .title(boardLike.getBoard().getTitle())
+                .startDate(boardLike.getBoard().getStartDate())
+                .endDate(boardLike.getBoard().getEndDate())
+                .currentCount(boardLike.getBoard().getCurrentCount())
+                .maxCount(boardLike.getBoard().getMaxCount())
+                .language(boardLike.getBoard().getLanguage())
+                .commentCount(boardLike.getBoard().getCommentCount())
+                .nickName(boardLike.getBoard().getUser().getNickName())
+                .ageRange(boardLike.getBoard().getUser().getAgeRange())
+                .gender(boardLike.getBoard().getUser().getGender())
+                .nationality(boardLike.getBoard().getUser().getNationality())
+                .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, boardLike.getBoard()))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardLike.getBoard()))
+                .build());
     }
 
     @Override
     public Page<GetBoardsResDTO> getMyBoards(Pageable pageable) {
         User currentUser = userPersistPort.findCurrentUserByEmail();
         Page<Board> boardList = boardService.getBoardsByUser(currentUser, pageable);
-        return boardList.map(board-> GetBoardsResDTO
-                        .builder()
-                        .boardId(board.getId())
-                        .title(board.getTitle())
-                        .startDate(board.getStartDate())
-                        .endDate(board.getEndDate())
-                        .currentCount(board.getCurrentCount())
-                        .maxCount(board.getMaxCount())
-                        .language(board.getLanguage())
-                        .commentCount(board.getCommentCount())
-                        .nickName(board.getUser().getNickName())
-                        .ageRange(board.getUser().getAgeRange())
-                        .gender(board.getUser().getGender())
-                        .nationality(board.getUser().getNationality())
-                        .isMine(currentUser.getId().equals(board.getUser().getId()))
-                        .isLiked(boardLikesService.isLikedBoard(currentUser,board))
-                        .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser,board))
-                        .build());
+        return boardList.map(board -> GetBoardsResDTO
+                .builder()
+                .boardId(board.getId())
+                .title(board.getTitle())
+                .startDate(board.getStartDate())
+                .endDate(board.getEndDate())
+                .currentCount(board.getCurrentCount())
+                .maxCount(board.getMaxCount())
+                .language(board.getLanguage())
+                .commentCount(board.getCommentCount())
+                .nickName(board.getUser().getNickName())
+                .ageRange(board.getUser().getAgeRange())
+                .gender(board.getUser().getGender())
+                .nationality(board.getUser().getNationality())
+                .isMine(currentUser.getId().equals(board.getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, board))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .build());
     }
 
     @Override

@@ -2,11 +2,11 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.CreateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.CreateBoardReqDTO;
-import com.example.tripmingle.dto.req.UpdateBoardCommentReqDTO;
-import com.example.tripmingle.dto.req.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.board.CreateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
+import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.res.board.*;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,9 @@ public class BoardController {
     @GetMapping("/{country-name}")
     //게시물 전체조회(나라명 입력, 성별이나 언어로 필터링, 페이징)
     public ResponseEntity<ResultResponse> getAllBoards(@PathVariable(value = "country-name") String countryName
-                                                       ,@RequestParam(value = "gender", required = false) String gender
-                                                       ,@RequestParam(value = "language", required = false) String language
-                                                       ,@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+            , @RequestParam(value = "gender", required = false) String gender
+            , @RequestParam(value = "language", required = false) String language
+            , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getAllBoards(countryName, gender, language, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_BOARD_SUCCESS, getBoardsResDTOS));
     }
@@ -75,8 +75,8 @@ public class BoardController {
     @GetMapping("/search/{country-name}")
     //게시글 검색
     public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name") String countryName
-                                                    , @RequestParam String keyword
-                                                    , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+            , @RequestParam String keyword
+            , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(keyword, pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
     }
@@ -105,35 +105,35 @@ public class BoardController {
 
     @PostMapping("/bookmark/{board-id}")
     //북마크 토글
-    public ResponseEntity<ResultResponse> toggleBoardBookmark(@PathVariable(value = "board-id") Long boardId){
+    public ResponseEntity<ResultResponse> toggleBoardBookmark(@PathVariable(value = "board-id") Long boardId) {
         ToggleStateResDTO toggleStateResDTO = boardUseCase.toggleBoardBookMark(boardId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_BOOK_MARK_SUCCESS, toggleStateResDTO));
     }
 
     @GetMapping("/bookmark")
     //내가 북마크한 모든 게시물 조회
-    public ResponseEntity<ResultResponse> getMyBookMarkedBoards(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<ResultResponse> getMyBookMarkedBoards(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
     }
 
     @PostMapping("/likes/{board-id}")
     //좋아요 토글
-    public ResponseEntity<ResultResponse> toggleBoardLikes(@PathVariable(value = "board-id") Long boardId){
+    public ResponseEntity<ResultResponse> toggleBoardLikes(@PathVariable(value = "board-id") Long boardId) {
         ToggleStateResDTO toggleStateResDTO = boardUseCase.toggleBoardLikes(boardId);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_LIKES_SUCCESS, toggleStateResDTO));
     }
 
     @GetMapping("/likes")
     //내가 좋아요한 모든 게시물 조회
-    public ResponseEntity<ResultResponse> getMyLikedBoards(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<ResultResponse> getMyLikedBoards(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
     }
 
     @GetMapping("/mine")
     //내가 방장인 모든 게시물 조회
-    public ResponseEntity<ResultResponse> getMyBoards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
+    public ResponseEntity<ResultResponse> getMyBoards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyBoards(pageable);
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_SUCCESS, getBoardsResDTOS));
     }
@@ -141,7 +141,6 @@ public class BoardController {
     //내가 참여하고있는 모든 게시물 조회
 
     //여행확정짓기
-
 
 
 }

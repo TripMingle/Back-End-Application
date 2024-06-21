@@ -1,6 +1,6 @@
 package com.example.tripmingle.port.out;
 
-import com.example.tripmingle.dto.res.KakaoTokenResDTO;
+import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

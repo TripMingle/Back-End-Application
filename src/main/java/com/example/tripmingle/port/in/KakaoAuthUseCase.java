@@ -1,8 +1,8 @@
 package com.example.tripmingle.port.in;
 
 import com.example.tripmingle.dto.etc.TokenDTO;
-import com.example.tripmingle.dto.req.KakaoUserAdditionDetailsReqDTO;
-import com.example.tripmingle.dto.res.KakaoTokenResDTO;
+import com.example.tripmingle.dto.req.oauth.KakaoUserAdditionDetailsReqDTO;
+import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 
 public interface KakaoAuthUseCase {
 

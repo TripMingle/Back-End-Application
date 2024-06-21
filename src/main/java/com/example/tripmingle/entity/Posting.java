@@ -1,7 +1,7 @@
 package com.example.tripmingle.entity;
 
 import com.example.tripmingle.common.entity.BaseEntity;
-import com.example.tripmingle.dto.req.PatchPostingReqDTO;
+import com.example.tripmingle.dto.req.posting.PatchPostingReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Where;
@@ -32,6 +32,9 @@ public class Posting extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(nullable = false)
+    private String country;
+
     private int commentCount;
 
     public void updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
@@ -44,6 +47,9 @@ public class Posting extends BaseEntity {
         if (patchPostingReqDTO.getPostingType() != null && !patchPostingReqDTO.getPostingType().equals("")) {
             this.postingType = patchPostingReqDTO.getPostingType();
         }
+        if (patchPostingReqDTO.getCountry() != null && !patchPostingReqDTO.getCountry().equals("")) {
+            this.country = patchPostingReqDTO.getCountry();
+        }
     }
 
     public void deletePosting() {
@@ -54,7 +60,19 @@ public class Posting extends BaseEntity {
         this.commentCount += 1;
     }
 
-    public void decreasePostingCommentCount() {
-        this.commentCount -= 1;
+    public void decreasePostingCommentCount(int deletedPostingCommentCount) {
+        if (this.commentCount > deletedPostingCommentCount) {
+            this.commentCount -= deletedPostingCommentCount;
+        } else {
+            this.commentCount = 0;
+        }
+    }
+
+    public void deletePostingComments() {
+        this.commentCount = 0;
+    }
+
+    public void deletePostingLikes() {
+        this.commentCount = 0;
     }
 }

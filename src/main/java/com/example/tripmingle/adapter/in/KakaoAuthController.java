@@ -2,8 +2,8 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.etc.TokenDTO;
-import com.example.tripmingle.dto.req.KakaoUserAdditionDetailsReqDTO;
-import com.example.tripmingle.dto.res.KakaoTokenResDTO;
+import com.example.tripmingle.dto.req.oauth.KakaoUserAdditionDetailsReqDTO;
+import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import com.example.tripmingle.port.in.KakaoAuthUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

@@ -1,7 +1,7 @@
 package com.example.tripmingle.port.in;
 
-import com.example.tripmingle.dto.req.*;
-import com.example.tripmingle.dto.res.*;
+import com.example.tripmingle.dto.req.posting.*;
+import com.example.tripmingle.dto.res.posting.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -12,15 +12,15 @@ public interface PostingUseCase {
 
     PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO);
 
-    DeletePostingResDTO deletePosting(DeletePostingReqDTO deletePostingReqDTO);
+    DeletePostingResDTO deletePosting(Long postingId);
 
-    List<GetPreviewPostingResDTO> getPreviewPostings();
+    List<GetPostingsResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO);
 
     GetOnePostingResDTO getOnePosting(Long postingId);
 
-    List<GetAllPostingsResDTO> getAllPostings(String postingType, Pageable pageable);
+    List<GetPostingsResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
 
-    List<GetSearchPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
+    List<GetPostingsResDTO> getSearchPostings(String keyword, Pageable pageable);
 
     PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO);
 
@@ -28,7 +28,7 @@ public interface PostingUseCase {
 
     DeletePostingCommentResDTO deletePostingComment(Long commentId);
 
-    PostingToggleStateResDTO togglePostingLikes(Long postingId);
+    PostingLikeToggleStateResDTO togglePostingLikes(Long postingId);
 
     GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable);
 }
