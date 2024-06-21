@@ -24,8 +24,9 @@ public class BoardBookMark {
     @Column(name = "is_active")
     private boolean isActive;
 
-    public void toggleBoardBookMark(){
+    public boolean toggleBoardBookMark(){
         this.isActive = !this.isActive;
+        return this.isActive;
     }
 
     public void delete(){

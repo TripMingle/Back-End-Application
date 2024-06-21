@@ -17,7 +17,8 @@ public class BoardBookMarkService {
         BoardBookMark boardBookMark;
         if(boardBookMarkPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
             boardBookMark = boardBookMarkPersistPort.findByUserAndBoard(currentUser,board);
-            boardBookMark.toggleBoardBookMark();
+            if(boardBookMark.toggleBoardBookMark()) board.increaseBookMarkCount();
+            else board.decreaseBookMarkCount(1);
         }
         else{
             boardBookMark = BoardBookMark.builder()
@@ -26,6 +27,7 @@ public class BoardBookMarkService {
                     .isActive(true)
                     .build();
             boardBookMarkPersistPort.saveBoardBookMark(boardBookMark);
+            board.increaseBookMarkCount();
         }
         return boardBookMark.isActive();
     }
@@ -44,6 +46,8 @@ public class BoardBookMarkService {
 
     public void deleteBoardBookMarksByBoardId(Long boardId) {
         boardBookMarkPersistPort.findBoardBookMarksByBoardId(boardId).stream()
-                .forEach(boardBookMark -> boardBookMark.delete());
+                .forEach(boardBookMark -> {
+                        boardBookMark.getBoard().decreaseBookMarkCount(1);
+                        boardBookMark.delete();});
     }
 }

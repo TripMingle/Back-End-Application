@@ -40,14 +40,16 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .title(board.getTitle())
                         .startDate(board.getStartDate())
                         .endDate(board.getEndDate())
+                        .currentCount(board.getCurrentCount())
+                        .maxCount(board.getMaxCount())
                         .language(board.getLanguage())
                         .commentCount(board.getCommentCount())
+                        .likeCount(board.getLikeCount())
+                        .bookMarkCount(board.getBookMarkCount())
                         .nickName(board.getUser().getNickName())
                         .ageRange(board.getUser().getAgeRange())
                         .gender(board.getUser().getGender())
                         .nationality(board.getUser().getNationality())
-                        .currentCount(board.getCurrentCount())
-                        .maxCount(board.getMaxCount())
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
@@ -65,14 +67,16 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .title(board.getTitle())
                 .startDate(board.getStartDate())
                 .endDate(board.getEndDate())
+                .currentCount(board.getCurrentCount())
+                .maxCount(board.getMaxCount())
                 .language(board.getLanguage())
                 .commentCount(board.getCommentCount())
+                .likeCount(board.getLikeCount()) // 추가된 필드 사용
+                .bookMarkCount(board.getBookMarkCount()) // 추가된 필드 사용
                 .nickName(board.getUser().getNickName())
                 .ageRange(board.getUser().getAgeRange())
                 .gender(board.getUser().getGender())
                 .nationality(board.getUser().getNationality())
-                .currentCount(board.getCurrentCount())
-                .maxCount(board.getMaxCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
@@ -100,6 +104,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .maxCount(board.getMaxCount())
                 .createdAt(board.getCreatedAt())
                 .commentCount(board.getCommentCount())
+                .likeCount(board.getLikeCount())
+                .bookMarkCount(board.getBookMarkCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
@@ -206,11 +212,13 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .currentCount(board.getCurrentCount())
                 .maxCount(board.getMaxCount())
                 .language(board.getLanguage())
+                .commentCount(board.getCommentCount())
+                .likeCount(board.getLikeCount())
+                .bookMarkCount(board.getBookMarkCount())
                 .nickName(board.getUser().getNickName())
                 .ageRange(board.getUser().getAgeRange())
                 .gender(board.getUser().getGender())
                 .nationality(board.getUser().getNationality())
-                .commentCount(board.getCommentCount())
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
@@ -242,7 +250,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         User currentUser = userService.getCurrentUser();
         Board board = boardCommentService.getBoardByCommentId(commentId);
         int commentCount = boardCommentService.deleteBoardComment(commentId, currentUser);
-        boardService.updateCommentCount(board, -commentCount);
+        boardService.updateCommentCount(board, commentCount);
 
     }
 
@@ -275,8 +283,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         User currentUser = userService.getCurrentUser();
         Page<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser, pageable);
 
-        return boardBookMarks.map(boardBookmark -> GetBoardsResDTO
-                .builder()
+        return boardBookMarks.map(boardBookmark -> GetBoardsResDTO.builder()
                 .boardId(boardBookmark.getBoard().getId())
                 .title(boardBookmark.getBoard().getTitle())
                 .startDate(boardBookmark.getBoard().getStartDate())
@@ -285,6 +292,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .maxCount(boardBookmark.getBoard().getMaxCount())
                 .language(boardBookmark.getBoard().getLanguage())
                 .commentCount(boardBookmark.getBoard().getCommentCount())
+                .likeCount(boardBookmark.getBoard().getLikeCount())
+                .bookMarkCount(boardBookmark.getBoard().getBookMarkCount())
                 .nickName(boardBookmark.getBoard().getUser().getNickName())
                 .ageRange(boardBookmark.getBoard().getUser().getAgeRange())
                 .gender(boardBookmark.getBoard().getUser().getGender())
@@ -311,8 +320,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         User currentUser = userService.getCurrentUser();
         Page<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser, pageable);
 
-        return boardLikes.map(boardLike -> GetBoardsResDTO
-                .builder()
+        return boardLikes.map(boardLike -> GetBoardsResDTO.builder()
                 .boardId(boardLike.getBoard().getId())
                 .title(boardLike.getBoard().getTitle())
                 .startDate(boardLike.getBoard().getStartDate())
@@ -321,6 +329,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .maxCount(boardLike.getBoard().getMaxCount())
                 .language(boardLike.getBoard().getLanguage())
                 .commentCount(boardLike.getBoard().getCommentCount())
+                .likeCount(boardLike.getBoard().getLikeCount())
+                .bookMarkCount(boardLike.getBoard().getBookMarkCount())
                 .nickName(boardLike.getBoard().getUser().getNickName())
                 .ageRange(boardLike.getBoard().getUser().getAgeRange())
                 .gender(boardLike.getBoard().getUser().getGender())
@@ -335,8 +345,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     public Page<GetBoardsResDTO> getMyBoards(Pageable pageable) {
         User currentUser = userService.getCurrentUser();
         Page<Board> boardList = boardService.getBoardsByUser(currentUser, pageable);
-        return boardList.map(board -> GetBoardsResDTO
-                .builder()
+        return boardList.map(board -> GetBoardsResDTO.builder()
                 .boardId(board.getId())
                 .title(board.getTitle())
                 .startDate(board.getStartDate())
@@ -345,6 +354,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .maxCount(board.getMaxCount())
                 .language(board.getLanguage())
                 .commentCount(board.getCommentCount())
+                .likeCount(board.getLikeCount())
+                .bookMarkCount(board.getBookMarkCount())
                 .nickName(board.getUser().getNickName())
                 .ageRange(board.getUser().getAgeRange())
                 .gender(board.getUser().getGender())

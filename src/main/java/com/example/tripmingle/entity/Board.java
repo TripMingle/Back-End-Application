@@ -46,11 +46,33 @@ public class Board extends BaseEntity {
     private String language;
 
     private int commentCount;
+    private int likeCount;
+    private int bookMarkCount;
 
-
-    public void updateCommentCount(int diff) {
-        this.commentCount += diff;
+    public void increaseLikeCount(){
+        likeCount++;
     }
+
+    public void decreaseLikeCount(int diff){
+        likeCount-=diff;
+    }
+
+    public void increaseBookMarkCount(){
+        bookMarkCount++;
+    }
+
+    public void decreaseBookMarkCount(int diff){
+        bookMarkCount-=diff;
+    }
+
+    public void increaseCommentCount(){
+        this.commentCount++;
+    }
+
+    public void decreaseCommentCount(int diff){
+        this.commentCount -= diff;
+    }
+
 
     public void update(UpdateBoardDTO updateBoardDTO) {
         if (updateBoardDTO.getTitle() != null) {

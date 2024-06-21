@@ -22,7 +22,9 @@ public class BoardLikesService {
         BoardLikes boardLikes;
         if(boardLikesPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
             boardLikes = boardLikesPersistPort.findByUserAndBoard(currentUser,board);
-            boardLikes.toggleBoardLikes();
+            if(boardLikes.toggleBoardLikes())board.increaseLikeCount();
+            else board.decreaseBookMarkCount(1);
+
         }
         else{
             boardLikes = BoardLikes.builder()
@@ -31,6 +33,7 @@ public class BoardLikesService {
                     .isActive(true)
                     .build();
             boardLikesPersistPort.saveBoardLikes(boardLikes);
+            board.increaseBookMarkCount();
         }
         return boardLikes.isActive();
     }
@@ -45,6 +48,9 @@ public class BoardLikesService {
 
     public void deleteBoardLikesByBoardId(Long boardId) {
         boardLikesPersistPort.findBoardLikesByBoardId(boardId).stream()
-                .forEach(boardLikes -> boardLikes.delete());
+                .forEach(boardLikes -> {
+                    boardLikes.getBoard().decreaseLikeCount(1);
+                    boardLikes.delete();
+                });
     }
 }

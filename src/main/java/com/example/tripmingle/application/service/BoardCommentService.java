@@ -32,7 +32,7 @@ public class BoardCommentService {
                     .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
         }
 
-        board.updateCommentCount(1);
+        board.increaseCommentCount();
 
         return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
                 .parentBoardComment(parentBoardComment)
@@ -50,7 +50,7 @@ public class BoardCommentService {
     public int deleteBoardComment(Long commentId, User currentUser) {
         int commentCount = 0;
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
-        userUtils.validateMasterUser(boardComment.getId(), currentUser.getId());
+        userUtils.validateMasterUser(boardComment.getUser().getId(), currentUser.getId());
         commentCount++;
         if (boardComment.isParentBoardCommentNull()) {
             List<BoardComment> childBoardComments = boardCommentPersistPort.getBoardCommentByParentBoardId(boardComment.getId());
@@ -67,7 +67,7 @@ public class BoardCommentService {
 
     public BoardComment updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId, User currentUser) {
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
-        userUtils.validateMasterUser(boardComment.getId(),currentUser.getId());
+        userUtils.validateMasterUser(boardComment.getUser().getId(),currentUser.getId());
         boardComment.update(updateBoardCommentReqDTO);
 
         return boardCommentPersistPort.saveBoardComment(boardComment);

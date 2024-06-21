@@ -26,8 +26,9 @@ public class BoardLikes {
     @Column(name = "is_active")
     private boolean isActive;
 
-    public void toggleBoardLikes(){
+    public boolean toggleBoardLikes(){
         this.isActive = !this.isActive;
+        return this.isActive;
     }
 
     public void delete(){

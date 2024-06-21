@@ -67,7 +67,7 @@ public class BoardService {
 
     public Long updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {
         Board board = boardPersistPort.getBoardById(boardId);
-        userUtils.validateMasterUser(board.getId(),currentUser.getId());
+        userUtils.validateMasterUser(board.getUser().getId(),currentUser.getId());
         UpdateBoardDTO updateBoardDTO = UpdateBoardDTO.builder()
                 .continent(updateBoardReqDTO.getContinent())
                 .countryName(updateBoardReqDTO.getCountryName())
@@ -85,8 +85,9 @@ public class BoardService {
     }
 
     public void deleteBoard(Long boardId, User currentUser) {
-        userUtils.validateMasterUser(boardId,currentUser.getId());
-        boardPersistPort.deleteBoardById(boardId);
+        Board board = boardPersistPort.getBoardById(boardId);
+        userUtils.validateMasterUser(board.getUser().getId(),currentUser.getId());
+        boardPersistPort.deleteBoardById(board.getId());
     }
 
 
@@ -103,7 +104,7 @@ public class BoardService {
     }
 
     public void updateCommentCount(Board board, int commentCount) {
-        board.updateCommentCount(commentCount);
+        board.decreaseCommentCount(commentCount);
     }
 
     public Page<Board> getBoardsByUser(User user, Pageable pageable) {
