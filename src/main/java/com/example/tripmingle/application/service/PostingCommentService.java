@@ -71,7 +71,7 @@ public class PostingCommentService {
         return 1;
     }
 
-    public void deletePostingWithPostingComments(Long postingId) {
+    public void deletePostingCommentsWithPosting(Long postingId) {
         List<PostingComment> postingComments = postingCommentPersistPort.getPostingCommentsByPostingId(postingId);
         postingComments.forEach(PostingComment::deletePostingComment);
     }

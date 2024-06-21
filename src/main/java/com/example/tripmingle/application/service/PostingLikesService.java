@@ -54,7 +54,7 @@ public class PostingLikesService {
         return postingLikesPersistPort.count(postingId);
     }
 
-    public void deletePostingWithPostingLikes(Long postingId) {
+    public void deletePostingLikesWithPosting(Long postingId) {
         List<PostingLikes> postingLikes = postingLikesPersistPort.getAllPostingLikes(postingId);
         postingLikes.forEach(PostingLikes::deletePostingLikes);
     }
