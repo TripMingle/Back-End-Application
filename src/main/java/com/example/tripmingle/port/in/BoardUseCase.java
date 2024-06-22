@@ -1,5 +1,6 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.res.board.*;
@@ -13,7 +14,7 @@ public interface BoardUseCase {
 
     void getClusteredBoards();
 
-    Page<GetBoardsResDTO> getAllBoards(String country, String gender, String language, Pageable pageable);
+    Page<GetBoardsResDTO> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable);
 
     GetBoardInfoResDTO getBoard(Long boardId);
 

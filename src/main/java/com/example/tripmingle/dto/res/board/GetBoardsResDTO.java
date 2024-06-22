@@ -2,7 +2,6 @@ package com.example.tripmingle.dto.res.board;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -18,6 +17,8 @@ public class GetBoardsResDTO {
     private int maxCount;
     private String language;
     private int commentCount;
+    private int likeCount;
+    private int bookMarkCount;
     //user info
     private String nickName;
     private String ageRange;

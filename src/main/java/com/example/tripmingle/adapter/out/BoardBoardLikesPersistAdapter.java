@@ -38,4 +38,9 @@ public class BoardBoardLikesPersistAdapter implements BoardLikesPersistPort {
     public Page<BoardLikes> findBoardLikesByUser(User user, Pageable pageable) {
         return boardLikesRepository.findBoardLikesByUser(user, pageable);
     }
+
+    @Override
+    public List<BoardLikes> findBoardLikesByBoardId(Long boardId) {
+        return boardLikesRepository.findBoardLikesByBoardId(boardId);
+    }
 }

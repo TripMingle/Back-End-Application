@@ -15,14 +15,16 @@ public class GetBoardInfoResDTO {
     private String title;
     private String content;
     private String language;
-    private List<String> traits;
-    private List<String> types;
+    private List<String> personalType;
+    private List<String> tripType;
     private LocalDate startDate;
     private LocalDate endDate;
     private int currentCount;
     private int maxCount;
     private LocalDateTime createdAt;
     private int commentCount;
+    private int likeCount;
+    private int bookMarkCount;
     private boolean isMine;
     private boolean isLiked;
     private boolean isBookMarked;

@@ -16,8 +16,8 @@ public class UpdateBoardDTO {
     private LocalDate endDate;
     private String language;
     private int maxCount;
-    private String types;
-    private String traits;
+    private String tripType;
+    private String personalType;
     private String title;
     private String content;
 }

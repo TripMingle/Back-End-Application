@@ -9,7 +9,6 @@ import com.example.tripmingle.dto.req.posting.PostPostingReqDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.PostingPersistPort;
-import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,33 +20,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostingService {
     private final PostingPersistPort postingPersistPort;
-    private final UserPersistPort userPersistPort;
     private final UserUtils userUtils;
 
-    public Long createPosting(PostPostingReqDTO postPostingReqDTO) {
-        User user = userPersistPort.findCurrentUserByEmail();
+    public Long createPosting(PostPostingReqDTO postPostingReqDTO, User currentUser) {
         Posting posting = Posting.builder()
                 .title(postPostingReqDTO.getTitle())
                 .content(postPostingReqDTO.getContent())
                 .postingType(postPostingReqDTO.getPostingType())
                 .country(postPostingReqDTO.getCountry())
-                .user(user)
+                .user(currentUser)
                 .build();
         return postingPersistPort.createPosting(posting);
     }
 
-    public Long updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
+    public Long updatePosting(PatchPostingReqDTO patchPostingReqDTO, User currentUser) {
         Posting posting = postingPersistPort.getPostingById(patchPostingReqDTO.getPostingId());
-        if (userUtils.validateMasterUser(posting.getUser().getId())) {
-            posting.updatePosting(patchPostingReqDTO);
-        }
+        userUtils.validateMasterUser(posting.getUser().getId(),currentUser.getId());
+        posting.updatePosting(patchPostingReqDTO);
+
         return posting.getId();
     }
 
-    public void deletePosting(Posting posting) {
-        if (userUtils.validateMasterUser(posting.getUser().getId())) {
-            posting.deletePosting();
-        }
+    public void deletePosting(Posting posting, User currentUser) {
+        userUtils.validateMasterUser(posting.getUser().getId(),currentUser.getId());
+        posting.deletePosting();
+
     }
 
     public List<Posting> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {

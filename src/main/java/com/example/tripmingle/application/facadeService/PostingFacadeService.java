@@ -34,7 +34,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO) {
-        Long postingId = postingService.createPosting(postPostingReqDTO);
+        User currentUser = userService.getCurrentUser();
+        Long postingId = postingService.createPosting(postPostingReqDTO, currentUser);
         return PostPostingResDTO.builder()
                 .postingId(postingId)
                 .build();
@@ -43,7 +44,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
-        Long postingId = postingService.updatePosting(patchPostingReqDTO);
+        User currentUser = userService.getCurrentUser();
+        Long postingId = postingService.updatePosting(patchPostingReqDTO, currentUser);
         return PatchPostingResDTO.builder()
                 .postingId(postingId)
                 .build();
@@ -52,12 +54,13 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public DeletePostingResDTO deletePosting(Long postingId) {
+        User currentUser = userService.getCurrentUser();
         Posting posting = postingService.getOnePosting(postingId);
         postingCommentService.deletePostingCommentsWithPosting(postingId);
         posting.deletePostingComments();
         postingLikesService.deletePostingLikesWithPosting(postingId);
         posting.deletePostingLikes();
-        postingService.deletePosting(posting);
+        postingService.deletePosting(posting, currentUser);
         return DeletePostingResDTO.builder()
                 .postingId(postingId)
                 .build();
@@ -169,8 +172,9 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO) {
+        User currentUser = userService.getCurrentUser();
         Posting posting = postingService.getOnePosting(postPostingCommentReqDTO.getPostingId());
-        Long newPostingCommentId = postingCommentService.createPostingComment(postPostingCommentReqDTO, posting);
+        Long newPostingCommentId = postingCommentService.createPostingComment(postPostingCommentReqDTO, posting, currentUser);
         return PostPostingCommentResDTO.builder()
                 .postingCommentId(newPostingCommentId)
                 .build();
@@ -179,7 +183,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
-        Long postingComment = postingCommentService.updatePostingComment(patchPostingCommentReqDTO);
+        User currentUser = userService.getCurrentUser();
+        Long postingComment = postingCommentService.updatePostingComment(patchPostingCommentReqDTO, currentUser);
         return PatchPostingCommentResDTO.builder()
                 .postingCommentId(postingComment)
                 .build();
@@ -188,7 +193,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
     @Transactional
     @Override
     public DeletePostingCommentResDTO deletePostingComment(Long commentId) {
-        Long postingCommentId = postingCommentService.deletePostingComment(commentId);
+        User currentUser = userService.getCurrentUser();
+        Long postingCommentId = postingCommentService.deletePostingComment(commentId, currentUser);
         return DeletePostingCommentResDTO.builder()
                 .postingCommentId(postingCommentId)
                 .build();

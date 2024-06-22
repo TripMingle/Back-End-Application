@@ -15,8 +15,8 @@ public class CreateBoardReqDTO {
     private LocalDate endDate;
     private String language;
     private int maxCount;
-    private List<String> types;
-    private List<String> traits;
+    private List<String> tripType;
+    private List<String> personalType;
     private String title;
     private String content;
 }

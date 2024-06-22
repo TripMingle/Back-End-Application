@@ -20,4 +20,6 @@ public interface BoardLikesRepository extends JpaRepository<BoardLikes, Long> {
 
     @Query("SELECT bl FROM BoardLikes bl where bl.user = :user AND bl.isActive=true")
     Page<BoardLikes> findBoardLikesByUser(User user, Pageable pageable);
+
+    List<BoardLikes> findBoardLikesByBoardId(Long boardId);
 }

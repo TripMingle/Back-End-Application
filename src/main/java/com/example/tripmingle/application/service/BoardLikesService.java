@@ -4,27 +4,27 @@ import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardLikes;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardLikesPersistPort;
-import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 @Service
 @RequiredArgsConstructor
 public class BoardLikesService {
-    private final UserPersistPort userPersistPort;
     private final BoardLikesPersistPort boardLikesPersistPort;
     public Page<BoardLikes> getMyLikedBoards(User currentUser, Pageable pageable) {
         return boardLikesPersistPort.findBoardLikesByUser(currentUser, pageable);
     }
 
-    public boolean toggleBoardLikes(Board board) {
-        User currentUser = userPersistPort.findCurrentUserByEmail();
+    public boolean toggleBoardLikes(Board board, User currentUser) {
         BoardLikes boardLikes;
         if(boardLikesPersistPort.existsBoardBookMarkByUserAndBoard(currentUser,board)){
             boardLikes = boardLikesPersistPort.findByUserAndBoard(currentUser,board);
-            boardLikes.toggleBoardLikes();
+            if(boardLikes.toggleBoardLikes())board.increaseLikeCount();
+            else board.decreaseBookMarkCount(1);
+
         }
         else{
             boardLikes = BoardLikes.builder()
@@ -33,6 +33,7 @@ public class BoardLikesService {
                     .isActive(true)
                     .build();
             boardLikesPersistPort.saveBoardLikes(boardLikes);
+            board.increaseLikeCount();
         }
         return boardLikes.isActive();
     }
@@ -43,5 +44,13 @@ public class BoardLikesService {
             return boardLikesPersistPort.findByUserAndBoard(currentUser,board).isActive();
         }
         else return false;
+    }
+
+    public void deleteBoardLikesByBoardId(Long boardId) {
+        boardLikesPersistPort.findBoardLikesByBoardId(boardId).stream()
+                .forEach(boardLikes -> {
+                    boardLikes.getBoard().decreaseLikeCount(1);
+                    boardLikes.delete();
+                });
     }
 }

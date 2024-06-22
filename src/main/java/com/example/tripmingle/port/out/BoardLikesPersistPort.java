@@ -16,4 +16,6 @@ public interface BoardLikesPersistPort {
     void saveBoardLikes(BoardLikes boardLikes);
 
     Page<BoardLikes> findBoardLikesByUser(User user, Pageable pageable);
+
+    List<BoardLikes> findBoardLikesByBoardId(Long boardId);
 }
