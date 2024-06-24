@@ -9,8 +9,9 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardCommentPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,31 @@ public class BoardCommentService {
                 .content(createBoardCommentReqDTO.getContent())
                 .build());
     }
+
+    @Transactional
+    public BoardComment createBoardCommentBySynchronized(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
+        synchronized (this) {
+            BoardComment parentBoardComment;
+
+        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
+            parentBoardComment = null;
+        } else {
+            parentBoardComment = boardCommentPersistPort
+                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
+        }
+
+        board.increaseCommentCount();
+
+        return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
+                .parentBoardComment(parentBoardComment)
+                .user(currentUser)
+                .board(board)
+                .content(createBoardCommentReqDTO.getContent())
+                .build());
+        }
+    }
+
+
 
     private boolean isParent(Long id) {
         if (id == -1) return true;
