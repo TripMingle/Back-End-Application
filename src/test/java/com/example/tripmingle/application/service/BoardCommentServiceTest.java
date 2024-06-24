@@ -8,6 +8,7 @@ import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.repository.BoardRepository;
 import com.example.tripmingle.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test") // 'test' 프로파일을 활성화하여 테스트 환경 설정을 사용
+@Transactional
+@Slf4j
 public class BoardCommentServiceTest {
 
     @Autowired
@@ -35,10 +38,9 @@ public class BoardCommentServiceTest {
     private UserRepository userRepository;
 
     @Test
-    @Transactional
     public void testAddComment() throws InterruptedException{
         int threadCount = 10; // 사용할 스레드 수
-        int commentsPerThread = 100; // 각 스레드당 생성할 댓글 수
+        int commentsPerThread = 1000; // 각 스레드당 생성할 댓글 수
 
         // User와 Board 엔티티를 데이터베이스에서 조회
         User user = userRepository.findById(1L)
@@ -58,7 +60,7 @@ public class BoardCommentServiceTest {
             executorService.execute(() -> {
                 try {
                     for (int j = 0; j < commentsPerThread; j++) {
-                        boardCommentService.createBoardComment(DTO, board, user); // 댓글 생성 서비스 호출
+                        boardCommentService.createBoardCommentBySynchronized(DTO, board, user); // 댓글 생성 서비스 호출
                     }
                 } finally {
                     latch.countDown(); // 작업 완료 후 CountDownLatch 감소
@@ -69,12 +71,17 @@ public class BoardCommentServiceTest {
         latch.await(); // 모든 스레드가 작업을 완료할 때까지 대기
         executorService.shutdown(); // ExecutorService 종료
 
-        long expectedCount = threadCount * commentsPerThread; // 예상 댓글 수
-        long actualCount = board.getCommentCount(); // 실제 댓글 수
+        int expectedCount = threadCount * commentsPerThread; // 예상 댓글 수
+        int actualCount = board.getCommentCount(); // 실제 댓글 수
+
+
+        System.out.println("expectedCount : " + expectedCount);
+        System.out.println("actualCount : " + actualCount);
 
         // 예상 댓글 수와 실제 댓글 수가 일치하는지 확인
         assertEquals(expectedCount, actualCount, "The comment count should not match the expected value.");
 
     }
+
 
 }
