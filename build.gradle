@@ -54,6 +54,10 @@ dependencies {
 
     // feign client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //JSON parser
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+
 }
 
 dependencyManagement {
