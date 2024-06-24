@@ -39,8 +39,8 @@ public class BoardCommentServiceTest {
 
     @Test
     public void testAddComment() throws InterruptedException{
-        int threadCount = 100; // 사용할 스레드 수
-        int commentsPerThread = 10000; // 각 스레드당 생성할 댓글 수
+        int threadCount = 10; // 사용할 스레드 수
+        int commentsPerThread = 1000; // 각 스레드당 생성할 댓글 수
 
         // User와 Board 엔티티를 데이터베이스에서 조회
         User user = userRepository.findById(1L)

@@ -44,9 +44,8 @@ public class BoardCommentService {
     }
 
     @Transactional
-    public BoardComment createBoardCommentBySynchronized(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
-        synchronized (this) {
-            BoardComment parentBoardComment;
+    public synchronized BoardComment createBoardCommentBySynchronized(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
+        BoardComment parentBoardComment;
 
         if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
             parentBoardComment = null;
@@ -63,7 +62,7 @@ public class BoardCommentService {
                 .board(board)
                 .content(createBoardCommentReqDTO.getContent())
                 .build());
-        }
+
     }
 
 
