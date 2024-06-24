@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CountDownLatch;
@@ -38,29 +39,32 @@ public class BoardCommentServiceTest {
     private UserRepository userRepository;
 
     @Test
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void testAddComment() throws InterruptedException{
-        int threadCount = 10; // 사용할 스레드 수
-        int commentsPerThread = 1000; // 각 스레드당 생성할 댓글 수
+        int threadCount = 1; // 사용할 스레드 수
+        int commentsPerThread = 10; // 각 스레드당 생성할 댓글 수
 
         // User와 Board 엔티티를 데이터베이스에서 조회
         User user = userRepository.findById(1L)
                 .orElseThrow(()->new UserNotFoundException("user not found", ErrorCode.USER_NOT_FOUND));
-        Board board = boardRepository.findById(4L)
+        Board board = boardRepository.findById(6L)
                 .orElseThrow(()->new BoardNotFoundException("board not found", ErrorCode.BOARD_NOT_FOUND));
 
         // CreateBoardCommentReqDTO 객체 생성 및 초기화
         CreateBoardCommentReqDTO DTO = new CreateBoardCommentReqDTO();
-        DTO.setBoardId(4L);
+        DTO.setBoardId(6L);
         DTO.setParentBoardCommentId(-1L);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount); // 고정된 스레드 풀 생성
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount*2); // 고정된 스레드 풀 생성
         CountDownLatch latch = new CountDownLatch(threadCount); // 모든 스레드가 작업을 완료할 때까지 기다리기 위한 CountDownLatch
 
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(() -> {
                 try {
-                    for (int j = 0; j < commentsPerThread; j++) {
-                        boardCommentService.createBoardCommentBySynchronized(DTO, board, user); // 댓글 생성 서비스 호출
+                    for (int j = 0; j < commentsPerThread; j++) {// 댓글 생성 서비스 호출
+                        //boardCommentService.createBoardCommentBySynchronized(DTO, board, user);
+                        //boardCommentService.createBoardComment(DTO, board, user);
+                        boardCommentService.createBoardCommentBySerializable(DTO, board, user);
                     }
                 } finally {
                     latch.countDown(); // 작업 완료 후 CountDownLatch 감소
