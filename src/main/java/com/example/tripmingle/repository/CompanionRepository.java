@@ -16,4 +16,6 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     List<Companion> findCompanionsByBoardId(Long boardId);
 
     Page<Companion> findCompanionsByUserId(Long userId, Pageable pageable);
+
+    boolean existsByUserIdAndBoardId(Long userId, Long boardId);
 }

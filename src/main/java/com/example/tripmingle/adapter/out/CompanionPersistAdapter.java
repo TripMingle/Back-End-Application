@@ -45,4 +45,9 @@ public class CompanionPersistAdapter implements CompanionPersistPort {
         return companionRepository.findCompanionsByUserId(userId,pageable);
     }
 
+    @Override
+    public boolean existsByUserIdAndBoardId(Long userId, Long boardId) {
+        return companionRepository.existsByUserIdAndBoardId(userId,boardId);
+    }
+
 }

@@ -19,4 +19,6 @@ public interface CompanionPersistPort {
     List<Companion> getCompanionsByBoardId(Long boardId);
 
     Page<Companion> getCompanionsByUserId(Long id, Pageable pageable);
+
+    boolean existsByUserIdAndBoardId(Long id, Long id1);
 }

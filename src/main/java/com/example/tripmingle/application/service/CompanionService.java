@@ -63,4 +63,8 @@ public class CompanionService {
     public Page<Companion> getCompanionsByUser(User currentUser, Pageable pageable) {
         return companionPersistPort.getCompanionsByUserId(currentUser.getId(),pageable);
     }
+
+    public boolean isParticipatingBoard(User currentUser, Board board) {
+        return companionPersistPort.existsByUserIdAndBoardId(currentUser.getId(),board.getId());
+    }
 }

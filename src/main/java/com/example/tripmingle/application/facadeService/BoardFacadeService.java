@@ -54,6 +54,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                        .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                        .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -81,6 +83,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .build());
     }
 
@@ -110,6 +114,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .boardCommentResDTOS(boardComments)
                 .userId(board.getUser().getId())
                 .nickName(board.getUser().getNickName())
@@ -224,6 +230,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .build());
     }
 
@@ -303,6 +311,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardBookmark.getBoard()))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,boardBookmark.getBoard()))
+                .isExpired(commonUtils.isEndDatePassed(boardBookmark.getBoard().getEndDate()))
                 .build());
     }
 
@@ -340,6 +350,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, boardLike.getBoard()))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardLike.getBoard()))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,boardLike.getBoard()))
+                .isExpired(commonUtils.isEndDatePassed(boardLike.getBoard().getEndDate()))
                 .build());
     }
 
@@ -365,6 +377,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .build());
     }
 
@@ -423,6 +437,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(companion.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, companion.getBoard()))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, companion.getBoard()))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,companion.getBoard()))
+                .isExpired(commonUtils.isEndDatePassed(companion.getBoard().getEndDate()))
                 .build());
     }
 

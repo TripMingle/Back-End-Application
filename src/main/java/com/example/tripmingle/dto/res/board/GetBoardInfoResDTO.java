@@ -28,6 +28,8 @@ public class GetBoardInfoResDTO {
     private boolean isMine;
     private boolean isLiked;
     private boolean isBookMarked;
+    private boolean isParticipating;
+    private boolean isExpired;
     //지났는지 안지났는지
 
 
