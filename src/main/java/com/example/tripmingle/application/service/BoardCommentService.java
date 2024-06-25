@@ -7,8 +7,10 @@ import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardComment;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.BoardCommentPersistPort;
+import com.example.tripmingle.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -64,7 +66,54 @@ public class BoardCommentService {
                 .build());
 
     }
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public BoardComment createBoardCommentBySerializable(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
+        BoardComment parentBoardComment;
+        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
+            parentBoardComment = null;
+        } else {
+            parentBoardComment = boardCommentPersistPort
+                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
+        }
 
+        board.increaseCommentCount();
+
+        return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
+                .parentBoardComment(parentBoardComment)
+                .user(currentUser)
+                .board(board)
+                .content(createBoardCommentReqDTO.getContent())
+                .build());
+    }
+
+    private final BoardRepository boardRepository;
+
+    @Transactional
+    public BoardComment createBoardCommentWithPessimisticLock(CreateBoardCommentReqDTO createBoardCommentReqDTO, Long boardId, User currentUser) {
+        // 비관적 락을 사용하여 Board 엔티티를 조회
+        Board board = boardRepository.findByIdWithPessimisticLock(boardId);
+
+        // 부모 댓글 설정
+        BoardComment parentBoardComment;
+        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
+            parentBoardComment = null;
+        } else {
+            parentBoardComment = boardCommentPersistPort
+                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
+        }
+
+        // 댓글 수 증가
+        board.increaseCommentCount();
+        boardRepository.save(board);
+
+        // 댓글 생성 및 저장
+        return boardCommentPersistPort.saveBoardComment(BoardComment.builder()
+                .parentBoardComment(parentBoardComment)
+                .user(currentUser)
+                .board(board)
+                .content(createBoardCommentReqDTO.getContent())
+                .build());
+    }
 
 
     private boolean isParent(Long id) {
