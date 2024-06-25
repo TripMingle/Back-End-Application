@@ -28,6 +28,8 @@ public class GetBoardInfoResDTO {
     private boolean isMine;
     private boolean isLiked;
     private boolean isBookMarked;
+    //지났는지 안지났는지
+
 
     //게시글 작성자
     private Long userId;
@@ -42,6 +44,4 @@ public class GetBoardInfoResDTO {
     //댓글
     private List<ParentBoardCommentResDTO> boardCommentResDTOS;
 
-
-    //일정
 }

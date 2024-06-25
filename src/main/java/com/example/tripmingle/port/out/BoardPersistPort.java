@@ -18,7 +18,7 @@ public interface BoardPersistPort {
 
     List<Board> getRecentBoardsByCountryName(String countryName);
 
-    Long saveBoard(Board board);
+    Board saveBoard(Board board);
 
     Page<Board> searchBoard(String keyword, Pageable pageable);
 

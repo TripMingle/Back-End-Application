@@ -140,9 +140,29 @@ public class BoardController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_SUCCESS, getBoardsResDTOS));
     }
 
+    @PostMapping("/{board-id}/confirm")
+    //여행확정짓기 (참여 확정짓기)
+    public ResponseEntity<ResultResponse> confirmUsers(@PathVariable(value = "board-id")Long boardId,
+                                                       @RequestBody ConfirmUsersReqDTO confirmUsersReqDTO){
+        boardUseCase.confirmUsers(boardId, confirmUsersReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CONFIRM_USERS_SUCCESS));
+    }
+
+    @GetMapping("/{board-id}/companion")
+    //단일 게시물에서 확정된 유저 조회
+    public ResponseEntity<ResultResponse> getCompanions(@PathVariable(value = "board-id")Long boardId){
+        List<GetCompanionsResDTO> getCompanionsResDTOS = boardUseCase.getCompanions(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMPANIONS_SUCCESS, getCompanionsResDTOS));
+    }
+
     //내가 참여하고있는 모든 게시물 조회
 
-    //여행확정짓기
+    @DeleteMapping("/{board-id}/leave")
+    //참여하고있는 게시물에서 탈퇴
+    public ResponseEntity<ResultResponse> leaveCompanion(@PathVariable(value = "board-id")Long boardId){
+        boardUseCase.leaveCompanion(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.LEAVE_COMPANION_SUCCESS));
+    }
 
 
 }

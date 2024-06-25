@@ -43,7 +43,7 @@ public class BoardService {
         return boardPersistPort.getBoardById(boardId);
     }
 
-    public Long createBoard(CreateBoardReqDTO createBoardReqDTO, User currentUser) {
+    public Board createBoard(CreateBoardReqDTO createBoardReqDTO, User currentUser) {
 
         Board board = Board.builder()
                 .user(currentUser)
@@ -65,7 +65,7 @@ public class BoardService {
     }
 
 
-    public Long updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {
+    public Board updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {
         Board board = boardPersistPort.getBoardById(boardId);
         userUtils.validateMasterUser(board.getUser().getId(),currentUser.getId());
         UpdateBoardDTO updateBoardDTO = UpdateBoardDTO.builder()

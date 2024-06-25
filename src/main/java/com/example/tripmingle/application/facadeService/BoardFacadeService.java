@@ -27,6 +27,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final CommonUtils commonUtils;
     private final BoardBookMarkService boardBookMarkService;
     private final BoardLikesService boardLikesService;
+    private final CompanionService companionService;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
@@ -177,16 +178,17 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Transactional(readOnly = false)
     public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
         User currentUser = userService.getCurrentUser();
-        Long boardId = boardService.createBoard(createBoardReqDTO,currentUser);
-        return PostBoardResDTO.builder().boardId(boardId).build();
+        Board board = boardService.createBoard(createBoardReqDTO,currentUser);
+        companionService.registerLeader(board,currentUser);
+        return PostBoardResDTO.builder().boardId(board.getId()).build();
     }
 
     @Override
     @Transactional(readOnly = false)
     public UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
         User currentUser = userService.getCurrentUser();
-        Long resultBoardId = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
-        return UpdateBoardResDTO.builder().boardId(resultBoardId)
+        Board board = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
+        return UpdateBoardResDTO.builder().boardId(board.getId())
                 .build();
     }
 
@@ -364,6 +366,39 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
                 .build());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void confirmUsers(Long boardId, ConfirmUsersReqDTO confirmUsersReqDTO) {
+        Board board = boardService.getBoardById(boardId);
+        User currentUser = userService.getCurrentUser();
+        List<User> users = userService.getUsersById(confirmUsersReqDTO.getUserIds());
+        companionService.confirmUsers(board,currentUser, users);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void leaveCompanion(Long boardId) {
+        Board board = boardService.getBoardById(boardId);
+        User currentUser = userService.getCurrentUser();
+        companionService.leaveCompanion(board,currentUser);
+    }
+
+    @Override
+    public List<GetCompanionsResDTO> getCompanions(Long boardId) {
+        Board board = boardService.getBoardById(boardId);
+        List<Companion> companions = companionService.getCompanionsByBoardId(board.getId());
+
+        return companions.stream().map(companion -> GetCompanionsResDTO.builder()
+                .userId(companion.getUser().getId())
+                .nickName(companion.getUser().getNickName())
+                .ageRange(companion.getUser().getAgeRange())
+                .gender(companion.getUser().getGender())
+                .nationality(companion.getUser().getNationality())
+                .selfIntroduction(companion.getUser().getSelfIntroduction())
+                .isLeader(companion.getPosition().equals(Position.LEADER))
+                .build()).collect(Collectors.toList());
     }
 
     @Override

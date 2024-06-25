@@ -48,8 +48,8 @@ public class BoardPersistAdapter implements BoardPersistPort {
     }
 
     @Override
-    public Long saveBoard(Board board) {
-        return boardRepository.save(board).getId();
+    public Board saveBoard(Board board) {
+        return boardRepository.save(board);
     }
 
     @Override
