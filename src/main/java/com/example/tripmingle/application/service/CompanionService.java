@@ -9,6 +9,8 @@ import com.example.tripmingle.entity.Position;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.CompanionPersistPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,5 +58,9 @@ public class CompanionService {
 
     public List<Companion> getCompanionsByBoardId(Long boardId) {
         return companionPersistPort.getCompanionsByBoardId(boardId);
+    }
+
+    public Page<Companion> getCompanionsByUser(User currentUser, Pageable pageable) {
+        return companionPersistPort.getCompanionsByUserId(currentUser.getId(),pageable);
     }
 }

@@ -155,7 +155,12 @@ public class BoardController {
         return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMPANIONS_SUCCESS, getCompanionsResDTOS));
     }
 
+    @GetMapping("/my-companion")
     //내가 참여하고있는 모든 게시물 조회
+    public ResponseEntity<ResultResponse> getMyCompanionBoards(@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyCompanionBoards(pageable);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_COMPANIONS_BOARDS_SUCCESS, getBoardsResDTOS));
+    }
 
     @DeleteMapping("/{board-id}/leave")
     //참여하고있는 게시물에서 탈퇴

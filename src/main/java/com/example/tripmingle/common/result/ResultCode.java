@@ -34,6 +34,7 @@ public enum ResultCode {
     CONFIRM_USERS_SUCCESS(200,"C001", "여행 확정에 성공"),
     LEAVE_COMPANION_SUCCESS(200,"C002","여행동행 탈퇴에 성공"),
     GET_COMPANIONS_SUCCESS(200,"C003","여행동행자 조회에 성공"),
+    GET_MY_COMPANIONS_BOARDS_SUCCESS(200,"C004","내 여행동행 게시물 조회 성공"),
 
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),

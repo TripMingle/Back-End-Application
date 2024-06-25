@@ -110,4 +110,5 @@ public class BoardService {
     public Page<Board> getBoardsByUser(User user, Pageable pageable) {
         return boardPersistPort.getBoardByUser(user, pageable);
     }
+
 }

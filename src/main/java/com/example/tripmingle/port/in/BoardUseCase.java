@@ -44,4 +44,6 @@ public interface BoardUseCase {
     void leaveCompanion(Long boardId);
 
     List<GetCompanionsResDTO> getCompanions(Long boardId);
+
+    Page<GetBoardsResDTO> getMyCompanionBoards(Pageable pageable);
 }

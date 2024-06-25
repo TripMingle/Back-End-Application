@@ -8,6 +8,8 @@ import com.example.tripmingle.entity.User;
 import com.example.tripmingle.port.out.CompanionPersistPort;
 import com.example.tripmingle.repository.CompanionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -37,4 +39,10 @@ public class CompanionPersistAdapter implements CompanionPersistPort {
     public List<Companion> getCompanionsByBoardId(Long boardId) {
         return companionRepository.findCompanionsByBoardId(boardId);
     }
+
+    @Override
+    public Page<Companion> getCompanionsByUserId(Long userId, Pageable pageable) {
+        return companionRepository.findCompanionsByUserId(userId,pageable);
+    }
+
 }

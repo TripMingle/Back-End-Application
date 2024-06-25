@@ -402,6 +402,31 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     }
 
     @Override
+    public Page<GetBoardsResDTO> getMyCompanionBoards(Pageable pageable) {
+        User currentUser = userService.getCurrentUser();
+        Page<Companion> companionList = companionService.getCompanionsByUser(currentUser, pageable);
+        return companionList.map(companion -> GetBoardsResDTO.builder()
+                .boardId(companion.getBoard().getId())
+                .title(companion.getBoard().getTitle())
+                .startDate(companion.getBoard().getStartDate())
+                .endDate(companion.getBoard().getEndDate())
+                .currentCount(companion.getBoard().getCurrentCount())
+                .maxCount(companion.getBoard().getMaxCount())
+                .language(companion.getBoard().getLanguage())
+                .commentCount(companion.getBoard().getCommentCount())
+                .likeCount(companion.getBoard().getLikeCount())
+                .bookMarkCount(companion.getBoard().getBookMarkCount())
+                .nickName(companion.getUser().getNickName())
+                .ageRange(companion.getUser().getAgeRange())
+                .gender(companion.getUser().getGender())
+                .nationality(companion.getUser().getNationality())
+                .isMine(currentUser.getId().equals(companion.getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, companion.getBoard()))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, companion.getBoard()))
+                .build());
+    }
+
+    @Override
     public void getClusteredBoards() {
         boardService.getBoardsByIdList();
     }
