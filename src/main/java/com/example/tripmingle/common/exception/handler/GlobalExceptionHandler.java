@@ -89,5 +89,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(BoardScheduleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleBoardScheduleNotFoundException(BoardScheduleNotFoundException ex) {
+        log.error("handleBoardScheduleNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+
 
 }

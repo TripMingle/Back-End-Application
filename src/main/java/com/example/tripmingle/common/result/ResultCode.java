@@ -30,6 +30,9 @@ public enum ResultCode {
     TOGGLE_BOARD_LIKES_SUCCESS(200, "L001", "좋아요 상태변경 완료"),
     GET_MY_BOARD_LIKES_SUCCESS(200, "L002", "좋아요한 게시판 조회 성공"),
 
+    //board schedule
+    CREATE_BOARD_SCHEDULE_SUCCESS(200,"BS001", "게시판 일정 생성 성공"),
+
     //companion
     CONFIRM_USERS_SUCCESS(200,"C001", "여행 확정에 성공"),
     LEAVE_COMPANION_SUCCESS(200,"C002","여행동행 탈퇴에 성공"),

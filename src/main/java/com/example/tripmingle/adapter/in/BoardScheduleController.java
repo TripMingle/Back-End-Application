@@ -1,25 +1,52 @@
 package com.example.tripmingle.adapter.in;
 
+import com.example.tripmingle.common.result.ResultCode;
+import com.example.tripmingle.common.result.ResultResponse;
+import com.example.tripmingle.dto.req.schedule.CreateBoardScheduleReqDTO;
+import com.example.tripmingle.dto.req.schedule.DeleteBoardScheduleReqDTO;
+import com.example.tripmingle.dto.req.schedule.UpdateBoardScheduleReqDTO;
+import com.example.tripmingle.dto.res.schedule.BoardScheduleResDTO;
+import com.example.tripmingle.dto.res.schedule.GetBoardScheduleResDTO;
+import com.example.tripmingle.port.in.BoardScheduleUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/board/schedule")
 @RequiredArgsConstructor
 public class BoardScheduleController {
 
-    //게시판 일정 생성 (게시물id-> 대륙,나라,기간 등 가져오기, List<장소,날짜,순서,좌표>
+    private final BoardScheduleUseCase boardScheduleUseCase;
 
-    //게시물 일정 수정 -> 일단 구현하지 않고 멘토님께 여쭤본 다음에 구현
+    //TODO 이 로직이 존재해도 되는건지 생각해보기 - 수정, 추가만 있으면 되는거 아닌가?
+    @PostMapping("/{board-id}")
+    //게시판 일정 추가 (게시물id-> 대륙,나라,기간 등 가져오기, List<장소,날짜,순서,좌표>)
+    public ResponseEntity<ResultResponse> createBoardSchedule(@PathVariable(value = "board-id") Long boardId,
+                                                              @RequestBody List<CreateBoardScheduleReqDTO> createBoardScheduleReqDTOS){
+        List<BoardScheduleResDTO> boardScheduleResDTO = boardScheduleUseCase.createBoardSchedule(boardId,createBoardScheduleReqDTOS);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SCHEDULE_SUCCESS, boardScheduleResDTO));
+    }
 
-    //게시물 일정 삭제
+    @PostMapping("/{board-id}/modify")
+    //게시물 일정 수정&삭제 로직
+    public ResponseEntity<ResultResponse> modifyBoardSchedule(@PathVariable(value = "board-id") Long boardId,
+                                                              @RequestBody List<UpdateBoardScheduleReqDTO> updateBoardScheduleReqDTOS,
+                                                              @RequestBody List<DeleteBoardScheduleReqDTO> deleteBoardScheduleReqDTOS){
+        boardScheduleUseCase.modifyBoardSchedule(boardId,updateBoardScheduleReqDTOS, deleteBoardScheduleReqDTOS);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SCHEDULE_SUCCESS));
+    }
 
+    @GetMapping("/{board-id}")
     //일정조회 -> 그냥 전부 리스트로 주면됨 (day, 순서별로 정렬하면 더좋음)
+    public ResponseEntity<ResultResponse> getBoardSchedule(@PathVariable(value = "board-id") Long boardId){
+        GetBoardScheduleResDTO getBoardScheduleResDTO = boardScheduleUseCase.getBoardSchedule(boardId);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SCHEDULE_SUCCESS));
+    }
 
-    //내가 참여하고있는 게시물 일정들 조회하기 (country 받아야하고 board, List<boardSchedule> 리턴) -> 내일정에서 불러오는 로직
-
-    //내 일정에서 게시판 일정으로 옮기기 이것도 수정의 일부이므로 여쭤본 다음에 구현
+    //내 일정에서 게시판 일정으로 옮기기
 
     //지도에서 조회 (나라, 기간에 대한 필터링 + 좌표에 대한 필터링이 있다, 이미 지난 일정은 조회하지 않도록 하는 로직 필요) -> 인덱싱 필요
     //is_expired를 하면 안될거같음. 그냥 쿼리문에 날짜비교쿼리를 포함시키는게 좋을듯?

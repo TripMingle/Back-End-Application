@@ -28,6 +28,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final BoardBookMarkService boardBookMarkService;
     private final BoardLikesService boardLikesService;
     private final CompanionService companionService;
+    private final BoardScheduleService boardScheduleService;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
@@ -186,6 +187,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
         User currentUser = userService.getCurrentUser();
         Board board = boardService.createBoard(createBoardReqDTO,currentUser);
         companionService.registerLeader(board,currentUser);
+        boardScheduleService.createBoardSchedule(board,currentUser,createBoardReqDTO.getCreateBoardScheduleReqDTOS());
         return PostBoardResDTO.builder().boardId(board.getId()).build();
     }
 

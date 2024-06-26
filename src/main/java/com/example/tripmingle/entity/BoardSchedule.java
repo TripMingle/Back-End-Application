@@ -1,28 +1,44 @@
 package com.example.tripmingle.entity;
 
+import com.example.tripmingle.common.entity.BaseEntity;
+import com.example.tripmingle.dto.req.schedule.UpdateBoardScheduleReqDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardSchedule {
+public class BoardSchedule extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="board_id", nullable = false)
     private Board board;
 
-    private String date;
+    private LocalDate date;
 
     private String placeName;
 
     private int number;
 
-    private String pointX;
-    private String pointY;
+    private double pointX;
+    private double pointY;
+
+    private String googlePlaceId;
+
+
+    public void update(UpdateBoardScheduleReqDTO updateBoardScheduleReqDTO){
+        this.date = updateBoardScheduleReqDTO.getDate();
+        this.placeName = updateBoardScheduleReqDTO.getPlaceName();
+        this.number = updateBoardScheduleReqDTO.getNumber();
+        this.pointX = updateBoardScheduleReqDTO.getPointX();
+        this.pointY = updateBoardScheduleReqDTO.getPointY();
+        this.googlePlaceId = updateBoardScheduleReqDTO.getGooglePlaceId();
+    }
 }
