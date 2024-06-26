@@ -28,5 +28,7 @@ public class GetBoardsResDTO {
     private boolean isMine;
     private boolean isLiked;
     private boolean isBookMarked;
+    private boolean isParticipating;
+    private boolean isExpired;
 
 }

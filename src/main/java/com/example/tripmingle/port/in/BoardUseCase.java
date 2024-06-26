@@ -1,5 +1,6 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.board.ConfirmUsersReqDTO;
 import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
@@ -37,4 +38,12 @@ public interface BoardUseCase {
     Page<GetBoardsResDTO> getMyLikedBoards(Pageable pageable);
 
     Page<GetBoardsResDTO> getMyBoards(Pageable pageable);
+
+    void confirmUsers(Long boardId, ConfirmUsersReqDTO confirmUsersReqDTO);
+
+    void leaveCompanion(Long boardId);
+
+    List<GetCompanionsResDTO> getCompanions(Long boardId);
+
+    Page<GetBoardsResDTO> getMyCompanionBoards(Pageable pageable);
 }

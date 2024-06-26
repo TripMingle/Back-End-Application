@@ -5,14 +5,19 @@ import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final UserPersistPort userPersistPort;
 
     public User getCurrentUser() {
         return userPersistPort.findCurrentUserByEmail();
+    }
+
+    public List<User> getUsersById(List<Long> userIds){
+        return userPersistPort.getUsersById(userIds);
     }
 
 }

@@ -75,5 +75,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(CompanionNotFound.class)
+    public ResponseEntity<ErrorResponse> handleCompanionNotFound(CompanionNotFound ex) {
+        log.error("handleCompanionNotFound", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(LeaderCannotLeaveException.class)
+    public ResponseEntity<ErrorResponse> handleLeaderCannotLeaveException(LeaderCannotLeaveException ex) {
+        log.error("handleCompanionNotFound", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
 
 }

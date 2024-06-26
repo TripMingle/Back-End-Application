@@ -27,6 +27,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     private final CommonUtils commonUtils;
     private final BoardBookMarkService boardBookMarkService;
     private final BoardLikesService boardLikesService;
+    private final CompanionService companionService;
 
     @Override
     public List<GetBoardsResDTO> getRecentBoards(String countryName) {
@@ -53,6 +54,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                         .isMine(currentUser.getId().equals(board.getUser().getId()))
                         .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                         .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                        .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                        .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -80,6 +83,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .build());
     }
 
@@ -109,6 +114,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .boardCommentResDTOS(boardComments)
                 .userId(board.getUser().getId())
                 .nickName(board.getUser().getNickName())
@@ -177,16 +184,17 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Transactional(readOnly = false)
     public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
         User currentUser = userService.getCurrentUser();
-        Long boardId = boardService.createBoard(createBoardReqDTO,currentUser);
-        return PostBoardResDTO.builder().boardId(boardId).build();
+        Board board = boardService.createBoard(createBoardReqDTO,currentUser);
+        companionService.registerLeader(board,currentUser);
+        return PostBoardResDTO.builder().boardId(board.getId()).build();
     }
 
     @Override
     @Transactional(readOnly = false)
     public UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
         User currentUser = userService.getCurrentUser();
-        Long resultBoardId = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
-        return UpdateBoardResDTO.builder().boardId(resultBoardId)
+        Board board = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
+        return UpdateBoardResDTO.builder().boardId(board.getId())
                 .build();
     }
 
@@ -222,6 +230,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
                 .build());
     }
 
@@ -301,6 +311,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardBookmark.getBoard()))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,boardBookmark.getBoard()))
+                .isExpired(commonUtils.isEndDatePassed(boardBookmark.getBoard().getEndDate()))
                 .build());
     }
 
@@ -338,6 +350,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, boardLike.getBoard()))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardLike.getBoard()))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,boardLike.getBoard()))
+                .isExpired(commonUtils.isEndDatePassed(boardLike.getBoard().getEndDate()))
                 .build());
     }
 
@@ -363,6 +377,68 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
                 .isMine(currentUser.getId().equals(board.getUser().getId()))
                 .isLiked(boardLikesService.isLikedBoard(currentUser, board))
                 .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,board))
+                .isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+                .build());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void confirmUsers(Long boardId, ConfirmUsersReqDTO confirmUsersReqDTO) {
+        Board board = boardService.getBoardById(boardId);
+        User currentUser = userService.getCurrentUser();
+        List<User> users = userService.getUsersById(confirmUsersReqDTO.getUserIds());
+        companionService.confirmUsers(board,currentUser, users);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void leaveCompanion(Long boardId) {
+        Board board = boardService.getBoardById(boardId);
+        User currentUser = userService.getCurrentUser();
+        companionService.leaveCompanion(board,currentUser);
+    }
+
+    @Override
+    public List<GetCompanionsResDTO> getCompanions(Long boardId) {
+        Board board = boardService.getBoardById(boardId);
+        List<Companion> companions = companionService.getCompanionsByBoardId(board.getId());
+
+        return companions.stream().map(companion -> GetCompanionsResDTO.builder()
+                .userId(companion.getUser().getId())
+                .nickName(companion.getUser().getNickName())
+                .ageRange(companion.getUser().getAgeRange())
+                .gender(companion.getUser().getGender())
+                .nationality(companion.getUser().getNationality())
+                .selfIntroduction(companion.getUser().getSelfIntroduction())
+                .isLeader(companion.getPosition().equals(Position.LEADER))
+                .build()).collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<GetBoardsResDTO> getMyCompanionBoards(Pageable pageable) {
+        User currentUser = userService.getCurrentUser();
+        Page<Companion> companionList = companionService.getCompanionsByUser(currentUser, pageable);
+        return companionList.map(companion -> GetBoardsResDTO.builder()
+                .boardId(companion.getBoard().getId())
+                .title(companion.getBoard().getTitle())
+                .startDate(companion.getBoard().getStartDate())
+                .endDate(companion.getBoard().getEndDate())
+                .currentCount(companion.getBoard().getCurrentCount())
+                .maxCount(companion.getBoard().getMaxCount())
+                .language(companion.getBoard().getLanguage())
+                .commentCount(companion.getBoard().getCommentCount())
+                .likeCount(companion.getBoard().getLikeCount())
+                .bookMarkCount(companion.getBoard().getBookMarkCount())
+                .nickName(companion.getUser().getNickName())
+                .ageRange(companion.getUser().getAgeRange())
+                .gender(companion.getUser().getGender())
+                .nationality(companion.getUser().getNationality())
+                .isMine(currentUser.getId().equals(companion.getUser().getId()))
+                .isLiked(boardLikesService.isLikedBoard(currentUser, companion.getBoard()))
+                .isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, companion.getBoard()))
+                .isParticipating(companionService.isParticipatingBoard(currentUser,companion.getBoard()))
+                .isExpired(commonUtils.isEndDatePassed(companion.getBoard().getEndDate()))
                 .build());
     }
 

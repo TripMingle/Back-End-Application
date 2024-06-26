@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @RequiredArgsConstructor
 public class UserPersistAdapter implements UserPersistPort {
@@ -38,5 +40,10 @@ public class UserPersistAdapter implements UserPersistPort {
     @Override
     public boolean existsByNickName(String nickName) {
         return userRepository.existsByNickName(nickName);
+    }
+
+    @Override
+    public List<User> getUsersById(List<Long> userIds) {
+        return userRepository.findAllById(userIds);
     }
 }
