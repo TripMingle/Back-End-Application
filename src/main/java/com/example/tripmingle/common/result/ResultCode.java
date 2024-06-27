@@ -31,7 +31,16 @@ public enum ResultCode {
     GET_MY_BOARD_LIKES_SUCCESS(200, "L002", "좋아요한 게시판 조회 성공"),
 
     //board schedule
-    CREATE_BOARD_SCHEDULE_SUCCESS(200,"BS001", "게시판 일정 생성 성공"),
+    CREATE_BOARD_SCHEDULE_SUCCESS(200,"BS001", "게시판 일정 추가생성 성공"),
+    MODIFY_BOARD_SCHEDULE_SUCCESS(200,"BS002","게시판 일정 수정/삭제 성공"),
+    GET_BOARD_SCHEDULE_SUCCESS(200,"BS003","게시판 일정 조회 성공"),
+
+    //user schedule
+    CREATE_USER_TRIP_SUCCESS(200, "US001", "유저 여행 생성 성공"),
+    CREATE_USER_SCHEDULE_SUCCESS(200,"US002","유저 일정 생성 성공"),
+    DELETE_USER_TRIP_SUCCESS(200,"US003", "유저 여행 삭제 성공"),
+    GET_USER_TRIP_SUCCESS(200,"US004","유저 여행 조회 성공"),
+    GET_USER_SCHEDULE_SUCCESS(200,"US005", "유저 일정 조회 성공"),
 
     //companion
     CONFIRM_USERS_SUCCESS(200,"C001", "여행 확정에 성공"),

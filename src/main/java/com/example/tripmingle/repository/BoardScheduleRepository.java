@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface BoardScheduleRepository extends JpaRepository<BoardSchedule,Long> {
     List<BoardSchedule> findByBoardIdOrderByDateAscNumberAsc(Long boardId);
+    List<BoardSchedule>findBoardSchedulesByBoardId(Long boardId);
 }

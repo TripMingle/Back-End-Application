@@ -204,6 +204,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
     @Transactional(readOnly = false)
     public void deleteBoard(Long boardId) {
         User currentUser = userService.getCurrentUser();
+        boardScheduleService.deleteBoardScheduleByBoardId(boardId);
         boardCommentService.deleteBoardCommentByBoardId(boardId);
         boardLikesService.deleteBoardLikesByBoardId(boardId);
         boardBookMarkService.deleteBoardBookMarksByBoardId(boardId);

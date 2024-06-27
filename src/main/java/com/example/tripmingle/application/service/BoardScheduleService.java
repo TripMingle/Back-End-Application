@@ -51,4 +51,8 @@ public class BoardScheduleService {
     public List<BoardSchedule> getBoardSchedulesByBoardId(Long boardId) {
         return boardSchedulePersistPort.getBoardSchedulesByBoardId(boardId);
     }
+
+    public void deleteBoardScheduleByBoardId(Long boardId) {
+        boardSchedulePersistPort.deleteBoardScheduleByBoardId(boardId);
+    }
 }

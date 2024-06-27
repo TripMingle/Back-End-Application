@@ -3,8 +3,7 @@ package com.example.tripmingle.adapter.in;
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.schedule.CreateBoardScheduleReqDTO;
-import com.example.tripmingle.dto.req.schedule.DeleteBoardScheduleReqDTO;
-import com.example.tripmingle.dto.req.schedule.UpdateBoardScheduleReqDTO;
+import com.example.tripmingle.dto.req.schedule.ModifyBoardScheduleReqDTO;
 import com.example.tripmingle.dto.res.schedule.BoardScheduleResDTO;
 import com.example.tripmingle.dto.res.schedule.GetBoardScheduleResDTO;
 import com.example.tripmingle.port.in.BoardScheduleUseCase;
@@ -21,7 +20,6 @@ public class BoardScheduleController {
 
     private final BoardScheduleUseCase boardScheduleUseCase;
 
-    //TODO 이 로직이 존재해도 되는건지 생각해보기 - 수정, 추가만 있으면 되는거 아닌가?
     @PostMapping("/{board-id}")
     //게시판 일정 추가 (게시물id-> 대륙,나라,기간 등 가져오기, List<장소,날짜,순서,좌표>)
     public ResponseEntity<ResultResponse> createBoardSchedule(@PathVariable(value = "board-id") Long boardId,
@@ -33,17 +31,16 @@ public class BoardScheduleController {
     @PostMapping("/{board-id}/modify")
     //게시물 일정 수정&삭제 로직
     public ResponseEntity<ResultResponse> modifyBoardSchedule(@PathVariable(value = "board-id") Long boardId,
-                                                              @RequestBody List<UpdateBoardScheduleReqDTO> updateBoardScheduleReqDTOS,
-                                                              @RequestBody List<DeleteBoardScheduleReqDTO> deleteBoardScheduleReqDTOS){
-        boardScheduleUseCase.modifyBoardSchedule(boardId,updateBoardScheduleReqDTOS, deleteBoardScheduleReqDTOS);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SCHEDULE_SUCCESS));
+                                                              @RequestBody ModifyBoardScheduleReqDTO modifyBoardScheduleReqDTO){
+        boardScheduleUseCase.modifyBoardSchedule(boardId,modifyBoardScheduleReqDTO.getUpdateBoardScheduleReqDTOS(),modifyBoardScheduleReqDTO.getDeleteBoardScheduleReqDTOS());
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_BOARD_SCHEDULE_SUCCESS));
     }
 
     @GetMapping("/{board-id}")
-    //일정조회 -> 그냥 전부 리스트로 주면됨 (day, 순서별로 정렬하면 더좋음)
+    //게시물 일정조회
     public ResponseEntity<ResultResponse> getBoardSchedule(@PathVariable(value = "board-id") Long boardId){
         GetBoardScheduleResDTO getBoardScheduleResDTO = boardScheduleUseCase.getBoardSchedule(boardId);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SCHEDULE_SUCCESS));
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_BOARD_SCHEDULE_SUCCESS, getBoardScheduleResDTO));
     }
 
     //내 일정에서 게시판 일정으로 옮기기

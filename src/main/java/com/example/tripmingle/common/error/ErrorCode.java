@@ -27,6 +27,11 @@ public enum ErrorCode {
     //Board_Schedule
     BOARD_SCHEDULE_NOT_FOUND(400,"BS001","여행 일정을 찾을 수 없습니다."),
 
+    //User trip & user schedule
+    USER_TRIP_NOT_FOUND(400,"US001", "유저 여행일정을 찾을 수 없습니다."),
+    USER_SCHEDULE_NOT_FOUND(400,"US002", "유저 일정을 찾을 수 없습니다."),
+
+
     //OAuth
     KAKAO_BAD_REQUEST(400, "O001", "카카오 소셜 로그인에 잘못된 요청입니다."),
     KAKAO_ALREADY_EXISTS_USER(400, "O002", "이미 트립밍글에 존재하는 카카오 유저입니다."),

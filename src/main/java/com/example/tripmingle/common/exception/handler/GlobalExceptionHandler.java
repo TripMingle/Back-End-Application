@@ -96,6 +96,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(UserTripNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserTripNotFoundException(UserTripNotFoundException ex) {
+        log.error("handleUserTripNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(UserScheduleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserScheduleNotFoundException(UserScheduleNotFoundException ex) {
+        log.error("handleUserScheduleNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 
 
 }

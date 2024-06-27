@@ -28,16 +28,20 @@ public class BoardSchedulePersistAdapter implements BoardSchedulePersistPort {
     }
 
     @Override
-    public BoardSchedule updateBoardSchedule(UpdateBoardScheduleReqDTO updateBoardScheduleReqDTO) {
+    public void updateBoardSchedule(UpdateBoardScheduleReqDTO updateBoardScheduleReqDTO) {
         BoardSchedule boardSchedule = boardScheduleRepository.findById(updateBoardScheduleReqDTO.getBoardScheduleId())
                 .orElseThrow(()-> new BoardScheduleNotFoundException("board schedule not found", ErrorCode.BOARD_SCHEDULE_NOT_FOUND));
 
         boardSchedule.update(updateBoardScheduleReqDTO);
-        return boardSchedule;
     }
 
     @Override
     public List<BoardSchedule> getBoardSchedulesByBoardId(Long boardId) {
         return boardScheduleRepository.findByBoardIdOrderByDateAscNumberAsc(boardId);
+    }
+
+    @Override
+    public void deleteBoardScheduleByBoardId(Long boardId) {
+        boardScheduleRepository.findBoardSchedulesByBoardId(boardId).forEach(boardSchedule -> boardSchedule.delete());
     }
 }

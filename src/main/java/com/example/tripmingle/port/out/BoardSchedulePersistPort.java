@@ -10,7 +10,9 @@ public interface BoardSchedulePersistPort {
 
     void deleteBoardScheduleById(Long boardScheduleId);
 
-    BoardSchedule updateBoardSchedule(UpdateBoardScheduleReqDTO dto);
+    void updateBoardSchedule(UpdateBoardScheduleReqDTO updateBoardScheduleReqDTO);
 
     List<BoardSchedule> getBoardSchedulesByBoardId(Long boardId);
+
+    void deleteBoardScheduleByBoardId(Long boardId);
 }
