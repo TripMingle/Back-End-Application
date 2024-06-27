@@ -1,5 +1,6 @@
 package com.example.tripmingle.dto.req.board;
 
+import com.example.tripmingle.dto.req.schedule.CreateBoardScheduleReqDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +20,7 @@ public class CreateBoardReqDTO {
     private List<String> personalType;
     private String title;
     private String content;
+
+    List<CreateBoardScheduleReqDTO> createBoardScheduleReqDTOS;
+
 }
