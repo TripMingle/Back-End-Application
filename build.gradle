@@ -61,6 +61,9 @@ dependencies {
     //redisson
     implementation 'org.redisson:redisson:3.16.4'
 
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.apache.commons:commons-lang3'
+
 
 }
 
