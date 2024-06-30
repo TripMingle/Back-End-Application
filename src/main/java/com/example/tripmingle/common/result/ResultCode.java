@@ -48,6 +48,9 @@ public enum ResultCode {
     GET_COMPANIONS_SUCCESS(200,"C003","여행동행자 조회에 성공"),
     GET_MY_COMPANIONS_BOARDS_SUCCESS(200,"C004","내 여행동행 게시물 조회 성공"),
 
+    //matching
+    GET_MY_USER_MATCHING_SUCCESS(200,"M001", "나와 어울리는 유저 조회 성공"),
+
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),
     OAUTH_TOKEN_ISSUE_SUCCESS(200, "O002", "소셜 로그인 토큰 발급이 성공하였습니다."),

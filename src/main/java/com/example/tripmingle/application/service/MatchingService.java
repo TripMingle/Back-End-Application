@@ -2,15 +2,12 @@ package com.example.tripmingle.application.service;
 
 import com.example.tripmingle.common.utils.PairDeserializer;
 import com.example.tripmingle.common.utils.PairSerializer;
+import com.example.tripmingle.port.out.MatchingPort;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,24 +18,18 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
+    private final MatchingPort matchingPort;
+
     private final RedisTemplate<String, Object> redisTemplate;
-    private static final String ALL_USER_PREFERENCES_KEY = "allUserPreferences";
-    private static final String USER_PREFERENCES_KEY = "userPreferences-";
+    private final String ALL_USER_PREFERENCES_KEY = "allUserPreferences";
+    private final String USER_PREFERENCES_KEY = "userPreferences-";
 
-    public Page<Long> getSimilarUserIds(Long userId, Pageable pageable){
-        List<Long> userPreferences = getUserPreferenceById(userId);
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), userPreferences.size());
-
-        if (start > userPreferences.size()) {
-            return new PageImpl<>(Collections.emptyList(), pageable, userPreferences.size()); // 요청한 페이지가 범위를 벗어나는 경우 빈 리스트 반환
-        }
-
-        return new PageImpl<>(userPreferences.subList(start, end), pageable, userPreferences.size());
+    public List<Long> getSimilarUserIds(Long userId){
+        return matchingPort.getSimilarUsersByUserId(userId);
     }
 
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         System.out.println("PostConstruct method called");
         Long userId = 1L;
@@ -73,7 +64,7 @@ public class MatchingService {
         }
     }
 
-    @PostConstruct
+    //@PostConstruct
     public Map<Long, List<Pair<Long, Double>>> getALLUserPreferences() {
         try {
             ObjectMapper mapper = new ObjectMapper();

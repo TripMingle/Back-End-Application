@@ -6,6 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class testDTO {
-    private Long chatId;
-    private String message2;
+    private Long userPersonalityId;
 }
