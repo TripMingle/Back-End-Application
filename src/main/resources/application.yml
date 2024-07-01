@@ -11,6 +11,10 @@ spring:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
   jwt:
     secret: ${jwt.secret-key}
     access-token-expiration: 6000000000000
@@ -26,3 +30,13 @@ oauth2:
     clientId: ${kakao.rest-api-key}
     secretKey: ${kakao.client-secret}
     grant_type: authorization_code
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
+server:
+  servlet:
+    session:
+      timeout: 30s

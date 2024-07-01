@@ -17,11 +17,16 @@ public class UserPersonalityPersistAdapter implements UserPersonalityPersistPort
     @Override
     public UserPersonality getUserPersonalityById(Long userPersonalityId) {
         return userPersonalityRepository.findUserPersonalityById(userPersonalityId)
-                .orElseThrow(()-> new UserPersonalityNotFoundException("userpersonality not found", ErrorCode.USER_PERSONALITY_NOT_FOUND));
+                .orElseThrow(()-> new UserPersonalityNotFoundException("user personality not found", ErrorCode.USER_PERSONALITY_NOT_FOUND));
     }
 
     @Override
     public boolean existsUserPersonalityByUser(User currentUser) {
         return userPersonalityRepository.existsByUserId(currentUser.getId());
+    }
+
+    @Override
+    public UserPersonality saveUserPersonality(UserPersonality userPersonality) {
+        return userPersonalityRepository.save(userPersonality);
     }
 }

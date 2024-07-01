@@ -7,4 +7,6 @@ public interface UserPersonalityPersistPort {
     UserPersonality getUserPersonalityById(Long userPersonalityId);
 
     boolean existsUserPersonalityByUser(User currentUser);
+
+    UserPersonality saveUserPersonality(UserPersonality userPersonality);
 }

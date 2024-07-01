@@ -1,13 +1,13 @@
 package com.example.tripmingle.adapter.out;
 
-import com.example.tripmingle.dto.etc.testDTO;
+import com.example.tripmingle.dto.etc.UserPersonalityIdPublishDTO;
+import com.example.tripmingle.port.out.PublishPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MessagePublisher {
-
+public class MessagePublisher implements PublishPort {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -17,17 +17,10 @@ public class MessagePublisher {
         this.redisTemplate = redisTemplate;
     }
 
-    //@PostConstruct
-    public void init(){
-        testDTO t = new testDTO();
-        t.setUserPersonalityId(27L);
-        addUserPublish(t);
-    }
-
-    public void addUserPublish(testDTO test) {
+    public void addUserPublish(UserPersonalityIdPublishDTO userPersonalityIdPublishDTO) {
         try {
             // JSON 객체 생성
-            String jsonMessage = objectMapper.writeValueAsString(test);
+            String jsonMessage = objectMapper.writeValueAsString(userPersonalityIdPublishDTO);
 
 
             // JSON 메시지를 Redis에 발행

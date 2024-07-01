@@ -51,8 +51,6 @@ public class BoardService {
                 .content(createBoardReqDTO.getContent())
                 .continent(createBoardReqDTO.getContinent())
                 .countryName(createBoardReqDTO.getCountryName())
-                //.personalType(commonUtils.convertListToString(createBoardReqDTO.getPersonalType()))
-                //.tripType(commonUtils.convertListToString(createBoardReqDTO.getTripType()))
                 .preferGender(createBoardReqDTO.getPreferGender())
                 .preferSmoking(createBoardReqDTO.getPreferSmoking())
                 .preferActivity(createBoardReqDTO.getPreferActivity())

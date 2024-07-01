@@ -3,6 +3,10 @@ package com.example.tripmingle.application.facadeService;
 import com.example.tripmingle.application.service.MatchingService;
 import com.example.tripmingle.application.service.UserPersonalityService;
 import com.example.tripmingle.application.service.UserService;
+import com.example.tripmingle.common.messageHandler.PubsubMessageHandler;
+import com.example.tripmingle.common.result.ResultCode;
+import com.example.tripmingle.common.result.ResultResponse;
+import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.entity.UserPersonality;
@@ -11,11 +15,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +34,8 @@ public class MatchingFacadeService implements MatchingUseCase {
     private final MatchingService matchingService;
     private final UserService userService;
     private final UserPersonalityService userPersonalityService;
+    private final PubsubMessageHandler pubsubMessageHandler;
+    private final ConcurrentMap<String, DeferredResult<ResponseEntity<ResultResponse>>> pendingResults = new ConcurrentHashMap<>();
 
     @Override
     public Page<MatchingUserResDTO> getMyMatchingUsers(Pageable pageable) {
@@ -70,6 +81,39 @@ public class MatchingFacadeService implements MatchingUseCase {
         return new PageImpl<>(matchingUserResDTOList, pageable, matchingUserResDTOList.size());
     }
 
+    @Override
+    @Transactional
+    public void postUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+        User currentUser = userService.getCurrentUser();
+        UserPersonality userPersonality = userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
+        try {
+            matchingService.addUser(userPersonality.getId());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void handleMessage(String requestId) {
+        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
+        if (deferredResult != null) {
+            deferredResult.setResult(ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS)));
+        }
+    }
+
+    public void handleMessageError(String requestId) {
+        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
+        if (deferredResult != null) {
+            deferredResult.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultResponse.of(ResultCode.INTERNAL_ERROR)));
+        }
+    }
+
+    public void handleCriticalError(String requestId) {
+        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
+        if (deferredResult != null) {
+            deferredResult.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultResponse.of(ResultCode.FAIL_ERROR)));
+        }
+    }
 
 
 }

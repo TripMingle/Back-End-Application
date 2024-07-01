@@ -50,6 +50,12 @@ public enum ResultCode {
 
     //matching
     GET_MY_USER_MATCHING_SUCCESS(200,"M001", "나와 어울리는 유저 조회 성공"),
+    ADD_USER_PERSONALITY_SUCCESS(200,"M002", "유저 성향 등록 성공"),
+
+    //async
+    REQUEST_TIMEOUT(500,"AS001", "요청의 시간이 만료 (재시도 필요)"),
+    INTERNAL_ERROR(500,"AS002", "내부 오류로 실패"),
+    FAIL_ERROR(400,"AS002", "예외로 실패"),
 
     //OAuth
     OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인이 성공하였습니다."),
