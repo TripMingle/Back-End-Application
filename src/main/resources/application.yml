@@ -3,7 +3,7 @@ spring:
     name: TripMingle
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/tripmingle?createDatabaseIfNotExist=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${database.url}
     username: ${database.name}
     password: ${database.password}
   jpa:
