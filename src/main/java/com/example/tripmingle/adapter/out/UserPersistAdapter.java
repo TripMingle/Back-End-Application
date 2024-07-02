@@ -46,4 +46,10 @@ public class UserPersistAdapter implements UserPersistPort {
     public List<User> getUsersById(List<Long> userIds) {
         return userRepository.findAllById(userIds);
     }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new UserNotFoundException("user not found", ErrorCode.USER_NOT_FOUND));
+    }
 }
