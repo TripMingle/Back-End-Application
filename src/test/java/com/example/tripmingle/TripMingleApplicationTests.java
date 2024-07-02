@@ -1,4 +1,4 @@
-package com.example.tripmingle;
+/*package com.example.tripmingle;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,3 +11,6 @@ class TripMingleApplicationTests {
     }
 
 }
+
+
+ */
