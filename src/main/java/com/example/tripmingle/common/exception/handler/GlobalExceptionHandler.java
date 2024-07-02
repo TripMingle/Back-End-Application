@@ -110,5 +110,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(RedisConnectException.class)
+    public ResponseEntity<ErrorResponse> handleRedisConnectException(RedisConnectException ex) {
+        log.error("handleRedisConnectException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(JsonParsingException.class)
+    public ResponseEntity<ErrorResponse> handleUserScheduleNotFoundException(JsonParsingException ex) {
+        log.error("handleJsonParsingException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(UserPersonalityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserScheduleNotFoundException(UserPersonalityNotFoundException ex) {
+        log.error("handleUserPersonalityNotFoundException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
 
 }

@@ -31,6 +31,14 @@ public enum ErrorCode {
     USER_TRIP_NOT_FOUND(400,"US001", "유저 여행일정을 찾을 수 없습니다."),
     USER_SCHEDULE_NOT_FOUND(400,"US002", "유저 일정을 찾을 수 없습니다."),
 
+    //Matching
+    USER_PERSONALITY_NOT_FOUND(400, "M001", "유저 성향이 저장되어있지 않습니다."),
+
+    //Json parsing
+    JSON_PARSE_EXCEPTION(400, "J001", "json 파싱에실패하였습니다."),
+
+    //Redis
+    REDIS_CONNECT_EXCEPTION(400, "R001", "redisConnection 에 예외가 발생하였습니다."),
 
     //OAuth
     KAKAO_BAD_REQUEST(400, "O001", "카카오 소셜 로그인에 잘못된 요청입니다."),

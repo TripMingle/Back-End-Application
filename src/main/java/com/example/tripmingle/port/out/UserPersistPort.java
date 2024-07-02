@@ -16,4 +16,6 @@ public interface UserPersistPort {
     boolean existsByNickName(String nickName);
 
     List<User> getUsersById(List<Long> userIds);
+
+    User getUserById(Long userId);
 }

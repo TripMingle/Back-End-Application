@@ -20,4 +20,7 @@ public class UserService {
         return userPersistPort.getUsersById(userIds);
     }
 
+    public User getUserById(Long userId) {
+        return userPersistPort.getUserById(userId);
+    }
 }
