@@ -108,12 +108,5 @@ public class MatchingFacadeService implements MatchingUseCase {
         return userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
     }
 
-    public void handleCriticalError(String requestId) {
-        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
-        if (deferredResult != null) {
-            deferredResult.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultResponse.of(ResultCode.FAIL_ERROR)));
-        }
-    }
-
 
 }
