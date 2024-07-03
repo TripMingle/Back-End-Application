@@ -44,7 +44,6 @@ public class RedisConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);  // RedisConnectionFactory를 설정합니다.
 
-        //container.addMessageListener(messageListener, addUserTopic());
         container.addMessageListener(messageListener, test());
 
         return container;
@@ -53,11 +52,6 @@ public class RedisConfig {
     @Bean
     public MessageListenerAdapter messageListener(RedisMessageSubscriber redisMessageSubscriber) {
         return new MessageListenerAdapter(redisMessageSubscriber);  // RedisMessageSubscriber를 메시지 리스너로 설정합니다.
-    }
-
-    @Bean
-    public ChannelTopic addUserTopic() {
-        return new ChannelTopic("pubsub:addUser");
     }
 
     @Bean

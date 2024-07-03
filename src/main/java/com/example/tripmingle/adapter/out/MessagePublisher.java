@@ -4,7 +4,12 @@ import com.example.tripmingle.dto.etc.UserPersonalityIdPublishDTO;
 import com.example.tripmingle.port.out.PublishPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 public class MessagePublisher implements PublishPort {
@@ -16,8 +21,14 @@ public class MessagePublisher implements PublishPort {
     public MessagePublisher(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+    private ConcurrentMap<String, CompletableFuture<String>> responseFutures = new ConcurrentHashMap<>();
 
-    public void addUserPublish(UserPersonalityIdPublishDTO userPersonalityIdPublishDTO) {
+
+    @Async
+    public CompletableFuture<String> addUserPublish(UserPersonalityIdPublishDTO userPersonalityIdPublishDTO) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        responseFutures.put(userPersonalityIdPublishDTO.getMessageId(), future);
+
         try {
             // JSON 객체 생성
             String jsonMessage = objectMapper.writeValueAsString(userPersonalityIdPublishDTO);
@@ -27,8 +38,16 @@ public class MessagePublisher implements PublishPort {
             redisTemplate.convertAndSend(ADD_USER_PUBLISH, jsonMessage);
             System.out.println("Published message: " + jsonMessage + " to topic: " + ADD_USER_PUBLISH);
         } catch (Exception e) {
+            future.completeExceptionally(e);
             e.printStackTrace();
         }
+        return future;
+    }
 
+    public void completeResponse(String messageId, String response) {
+        CompletableFuture<String> future = responseFutures.remove(messageId);
+        if (future != null) {
+            future.complete(response);
+        }
     }
 }

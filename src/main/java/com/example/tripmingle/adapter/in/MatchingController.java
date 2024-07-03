@@ -4,6 +4,7 @@ import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
+import com.example.tripmingle.entity.UserPersonality;
 import com.example.tripmingle.port.in.MatchingUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,8 @@ public class MatchingController{
     //새로운 유저성향 추가
     @PostMapping("/userPersonality")
     public ResponseEntity<ResultResponse> postUserPersonality(@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO){
-        matchingUseCase.postUserPersonality(postUserPersonalityReqDTO);
+        UserPersonality userPersonality = matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO);
+        matchingUseCase.postUserPersonality(userPersonality);
        return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS));
     }
 

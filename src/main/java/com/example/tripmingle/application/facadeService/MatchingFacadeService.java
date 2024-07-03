@@ -23,6 +23,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -83,15 +85,25 @@ public class MatchingFacadeService implements MatchingUseCase {
 
     @Override
     @Transactional
-    public void postUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
-        User currentUser = userService.getCurrentUser();
-        UserPersonality userPersonality = userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
+    public void postUserPersonality(UserPersonality userPersonality) {
+        String messageId = UUID.randomUUID().toString();
+        String response = "";
         try {
-            matchingService.addUser(userPersonality.getId());
+            CompletableFuture<String> future = matchingService.addUser(userPersonality.getId(), messageId);
+            response = future.get();
         }
         catch (Exception e){
             e.printStackTrace();
         }
+
+        System.out.println(response);
+    }
+
+    @Override
+    @Transactional
+    public UserPersonality saveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+        User currentUser = userService.getCurrentUser();
+        return userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
     }
 
     public void handleMessage(String requestId) {
