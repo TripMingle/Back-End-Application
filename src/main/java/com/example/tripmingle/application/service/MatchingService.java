@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +23,10 @@ public class MatchingService {
     public List<Long> getSimilarUserIds(Long userId){
         return matchingPort.getSimilarUsersByUserId(userId);
     }
-    public void addUser(Long userPersonalityId) {
-        publishPort.addUserPublish(UserPersonalityIdPublishDTO.builder()
+    public CompletableFuture<String> addUser(Long userPersonalityId, String messageId) {
+        return publishPort.addUserPublish(UserPersonalityIdPublishDTO.builder()
                 .userPersonalityId(userPersonalityId)
+                .messageId(messageId)
                 .build());
     }
 }

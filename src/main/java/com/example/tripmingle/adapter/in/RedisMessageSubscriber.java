@@ -1,6 +1,6 @@
 package com.example.tripmingle.adapter.in;
 
-import com.example.tripmingle.application.facadeService.MatchingFacadeService;
+import com.example.tripmingle.adapter.out.MessagePublisher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RedisMessageSubscriber implements MessageListener {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private final MatchingFacadeService matchingFacadeService;
+    private final MessagePublisher messagePublisher;
 
     private static final String ADD_USER_RES_PUBLISH = "pubsub:addUserRes";
     private static final String FAIL_TO_ADD_USER_PERSONALITY = "fail to add user personality";
@@ -36,11 +36,11 @@ public class RedisMessageSubscriber implements MessageListener {
         try {
             JsonNode jsonNode = objectMapper.readTree(messageBody);
             String result = jsonNode.get("message").toString().substring(1, jsonNode.get("message").toString().length()-1);
-
+            String messageId = jsonNode.get("messageId").toString().substring(1, jsonNode.get("messageId").toString().length()-1);
             System.out.println(channel + " : " + result);
+            messagePublisher.completeResponse(messageId,result);
             
         }catch (Exception e) {
-            //여기 어떻게?
             e.printStackTrace();
         }
         

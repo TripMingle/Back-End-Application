@@ -9,4 +9,5 @@ import lombok.Setter;
 @Setter
 public class UserPersonalityIdPublishDTO {
     private Long userPersonalityId;
+    private String messageId;
 }
