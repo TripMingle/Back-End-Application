@@ -4,12 +4,14 @@ import com.example.tripmingle.adapter.out.MessagePublisher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RedisMessageSubscriber implements MessageListener {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private final MessagePublisher messagePublisher;
@@ -37,12 +39,19 @@ public class RedisMessageSubscriber implements MessageListener {
             JsonNode jsonNode = objectMapper.readTree(messageBody);
             String result = jsonNode.get("message").toString().substring(1, jsonNode.get("message").toString().length()-1);
             String messageId = jsonNode.get("messageId").toString().substring(1, jsonNode.get("messageId").toString().length()-1);
-            System.out.println(channel + " : " + result);
-            messagePublisher.completeResponse(messageId,result);
+            log.info(channel + " : " + result);
+
+            if(result.equals(ADD_USER_PERSONALITY_SUCCESS)) {
+                messagePublisher.completeResponse(messageId, result);
+            }
+            else{
+                messagePublisher.completeResponse(messageId, "FAIL");
+            }
             
         }catch (Exception e) {
             e.printStackTrace();
         }
         
     }
+
 }

@@ -118,18 +118,26 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(JsonParsingException.class)
-    public ResponseEntity<ErrorResponse> handleUserScheduleNotFoundException(JsonParsingException ex) {
+    public ResponseEntity<ErrorResponse> handleJsonParsingException(JsonParsingException ex) {
         log.error("handleJsonParsingException", ex);
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
     @ExceptionHandler(UserPersonalityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserScheduleNotFoundException(UserPersonalityNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleUserPersonalityNotFoundException(UserPersonalityNotFoundException ex) {
         log.error("handleUserPersonalityNotFoundException", ex);
         final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
+
+    @ExceptionHandler(MatchingServerException.class)
+    public ResponseEntity<ErrorResponse> handleMatchingServerException(MatchingServerException ex) {
+        log.error("handleMatchingServerException", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
 
 
 }

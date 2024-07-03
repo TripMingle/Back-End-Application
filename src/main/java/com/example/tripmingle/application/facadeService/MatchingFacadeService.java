@@ -3,10 +3,11 @@ package com.example.tripmingle.application.facadeService;
 import com.example.tripmingle.application.service.MatchingService;
 import com.example.tripmingle.application.service.UserPersonalityService;
 import com.example.tripmingle.application.service.UserService;
-import com.example.tripmingle.common.messageHandler.PubsubMessageHandler;
-import com.example.tripmingle.common.result.ResultCode;
+import com.example.tripmingle.common.error.ErrorCode;
+import com.example.tripmingle.common.exception.MatchingServerException;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
+import com.example.tripmingle.dto.res.matching.AddUserResDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.entity.UserPersonality;
@@ -15,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,6 @@ public class MatchingFacadeService implements MatchingUseCase {
     private final MatchingService matchingService;
     private final UserService userService;
     private final UserPersonalityService userPersonalityService;
-    private final PubsubMessageHandler pubsubMessageHandler;
     private final ConcurrentMap<String, DeferredResult<ResponseEntity<ResultResponse>>> pendingResults = new ConcurrentHashMap<>();
 
     @Override
@@ -85,7 +84,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 
     @Override
     @Transactional
-    public void postUserPersonality(UserPersonality userPersonality) {
+    public AddUserResDTO postUserPersonality(UserPersonality userPersonality) {
         String messageId = UUID.randomUUID().toString();
         String response = "";
         try {
@@ -95,8 +94,11 @@ public class MatchingFacadeService implements MatchingUseCase {
         catch (Exception e){
             e.printStackTrace();
         }
+        if(response.equals("FAIL")){
+            throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
+        }
 
-        System.out.println(response);
+        return AddUserResDTO.builder().resultMessage(response).build();
     }
 
     @Override
@@ -106,26 +108,6 @@ public class MatchingFacadeService implements MatchingUseCase {
         return userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
     }
 
-    public void handleMessage(String requestId) {
-        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
-        if (deferredResult != null) {
-            deferredResult.setResult(ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS)));
-        }
-    }
-
-    public void handleMessageError(String requestId) {
-        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
-        if (deferredResult != null) {
-            deferredResult.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultResponse.of(ResultCode.INTERNAL_ERROR)));
-        }
-    }
-
-    public void handleCriticalError(String requestId) {
-        DeferredResult<ResponseEntity<ResultResponse>> deferredResult = pendingResults.remove(requestId);
-        if (deferredResult != null) {
-            deferredResult.setErrorResult(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResultResponse.of(ResultCode.FAIL_ERROR)));
-        }
-    }
 
 
 }

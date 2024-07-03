@@ -3,6 +3,7 @@ package com.example.tripmingle.adapter.in;
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
+import com.example.tripmingle.dto.res.matching.AddUserResDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
 import com.example.tripmingle.entity.UserPersonality;
 import com.example.tripmingle.port.in.MatchingUseCase;
@@ -31,8 +32,8 @@ public class MatchingController{
     @PostMapping("/userPersonality")
     public ResponseEntity<ResultResponse> postUserPersonality(@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO){
         UserPersonality userPersonality = matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO);
-        matchingUseCase.postUserPersonality(userPersonality);
-       return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS));
+        AddUserResDTO addUserResDTO = matchingUseCase.postUserPersonality(userPersonality);
+       return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS, addUserResDTO));
     }
 
 

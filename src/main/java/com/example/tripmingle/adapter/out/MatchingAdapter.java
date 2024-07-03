@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.lettuce.core.RedisConnectionException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class MatchingAdapter implements MatchingPort {
 
     private final RedisTemplate<String, Object> redisTemplate;
@@ -40,7 +42,7 @@ public class MatchingAdapter implements MatchingPort {
             String redisKey = USER_PREFERENCES_KEY + userId;
             String json = (String) redisTemplate.opsForValue().get(redisKey);
             if (json != null) {
-                System.out.println("Retrieved JSON for user " + userId + ": " + json);  // JSON 데이터 로그 확인
+                log.info("Retrieved JSON for user " + userId + ": " + json);
                 return mapper.readValue(json, new TypeReference<List<Long>>() {});
             } else {
                 throw new UserPersonalityNotFoundException("user personality not found", ErrorCode.USER_PERSONALITY_NOT_FOUND);

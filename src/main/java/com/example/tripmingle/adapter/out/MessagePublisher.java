@@ -3,6 +3,7 @@ package com.example.tripmingle.adapter.out;
 import com.example.tripmingle.dto.etc.UserPersonalityIdPublishDTO;
 import com.example.tripmingle.port.out.PublishPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Service
+@Slf4j
 public class MessagePublisher implements PublishPort {
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -36,7 +38,7 @@ public class MessagePublisher implements PublishPort {
 
             // JSON 메시지를 Redis에 발행
             redisTemplate.convertAndSend(ADD_USER_PUBLISH, jsonMessage);
-            System.out.println("Published message: " + jsonMessage + " to topic: " + ADD_USER_PUBLISH);
+            log.info("Published message: " + jsonMessage + " to topic: " + ADD_USER_PUBLISH);
         } catch (Exception e) {
             future.completeExceptionally(e);
             e.printStackTrace();
@@ -48,6 +50,13 @@ public class MessagePublisher implements PublishPort {
         CompletableFuture<String> future = responseFutures.remove(messageId);
         if (future != null) {
             future.complete(response);
+        }
+    }
+
+    public void exceptionResponse(String messageId, Exception e) {
+        CompletableFuture<String> future = responseFutures.remove(messageId);
+        if (future != null) {
+            future.completeExceptionally(e);
         }
     }
 }
