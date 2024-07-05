@@ -1,16 +1,19 @@
 package com.example.tripmingle.port.in;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import com.example.tripmingle.dto.res.matching.AddUserResDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
 import com.example.tripmingle.entity.UserPersonality;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface MatchingUseCase {
-    Page<MatchingUserResDTO> getMyMatchingUsers(Pageable pageable);
+	Page<MatchingUserResDTO> getMyMatchingUsers(Pageable pageable);
 
-    AddUserResDTO postUserPersonality(UserPersonality userPersonality);
+	AddUserResDTO addUserPersonality(UserPersonality userPersonality);
 
-    UserPersonality saveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
+	UserPersonality saveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
+
+	void deleteUserPersonality();
 }
