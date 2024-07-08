@@ -47,15 +47,15 @@ public class MatchingAdapter implements MatchingPort {
 	}
 
 	@Override
-	public List<Long> getSimilarUsersByUserId(Long userId) {
+	public List<Long> getSimilarUsersByUserId(Long userPersonalityId) {
 		try {
-			String redisKey = USER_PREFERENCES_KEY + userId;
+			String redisKey = USER_PREFERENCES_KEY + userPersonalityId;
 			System.out.println(redisKey);
 			Object json = redisTemplate.opsForValue().get(redisKey);
 			System.out.println(json);
 			if (json != null) {
 
-				log.info("Retrieved JSON for user " + userId + ": " + json);
+				log.info("Retrieved JSON for user " + userPersonalityId + ": " + json);
 				String value = json.toString();
 				List<Pair<Long, Double>> result = mapper.readValue(value,
 					new TypeReference<List<Pair<Long, Double>>>() {
@@ -105,24 +105,4 @@ public class MatchingAdapter implements MatchingPort {
 		}
 	}
 
-	//매직넘버 어떻게할지
-	@Override
-	public Long compareMaxCount(Long userId) {
-		try {
-
-			int currentMax = (int)redisTemplate.opsForValue().get(CURRENT_MAX_USER_COUNT);
-			int userMax = (int)redisTemplate.opsForValue().get(MAX_USER_COUNT + userId);
-
-			return currentMax == userMax ? -1L : userMax;
-
-		} catch (RedisConnectionException e) {
-			// Redis 연결과 관련된 예외
-			e.printStackTrace();
-			throw new RedisConnectException("redis connect exception", ErrorCode.REDIS_CONNECT_EXCEPTION);
-		} catch (Exception e) {
-			// 그 외 일반 예외
-			e.printStackTrace();
-			throw new RuntimeException("can't load my similar users");
-		}
-	}
 }

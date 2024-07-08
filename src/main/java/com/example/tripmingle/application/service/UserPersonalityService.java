@@ -1,5 +1,7 @@
 package com.example.tripmingle.application.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,5 +57,9 @@ public class UserPersonalityService {
 	public void delete(User currentUser, UserPersonality userPersonality) {
 		userUtils.validateMasterUser(currentUser.getId(), userPersonality.getUser().getId());
 		userPersonalityPersistPort.deleteUserPersonality(userPersonality);
+	}
+
+	public List<UserPersonality> getUserPersonalityByIds(List<Long> similarUsers) {
+		return userPersonalityPersistPort.getUserPersonalitiesByIds(similarUsers);
 	}
 }

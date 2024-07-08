@@ -1,5 +1,7 @@
 package com.example.tripmingle.adapter.out;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.example.tripmingle.common.error.ErrorCode;
@@ -44,5 +46,10 @@ public class UserPersonalityPersistAdapter implements UserPersonalityPersistPort
 	public void deleteUserPersonality(UserPersonality userPersonality) {
 		userPersonalityRepository.delete(userPersonality);
 		userPersonalityRepository.flush();
+	}
+
+	@Override
+	public List<UserPersonality> getUserPersonalitiesByIds(List<Long> similarUsers) {
+		return userPersonalityRepository.findUserPersonalitiesByUser_IdIn(similarUsers);
 	}
 }
