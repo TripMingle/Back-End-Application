@@ -20,6 +20,7 @@ import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
 import com.example.tripmingle.entity.UserPersonality;
 import com.example.tripmingle.port.in.MatchingUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class MatchingController {
 	private final MatchingUseCase matchingUseCase;
 
+	@Operation(summary = "나와 어울리는 추천유저 반환 (유저성향 추가가 선행되어야함)")
 	//나와 어울리는 추천 유저 리스트 반환
 	@GetMapping("/user")
 	public ResponseEntity<ResultResponse> getMyMatchingUsers(
@@ -38,6 +40,7 @@ public class MatchingController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_USER_MATCHING_SUCCESS, matchingUserResDTOS));
 	}
 
+	@Operation(summary = "내 유저성향 추가")
 	//새로운 유저성향 추가
 	@PostMapping("/userPersonality")
 	public ResponseEntity<ResultResponse> addUserPersonality(
@@ -47,6 +50,7 @@ public class MatchingController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS, addUserResDTO));
 	}
 
+	@Operation(summary = "유저성향 변경")
 	@PatchMapping("/userPersonality")
 	//유저성향 변경
 	public ResponseEntity<ResultResponse> modifyPersonality(

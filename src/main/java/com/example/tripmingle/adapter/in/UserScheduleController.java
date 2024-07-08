@@ -22,6 +22,7 @@ import com.example.tripmingle.dto.res.schedule.GetUserTripResDTO;
 import com.example.tripmingle.dto.res.schedule.UserScheduleResDTO;
 import com.example.tripmingle.port.in.UserScheduleUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class UserScheduleController {
 	private final UserScheduleUseCase userScheduleUseCase;
 
+	@Operation(summary = "유저 여행일정 생성")
 	@PostMapping()
 	//유저 여행일정 생성 (대륙,나라,기간)
 	public ResponseEntity<ResultResponse> createUserTrip(@RequestBody CreateUserTripReqDTO createUserTripReqDTO) {
@@ -39,6 +41,7 @@ public class UserScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_USER_TRIP_SUCCESS, createUserTripResDTO));
 	}
 
+	@Operation(summary = "유저 여행상세일정 추가")
 	@PostMapping("/{user-trip-id}")
 	//유저 세부일정 추가
 	public ResponseEntity<ResultResponse> createUserSchedule(@PathVariable(value = "user-trip-id") Long userTripId,
@@ -48,6 +51,7 @@ public class UserScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_USER_SCHEDULE_SUCCESS, userSchedules));
 	}
 
+	@Operation(summary = "유저 여행일정 삭제")
 	@DeleteMapping("/{user-trip-id}")
 	//유저 여행일정 삭제
 	public ResponseEntity<ResultResponse> deleteUserTrip(@PathVariable(value = "user-trip-id") Long userTripId) {
@@ -55,6 +59,7 @@ public class UserScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_USER_TRIP_SUCCESS));
 	}
 
+	@Operation(summary = "유저 여행상세일정 삭제&수정")
 	@PostMapping("/{user-trip-id}/modify")
 	//유저 세부일정 삭제&수정
 	public ResponseEntity<ResultResponse> modifyUserSchedule(@PathVariable(value = "user-trip-id") Long userTripId,
@@ -64,6 +69,7 @@ public class UserScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_BOARD_SCHEDULE_SUCCESS));
 	}
 
+	@Operation(summary = "유저 여행일정 조회")
 	@GetMapping
 	//유저 여행일정 조회
 	public ResponseEntity<ResultResponse> getUserTrip() {
@@ -71,6 +77,7 @@ public class UserScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_TRIP_SUCCESS, getUserTripResDTOS));
 	}
 
+	@Operation(summary = "유저 세부일정 조회")
 	@GetMapping("/{user-trip-id}")
 	//세부일정조회 -> 그냥 전부 리스트로 주면됨 (day, 순서별로 정렬하면 더좋음)
 	public ResponseEntity<ResultResponse> getUserSchedule(@PathVariable(value = "user-trip-id") Long userTripId) {

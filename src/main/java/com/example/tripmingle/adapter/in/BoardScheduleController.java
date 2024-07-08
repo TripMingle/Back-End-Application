@@ -18,6 +18,7 @@ import com.example.tripmingle.dto.res.schedule.BoardScheduleResDTO;
 import com.example.tripmingle.dto.res.schedule.GetBoardScheduleResDTO;
 import com.example.tripmingle.port.in.BoardScheduleUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +30,7 @@ public class BoardScheduleController {
 
 	private final BoardScheduleUseCase boardScheduleUseCase;
 
+	@Operation(summary = "게시판 일정 추가")
 	@PostMapping("/{board-id}")
 	//게시판 일정 추가 (게시물id-> 대륙,나라,기간 등 가져오기, List<장소,날짜,순서,좌표>)
 	public ResponseEntity<ResultResponse> createBoardSchedule(@PathVariable(value = "board-id") Long boardId,
@@ -38,6 +40,7 @@ public class BoardScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SCHEDULE_SUCCESS, boardScheduleResDTO));
 	}
 
+	@Operation(summary = "게시판 일정 수정 및 삭제")
 	@PostMapping("/{board-id}/modify")
 	//게시물 일정 수정&삭제 로직
 	public ResponseEntity<ResultResponse> modifyBoardSchedule(@PathVariable(value = "board-id") Long boardId,
@@ -47,6 +50,7 @@ public class BoardScheduleController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_BOARD_SCHEDULE_SUCCESS));
 	}
 
+	@Operation(summary = "게시물 일정 조회")
 	@GetMapping("/{board-id}")
 	//게시물 일정조회
 	public ResponseEntity<ResultResponse> getBoardSchedule(@PathVariable(value = "board-id") Long boardId) {

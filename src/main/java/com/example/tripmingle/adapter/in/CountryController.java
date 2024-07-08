@@ -13,6 +13,7 @@ import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.res.count.GetCountriesResDTO;
 import com.example.tripmingle.port.in.CountryUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class CountryController {
 	private final CountryUseCase countryUseCase;
 
+	@Operation(summary = "자동완성")
 	//검색할때 확인하는 로직
 	@GetMapping("/search/{keyword}")
 	public ResponseEntity<ResultResponse> getAutoComplete(@PathVariable(value = "keyword") String keyword) {
@@ -30,6 +32,7 @@ public class CountryController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COUNTRIES_BY_KEYWORD_SUCCESS, getCountriesDTO));
 	}
 
+	@Operation(summary = "대륙별 나라조회")
 	//대륙에 포함되는 나라 전부 조회
 	@GetMapping("/{continent}")
 	public ResponseEntity<ResultResponse> getCountries(@PathVariable(value = "continent") String continent) {

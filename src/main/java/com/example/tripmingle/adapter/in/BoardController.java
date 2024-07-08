@@ -56,6 +56,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_BOARD_PREVIEW_SUCCESS, getBoardsResDTO));
 	}
 
+	@Operation(summary = "게시물 전체조회(성별이나 언어로 필터링)")
 	@GetMapping("/{country-name}")
 	//게시물 전체조회(나라명 입력, 성별이나 언어로 필터링, 페이징)
 	public ResponseEntity<ResultResponse> getAllBoards(@PathVariable(value = "country-name") String countryName
@@ -71,6 +72,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_BOARD_SUCCESS, getBoardsResDTOS));
 	}
 
+	@Operation(summary = "단일게시물 조회")
 	@GetMapping("/show/{board-id}")
 	//단일게시물 조회 (상세내용 + 댓글까지 + 유저정보 + 태그)
 	public ResponseEntity<ResultResponse> getBoard(@PathVariable(value = "board-id") Long boardId) {
@@ -78,6 +80,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_SINGLE_BOARD_SUCCESS, getBoardInfoResDTO));
 	}
 
+	@Operation(summary = "게시글 작성")
 	@PostMapping()
 	//게시글 작성
 	public ResponseEntity<ResultResponse> createBoard(@RequestBody CreateBoardReqDTO createBoardReqDTO) {
@@ -85,6 +88,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SUCCESS, postBoardResDTO));
 	}
 
+	@Operation(summary = "게시글 수정")
 	@PatchMapping("/{board-id}")
 	//게시글 수정
 	public ResponseEntity<ResultResponse> updateBoard(@PathVariable(value = "board-id") Long boardId,
@@ -93,6 +97,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_SUCCESS, updateBoardResDTO));
 	}
 
+	@Operation(summary = "게시글 삭제")
 	@DeleteMapping("/{board-id}")
 	//게시글 삭제
 	public ResponseEntity<ResultResponse> deleteBoard(@PathVariable(value = "board-id") Long boardId) {
@@ -100,6 +105,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BOARD_SUCCESS));
 	}
 
+	@Operation(summary = "게시글 검색")
 	@GetMapping("/search/{country-name}")
 	//게시글 검색
 	public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name") String countryName
@@ -109,6 +115,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
 	}
 
+	@Operation(summary = "댓글 작성")
 	@PostMapping("/comment")
 	//댓글달기 (대댓글달기도 같은 API 사용)
 	public ResponseEntity<ResultResponse> createComment(
@@ -118,6 +125,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_COMMENT_SUCCESS, createBoardCommentResDTO));
 	}
 
+	@Operation(summary = "댓글 수정")
 	@PatchMapping("/comment/{comment-id}")
 	//댓글수정(대댓글도 같은 API 사용)
 	public ResponseEntity<ResultResponse> updateComment(@PathVariable(value = "comment-id") Long commentId,
@@ -127,6 +135,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_COMMENT_SUCCESS, updateBoardCommentResDTO));
 	}
 
+	@Operation(summary = "댓글 삭제")
 	@DeleteMapping("/comment/{comment-id}")
 	//댓글삭제(대댓글도 사용가능)
 	public ResponseEntity<ResultResponse> deleteComment(@PathVariable(value = "comment-id") Long commentId) {
@@ -134,6 +143,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_BOARD_COMMENT_SUCCESS));
 	}
 
+	@Operation(summary = "북마크 토글")
 	@PostMapping("/bookmark/{board-id}")
 	//북마크 토글
 	public ResponseEntity<ResultResponse> toggleBoardBookmark(@PathVariable(value = "board-id") Long boardId) {
@@ -141,6 +151,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_BOOK_MARK_SUCCESS, toggleStateResDTO));
 	}
 
+	@Operation(summary = "내가 북마크한 게시물 조회")
 	@GetMapping("/bookmark")
 	//내가 북마크한 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyBookMarkedBoards(
@@ -149,6 +160,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
 	}
 
+	@Operation(summary = "좋아요 토글")
 	@PostMapping("/likes/{board-id}")
 	//좋아요 토글
 	public ResponseEntity<ResultResponse> toggleBoardLikes(@PathVariable(value = "board-id") Long boardId) {
@@ -156,6 +168,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.TOGGLE_BOARD_LIKES_SUCCESS, toggleStateResDTO));
 	}
 
+	@Operation(summary = "내가 좋아요한 게시물 조회")
 	@GetMapping("/likes")
 	//내가 좋아요한 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyLikedBoards(
@@ -164,6 +177,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
 	}
 
+	@Operation(summary = "내가 방장인 동행게시물 조회")
 	@GetMapping("/mine")
 	//내가 방장인 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyBoards(
@@ -172,6 +186,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_SUCCESS, getBoardsResDTOS));
 	}
 
+	@Operation(summary = "여행 확정짓기")
 	@PostMapping("/{board-id}/confirm")
 	//여행확정짓기 (참여 확정짓기)
 	public ResponseEntity<ResultResponse> confirmUsers(@PathVariable(value = "board-id") Long boardId,
@@ -180,6 +195,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.CONFIRM_USERS_SUCCESS));
 	}
 
+	@Operation(summary = "단일 게시물에서 여행 확정된 유저 조회")
 	@GetMapping("/{board-id}/companion")
 	//단일 게시물에서 확정된 유저 조회
 	public ResponseEntity<ResultResponse> getCompanions(@PathVariable(value = "board-id") Long boardId) {
@@ -187,6 +203,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COMPANIONS_SUCCESS, getCompanionsResDTOS));
 	}
 
+	@Operation(summary = "내가 참여하고있는 동행게시물 조회")
 	@GetMapping("/my-companion")
 	//내가 참여하고있는 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyCompanionBoards(
@@ -195,6 +212,7 @@ public class BoardController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_COMPANIONS_BOARDS_SUCCESS, getBoardsResDTOS));
 	}
 
+	@Operation(summary = "참여하고 있는 동행 게시물에서 탈퇴")
 	@DeleteMapping("/{board-id}/leave")
 	//참여하고있는 게시물에서 탈퇴
 	public ResponseEntity<ResultResponse> leaveCompanion(@PathVariable(value = "board-id") Long boardId) {
