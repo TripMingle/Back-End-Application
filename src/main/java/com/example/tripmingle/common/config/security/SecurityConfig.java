@@ -3,6 +3,7 @@ package com.example.tripmingle.common.config.security;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +38,9 @@ public class SecurityConfig {
 	private final ObjectMapper objectMapper;
 	private final UserRepository userRepository;
 
+	@Value("${cors.allowed-origins}")
+	private String allowedOrigins;
+
 	private static final String[] AUTH_WHITELIST = {
 		"/swagger-ui/**", "swagger-ui.html/**", "/v3/**"
 	};
@@ -65,7 +69,7 @@ public class SecurityConfig {
 					public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
 
-						configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+						configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
 						configuration.setAllowedHeaders(Collections.singletonList("*"));

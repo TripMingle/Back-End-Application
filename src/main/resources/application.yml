@@ -51,3 +51,6 @@ springdoc:
     disable-swagger-default-url: true
     display-request-duration: true
     operations-sorter: alpha
+
+cors:
+  allowed-origins: ${allowed-origins}
