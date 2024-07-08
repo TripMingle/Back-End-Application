@@ -48,8 +48,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 		String messageId = UUID.randomUUID().toString();
 		String response = "";
 		try {
-			CompletableFuture<String> future = matchingService.prepareData(currentUser, currentUserPersonality,
-				messageId);
+			CompletableFuture<String> future = matchingService.prepareData(currentUserPersonality, messageId);
 			response = future.get();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,7 +57,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
 		}
 
-		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUser.getId());
+		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId());
 
 		int start = (int)pageable.getOffset();
 		int end = Math.min((start + pageable.getPageSize()), similarUsers.size());
