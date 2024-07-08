@@ -5,6 +5,8 @@ import com.example.tripmingle.dto.req.posting.*;
 import com.example.tripmingle.dto.res.posting.*;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +20,14 @@ import java.util.List;
 
 import static com.example.tripmingle.common.result.ResultCode.*;
 
+@Tag(name = "포스팅")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/postings")
 @Slf4j
 public class PostingController {
-    private final PostingUseCase postingUseCase;
-    private final PostingCommentUseCase postingCommentUseCase;
+	private final PostingUseCase postingUseCase;
+	private final PostingCommentUseCase postingCommentUseCase;
 
     //포스트 게시하기
     @Operation(summary = "포스트 작성")

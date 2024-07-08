@@ -15,13 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.example.tripmingle.common.result.ResultCode.VALIDATE_COMPLETE;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Auth")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthUseCase authUseCase;
+	private final AuthUseCase authUseCase;
 
     @Operation(summary = "닉네임 중복 여부 확인")
     @GetMapping("/validate/duplication")
