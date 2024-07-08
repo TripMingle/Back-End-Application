@@ -138,6 +138,39 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(AlreadyExistsChatRoomException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyExistsChatRoom(AlreadyExistsChatRoomException ex) {
+        log.error("handleAlreadyExistsChatRoom", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleChatRoomNotFound(ChatRoomNotFoundException ex) {
+        log.error("handleChatRoomNotFound", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(OneOnOneChatRoomNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleOneOnOneChatRoomNotFound(OneOnOneChatRoomNotFoundException ex) {
+        log.error("handleOneOnOneChatRoomNotFound", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(ChatRoomUserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleChatRoomUserNotFound(ChatRoomUserNotFoundException ex) {
+        log.error("handleChatRoomUserNotFound", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(AlreadyExistsChatRoomUserException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyExistsChatRoomUser(AlreadyExistsChatRoomUserException ex) {
+        log.error("handleAlreadyExistsChatRoomUser", ex);
+        final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
 
 }
