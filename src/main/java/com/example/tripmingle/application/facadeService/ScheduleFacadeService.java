@@ -1,6 +1,10 @@
 package com.example.tripmingle.application.facadeService;
 
-import com.example.tripmingle.application.service.*;
+import com.example.tripmingle.application.service.BoardScheduleService;
+import com.example.tripmingle.application.service.BoardService;
+import com.example.tripmingle.application.service.UserScheduleService;
+import com.example.tripmingle.application.service.UserService;
+import com.example.tripmingle.application.service.UserTripService;
 import com.example.tripmingle.dto.req.schedule.*;
 import com.example.tripmingle.dto.res.schedule.*;
 import com.example.tripmingle.entity.*;

@@ -80,7 +80,18 @@ public enum ResultCode {
 
 	//language
 	GET_COUNTRIES_BY_CONTINENT_SUCCESS(200, "L001", "해당 대륙에 존재하는 나라 조회에 성공하였습니다."),
-	GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "L002", "검색어에 해당하는 나라 조회에 성공하였습니다.");
+	GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "L002", "검색어에 해당하는 나라 조회에 성공하였습니다."),
+
+	// chat
+	GET_ALL_CHAT_MESSAGES(200, "CM001", "전체 채팅 조회 성공"),
+
+	// chat room
+	CREATE_ONE_ON_ONE_CHAT_ROOM_SUCCESS(200, "O3CR001", "일대일 채팅방 생성 성공"),
+	CREATE_GROUP_CHAT_ROOM_SUCCESS(200, "GCR001", "그룹 채팅방 생성 성공"),
+	USER_ENTER_CHAT_ROOM_SUCCESS(200, "GCR002", "그룹 채팅방 참여 성공"),
+	EXIT_GROUP_CHAT_ROOM_SUCCESS(200, "GCR003", "그룹 채팅방 퇴장 성공"),
+	EXIT_ONE_ON_ONE_CHAT_ROOM_SUCCESS(200, "O3CR002", "일대일 채팅방 퇴장 성공"),
+	;
 	private final int status;
 	private final String code;
 	private final String message;
