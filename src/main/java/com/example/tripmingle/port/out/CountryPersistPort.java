@@ -1,14 +1,17 @@
 package com.example.tripmingle.port.out;
 
-import com.example.tripmingle.entity.Country;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.example.tripmingle.entity.Country;
 
 @Component
 public interface CountryPersistPort {
 
-    List<Country> getCountriesByContinent(String continent);
+	List<Country> getCountriesByContinent(String continent);
 
-    List<Country> getCountriesByKeyword(String keyword);
+	List<Country> getCountriesByKeyword(String keyword);
+
+	Country getCountryByCountryName(String countryName);
 }

@@ -111,7 +111,7 @@ public class BoardController {
 	public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name") String countryName
 		, @RequestParam String keyword
 		, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(keyword, pageable);
+		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(countryName, keyword, pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
 	}
 

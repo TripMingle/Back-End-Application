@@ -78,9 +78,12 @@ public enum ResultCode {
 	// auth
 	VALIDATE_COMPLETE(200, "A001", "검증이 완료되었습니다."),
 
-	//language
-	GET_COUNTRIES_BY_CONTINENT_SUCCESS(200, "L001", "해당 대륙에 존재하는 나라 조회에 성공하였습니다."),
-	GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "L002", "검색어에 해당하는 나라 조회에 성공하였습니다."),
+	//country
+	GET_COUNTRIES_BY_CONTINENT_SUCCESS(200, "C001", "해당 대륙에 존재하는 나라 조회에 성공하였습니다."),
+	GET_COUNTRIES_BY_KEYWORD_SUCCESS(200, "C002", "검색어에 해당하는 나라 조회에 성공하였습니다."),
+	UPLOAD_COUNTRY_IMAGE_SUCCESS(200, "C003", "나라 이미지 업로드에 성공하였습니다."),
+	DELETE_COUNTRY_IMAGE_SUCCESS(200, "C004", "나라 이미지 삭제에 성공하였습니다."),
+	UPLOAD_PRIMARY_COUNTRY_IMAGE_SUCCESS(200, "C005", "나라 대표이미지 업로드에 성공하였습니다."),
 
 	// chat
 	GET_ALL_CHAT_MESSAGES(200, "CM001", "전체 채팅 조회 성공"),
