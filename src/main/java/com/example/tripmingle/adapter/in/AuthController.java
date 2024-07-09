@@ -3,16 +3,15 @@ package com.example.tripmingle.adapter.in;
 
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
+import com.example.tripmingle.dto.res.auth.LogoutResDTO;
 import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
 import com.example.tripmingle.port.in.AuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import static com.example.tripmingle.common.result.ResultCode.LOGOUT_SUCCESS;
 import static com.example.tripmingle.common.result.ResultCode.VALIDATE_COMPLETE;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,5 +30,12 @@ public class AuthController {
         ValidateDuplicationResDTO validateDuplicationResDTO = authUseCase.validateDuplication(validateDuplicationReqDTO);
         return ResponseEntity.ok(ResultResponse.of(VALIDATE_COMPLETE, validateDuplicationResDTO));
     }
+
+//    @Operation(summary = "로그아웃")
+//    @PostMapping("/logout")
+//    public ResponseEntity<ResultResponse> logout() {
+//        LogoutResDTO logoutResDTO = authUseCase.logout();
+//        return ResponseEntity.ok(ResultResponse.of(LOGOUT_SUCCESS, logoutResDTO));
+//    }
 
 }

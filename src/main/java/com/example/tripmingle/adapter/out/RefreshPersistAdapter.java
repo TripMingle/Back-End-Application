@@ -16,4 +16,9 @@ public class RefreshPersistAdapter implements RefreshPort {
     public void save(Refresh refreshEntity) {
         refreshRepository.save(refreshEntity);
     }
+
+    @Override
+    public void deleteRefresh(String email) {
+        refreshRepository.deleteByEmail(email);
+    }
 }

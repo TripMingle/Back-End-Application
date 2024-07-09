@@ -4,4 +4,6 @@ import com.example.tripmingle.entity.Refresh;
 
 public interface RefreshPort {
     void save(Refresh refreshEntity);
+
+    void deleteRefresh(String email);
 }

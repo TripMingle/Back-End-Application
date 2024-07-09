@@ -5,6 +5,7 @@ import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
 import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
 import com.example.tripmingle.entity.User;
+import com.example.tripmingle.port.out.RefreshPort;
 import com.example.tripmingle.port.out.UserPersistPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserPersistPort userPersistPort;
+    private final RefreshPort refreshPort;
 
     public ValidateDuplicationResDTO validateDuplication(ValidateDuplicationReqDTO validateDuplicationReqDTO) {
         boolean duplicationStatus = userPersistPort.existsByNickName(validateDuplicationReqDTO.getNickName());
@@ -29,5 +31,9 @@ public class AuthService {
         } else {
             throw new InvalidUserAccessException("Invalid User Access.", ErrorCode.INVALID_USER_ACCESS);
         }
+    }
+
+    public void deleteRefresh(String email) {
+        refreshPort.deleteRefresh(email);
     }
 }

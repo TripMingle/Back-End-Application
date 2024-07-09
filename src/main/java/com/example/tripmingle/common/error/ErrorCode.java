@@ -41,6 +41,9 @@ public enum ErrorCode {
     //Redis
     REDIS_CONNECT_EXCEPTION(400, "R001", "redisConnection 에 예외가 발생하였습니다."),
 
+    // auth
+    LOGOUT_USER(400, "A001", "로그아웃된 유저입니다."),
+    TOKEN_NOT_FOUND(404, "A002", "토큰이 없습니다."),
 
     //OAuth
     KAKAO_BAD_REQUEST(400, "O001", "카카오 소셜 로그인에 잘못된 요청입니다."),
