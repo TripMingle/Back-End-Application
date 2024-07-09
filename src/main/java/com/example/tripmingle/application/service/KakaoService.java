@@ -6,6 +6,7 @@ import com.example.tripmingle.common.utils.KakaoProperties;
 import com.example.tripmingle.dto.etc.KakaoUserInfo;
 import com.example.tripmingle.dto.etc.TokenDTO;
 import com.example.tripmingle.dto.req.oauth.KakaoUserAdditionDetailsReqDTO;
+import com.example.tripmingle.dto.req.oauth.KakaoUserDetailReqDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoLoginResDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import com.example.tripmingle.entity.Refresh;
@@ -42,15 +43,14 @@ public class KakaoService {
     private final KakaoLoginFeignClientForAccessTokenPort kakaoLoginFeignClientForAccessTokenPort;
 
     @Transactional
-    public TokenDTO loginKakaoAccount(KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
-        String redefineAccessToken = "Bearer " + kakaoUserAdditionDetailsReqDTO.getKakaoAccessToken();
+    public TokenDTO loginKakaoAccount(KakaoUserDetailReqDTO kakaoUserDetailReqDTO) {
+        String redefineAccessToken = "Bearer " + kakaoUserDetailReqDTO.getKakaoAccessToken();
         KakaoLoginResDTO kakaoLoginResDTO = kakaoLoginFeignClientPort.getKakaoUserInfo(redefineAccessToken);
-
-        User user = joinStateCheckAndReturnUser(kakaoLoginResDTO, kakaoUserAdditionDetailsReqDTO);
+        User user = joinStateCheckAndReturnUser(kakaoLoginResDTO, kakaoUserDetailReqDTO);
         userNullCheck(user);
 
-        String accessToken = jwtUtils.createJwtToken(user.getEmail(), user.getRole(), user.getLoginType(), ACCESS_TOKEN.getMessage(), jwtUtils.getAccessTokenExpTime());
-        String refreshToken = jwtUtils.createJwtToken(user.getEmail(), user.getRole(), user.getLoginType(), REFRESH_TOKEN.getMessage(), jwtUtils.getRefreshTokenExpTime());
+        String accessToken = jwtUtils.createJwtAccessToken(user.getEmail(), user.getRole(), user.getLoginType());
+        String refreshToken = jwtUtils.createJwtRefreshToken(user.getEmail(), user.getRole(), user.getLoginType());
         addRefreshEntity(user.getEmail(), refreshToken, jwtUtils.getRefreshTokenExpTimeByToken(refreshToken));
 
         return TokenDTO.builder()
@@ -59,7 +59,7 @@ public class KakaoService {
                 .build();
     }
 
-    private User joinStateCheckAndReturnUser(KakaoLoginResDTO kakaoLoginResDTO, KakaoUserAdditionDetailsReqDTO kakaoUserAdditionDetailsReqDTO) {
+    private User joinStateCheckAndReturnUser(KakaoLoginResDTO kakaoLoginResDTO, KakaoUserDetailReqDTO kakaoUserDetailReqDTO) {
         KakaoUserInfo kakaoUserInfo = kakaoLoginResDTO.getKakaoUserInfo();
         User user = null;
         if (!userPersistPort.existsByEmail(kakaoUserInfo.getEmail())) {
@@ -69,11 +69,11 @@ public class KakaoService {
                     .role("ROLE_USER")
                     .loginType(KAKAO.getLoginType())
                     .oauthId(kakaoLoginResDTO.getKakaoId())
-                    .nickName(kakaoUserAdditionDetailsReqDTO.getNickName())
+                    .nickName(kakaoUserDetailReqDTO.getNickName())
                     .ageRange(kakaoUserInfo.getAgeRange())
                     .gender(kakaoUserInfo.getGender())
                     .name(kakaoUserInfo.getName())
-                    .nationality(kakaoUserAdditionDetailsReqDTO.getNationality())
+                    .nationality(kakaoUserDetailReqDTO.getNationality())
                     .phoneNumber(kakaoUserInfo.getPhoneNumber())
                     .build());
         } else {

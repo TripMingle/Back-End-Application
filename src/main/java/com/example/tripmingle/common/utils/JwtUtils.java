@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
 
+import static com.example.tripmingle.common.constants.JwtConstants.ACCESS_TOKEN;
+import static com.example.tripmingle.common.constants.JwtConstants.REFRESH_TOKEN;
+
 @Component
 public class JwtUtils {
 
@@ -91,16 +94,32 @@ public class JwtUtils {
 			.before(new Date());
 	}
 
-	public String createJwtToken(String email, String role, String loginType, String tokenType, Long expiredMs) {
+	public String parsingAccessToken(String token) {
+		return token.substring(7);
+	}
+
+	public String createJwtAccessToken(String email, String role, String loginType) {
 		return "Bearer " + Jwts.builder()
 			.claim("email", email)
 			.claim("role", role)
 			.claim("loginType", loginType)
-			.claim("tokenType", tokenType)
+			.claim("tokenType", ACCESS_TOKEN.getMessage())
 			.issuedAt(new Date(System.currentTimeMillis()))
-			.expiration(new Date(System.currentTimeMillis() + expiredMs))
+			.expiration(new Date(System.currentTimeMillis() + getAccessTokenExpTime()))
 			.signWith(secretKey)
 			.compact();
+	}
+
+	public String createJwtRefreshToken(String email, String role, String loginType) {
+		return Jwts.builder()
+				.claim("email", email)
+				.claim("role", role)
+				.claim("loginType", loginType)
+				.claim("tokenType", REFRESH_TOKEN.getMessage())
+				.issuedAt(new Date(System.currentTimeMillis()))
+				.expiration(new Date(System.currentTimeMillis() + getRefreshTokenExpTime()))
+				.signWith(secretKey)
+				.compact();
 	}
 
 }

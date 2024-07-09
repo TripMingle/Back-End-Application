@@ -2,10 +2,12 @@ package com.example.tripmingle.common.config.security;
 
 import java.util.Collections;
 
+import com.example.tripmingle.entity.Refresh;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,8 +48,7 @@ public class SecurityConfig {
 	};
 
 	@Autowired
-	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtils jwtUtils,
-		RefreshRepository refreshRepository, ObjectMapper objectMapper, UserRepository userRepository) {
+	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtils jwtUtils, RefreshRepository refreshRepository, ObjectMapper objectMapper, UserRepository userRepository) {
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.jwtUtils = jwtUtils;
 		this.refreshRepository = refreshRepository;
@@ -88,8 +89,8 @@ public class SecurityConfig {
 				.requestMatchers(AUTH_WHITELIST).permitAll()
 				.requestMatchers("/kakao/**", "/auth/validate/duplication").permitAll()
 				.anyRequest().authenticated())
-			.addFilterBefore(new JwtFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(new CustomLogoutFilter(jwtUtils, refreshRepository), LogoutFilter.class)
+			.addFilterBefore(new JwtFilter(jwtUtils, refreshRepository), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(new CustomLogoutFilter(jwtUtils, refreshRepository), JwtFilter.class)
 			.sessionManagement((session) -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();
