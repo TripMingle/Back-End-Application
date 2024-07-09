@@ -6,17 +6,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.tripmingle.common.error.ErrorResponse;
+import com.example.tripmingle.common.exception.AlreadyExistsChatRoomException;
+import com.example.tripmingle.common.exception.AlreadyExistsChatRoomUserException;
 import com.example.tripmingle.common.exception.BoardBookMarkNotFoundException;
 import com.example.tripmingle.common.exception.BoardCommentNotFoundException;
 import com.example.tripmingle.common.exception.BoardLikesNotFoundException;
 import com.example.tripmingle.common.exception.BoardNotFoundException;
 import com.example.tripmingle.common.exception.BoardScheduleNotFoundException;
+import com.example.tripmingle.common.exception.ChatRoomNotFoundException;
+import com.example.tripmingle.common.exception.ChatRoomUserNotFoundException;
 import com.example.tripmingle.common.exception.CompanionNotFound;
 import com.example.tripmingle.common.exception.CountryNotFoundException;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.common.exception.JsonParsingException;
 import com.example.tripmingle.common.exception.LeaderCannotLeaveException;
 import com.example.tripmingle.common.exception.MatchingServerException;
+import com.example.tripmingle.common.exception.OneOnOneChatRoomNotFoundException;
 import com.example.tripmingle.common.exception.PostingCommentNotFoundException;
 import com.example.tripmingle.common.exception.PostingLikesNotFoundException;
 import com.example.tripmingle.common.exception.PostingNotFoundException;
@@ -168,6 +173,41 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(CountryNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleCountryNotFoundException(CountryNotFoundException ex) {
 		log.error("handleCountryNotFoundException", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(AlreadyExistsChatRoomException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyExistsChatRoom(AlreadyExistsChatRoomException ex) {
+		log.error("handleAlreadyExistsChatRoom", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(ChatRoomNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleChatRoomNotFound(ChatRoomNotFoundException ex) {
+		log.error("handleChatRoomNotFound", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(OneOnOneChatRoomNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleOneOnOneChatRoomNotFound(OneOnOneChatRoomNotFoundException ex) {
+		log.error("handleOneOnOneChatRoomNotFound", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(ChatRoomUserNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleChatRoomUserNotFound(ChatRoomUserNotFoundException ex) {
+		log.error("handleChatRoomUserNotFound", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(AlreadyExistsChatRoomUserException.class)
+	public ResponseEntity<ErrorResponse> handleAlreadyExistsChatRoomUser(AlreadyExistsChatRoomUserException ex) {
+		log.error("handleAlreadyExistsChatRoomUser", ex);
 		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
 	}

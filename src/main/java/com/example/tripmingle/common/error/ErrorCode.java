@@ -70,7 +70,18 @@ public enum ErrorCode {
 
 	// posting likes
 	POSTING_LIKES_NOT_FOUND(404, "PL001", "해당 좋아요를 찾을 수 없습니다."),
-	;
+    // chat
+    ALREADY_EXISTS_CHAT_ROOM(400, "CR002", "해당 채팅방은 이미 존재합니다."),
+    INVALID_CHAT_ROOM_ID_FOR_CHAT_MESSAGE(403, "CM001", "해당 채팅에 대한 채팅방 아이디값이 유효하지 않습니다."),
+
+    // chatroom
+    CHATROOM_NOT_FOUND(404, "CR001", "해당 채팅방을 찾을 수 없습니다."),
+    ONE_ON_ONE_CHAT_ROOM_NOT_FOUND(404, "O3CR001", "해당 일대일 채팅방을 찾을 수 없습니다."),
+
+    // chat room user
+    USER_IN_CHAT_ROOM_NOT_FOUND(404, "CRU001", "해당 채팅방에 유저를 찾을 수 없습니다."),
+    ALREADY_EXISTS_USER_IN_CHAT_ROOM(400, "CRU002", "해당 채팅방에 이미 유저가 존재합니다."),
+    ;
 
 	final private int status;
 	final private String ErrorCode;

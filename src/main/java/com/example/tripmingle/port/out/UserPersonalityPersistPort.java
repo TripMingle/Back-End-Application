@@ -1,5 +1,7 @@
 package com.example.tripmingle.port.out;
 
+import java.util.List;
+
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.entity.UserPersonality;
 
@@ -13,4 +15,6 @@ public interface UserPersonalityPersistPort {
 	UserPersonality getUserPersonalityByUserId(Long userId);
 
 	void deleteUserPersonality(UserPersonality userPersonality);
+
+	List<UserPersonality> getUserPersonalitiesByIds(List<Long> similarUsers);
 }

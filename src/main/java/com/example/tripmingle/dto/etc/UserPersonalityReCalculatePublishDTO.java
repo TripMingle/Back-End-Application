@@ -7,6 +7,5 @@ import lombok.Getter;
 @Builder
 public class UserPersonalityReCalculatePublishDTO {
 	private Long userPersonalityId;
-	private Long minUserPersonalityId;
 	private String messageId;
 }

@@ -1,6 +1,7 @@
 package com.example.tripmingle.application.facadeService;
 
 import com.example.tripmingle.application.service.*;
+import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.etc.ChildBoardCommentDTO;
 import com.example.tripmingle.dto.req.board.*;
