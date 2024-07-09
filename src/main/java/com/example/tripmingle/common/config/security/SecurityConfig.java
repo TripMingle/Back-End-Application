@@ -44,7 +44,7 @@ public class SecurityConfig {
 	private String allowedOrigins;
 
 	private static final String[] AUTH_WHITELIST = {
-		"/swagger-ui/**", "swagger-ui.html/**", "/v3/**"
+		"/swagger-ui/**", "swagger-ui.html/**", "/v3/**", "/country/**"
 	};
 
 	@Autowired
