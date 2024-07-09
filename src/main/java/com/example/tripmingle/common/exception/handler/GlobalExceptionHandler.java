@@ -16,6 +16,7 @@ import com.example.tripmingle.common.exception.BoardScheduleNotFoundException;
 import com.example.tripmingle.common.exception.ChatRoomNotFoundException;
 import com.example.tripmingle.common.exception.ChatRoomUserNotFoundException;
 import com.example.tripmingle.common.exception.CompanionNotFound;
+import com.example.tripmingle.common.exception.CountryImageNotFoundException;
 import com.example.tripmingle.common.exception.CountryNotFoundException;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.common.exception.JsonParsingException;
@@ -208,6 +209,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AlreadyExistsChatRoomUserException.class)
 	public ResponseEntity<ErrorResponse> handleAlreadyExistsChatRoomUser(AlreadyExistsChatRoomUserException ex) {
 		log.error("handleAlreadyExistsChatRoomUser", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(CountryImageNotFoundException.class)
+	public ResponseEntity<ErrorResponse> handleCountryImageNotFoundException(CountryImageNotFoundException ex) {
+		log.error("handleCountryImageNotFoundException", ex);
 		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
 	}

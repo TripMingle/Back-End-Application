@@ -14,4 +14,6 @@ public class GetCountriesResDTO {
 	private String continentNameEnglish;
 	private String capitalNameEnglish;
 
+	private String primaryImageUrl;
+
 }

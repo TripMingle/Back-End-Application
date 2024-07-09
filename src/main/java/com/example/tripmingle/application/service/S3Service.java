@@ -15,4 +15,8 @@ public class S3Service {
 	public String uploadCountryImage(MultipartFile image) {
 		return s3StoragePort.upload(image);
 	}
+
+	public void deleteCountryImage(String imageUrl) {
+		s3StoragePort.deleteImageFromS3(imageUrl);
+	}
 }

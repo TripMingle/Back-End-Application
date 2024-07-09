@@ -12,5 +12,8 @@ public interface CountryUseCase {
 
 	List<GetCountriesResDTO> getCountriesByKeyword(String keyword);
 
-	UploadCountryImageResDTO uploadCountryImage(String countryName, MultipartFile image);
+	UploadCountryImageResDTO uploadCountryImage(String countryName, MultipartFile image, boolean isPrimary);
+
+	void deleteCountryImage(String imageUrl);
+
 }

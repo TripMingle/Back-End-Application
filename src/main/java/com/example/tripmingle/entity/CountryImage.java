@@ -26,5 +26,6 @@ public class CountryImage {
 	private Country country;
 
 	private String imageUrl;
+	private boolean isPrimary;
 
 }
