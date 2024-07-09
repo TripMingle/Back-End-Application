@@ -2,15 +2,20 @@ package com.example.tripmingle.adapter.in;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.res.count.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.country.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.country.UploadCountryImageResDTO;
 import com.example.tripmingle.port.in.CountryUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +43,15 @@ public class CountryController {
 	public ResponseEntity<ResultResponse> getCountries(@PathVariable(value = "continent") String continent) {
 		List<GetCountriesResDTO> getCountriesResDTO = countryUseCase.getCountries(continent);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COUNTRIES_BY_CONTINENT_SUCCESS, getCountriesResDTO));
+	}
+
+	@Operation(summary = "국가 사진 업로드")
+	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ResultResponse> uploadCountryImage(
+		@RequestPart("countryName") String countryName,
+		@RequestPart("image") MultipartFile image) {
+		UploadCountryImageResDTO uploadCountryImageResDTO = countryUseCase.uploadCountryImage(countryName, image);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPLOAD_COUNTRY_IMAGE_SUCCESS, uploadCountryImageResDTO));
 	}
 
 }
