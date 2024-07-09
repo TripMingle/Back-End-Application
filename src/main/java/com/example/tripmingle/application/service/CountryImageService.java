@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class CountryImageService {
-	private CountryImagePersistPort countryImagePersistPort;
+	private final CountryImagePersistPort countryImagePersistPort;
 
 	public void saveImage(Country country, String imageUrl) {
 		CountryImage countryImage = CountryImage.builder()

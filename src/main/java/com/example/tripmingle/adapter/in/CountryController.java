@@ -46,9 +46,9 @@ public class CountryController {
 	}
 
 	@Operation(summary = "국가 사진 업로드")
-	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/image/{country-name}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResultResponse> uploadCountryImage(
-		@RequestPart("countryName") String countryName,
+		@PathVariable(value = "country-name") String countryName,
 		@RequestPart("image") MultipartFile image) {
 		UploadCountryImageResDTO uploadCountryImageResDTO = countryUseCase.uploadCountryImage(countryName, image);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPLOAD_COUNTRY_IMAGE_SUCCESS, uploadCountryImageResDTO));
