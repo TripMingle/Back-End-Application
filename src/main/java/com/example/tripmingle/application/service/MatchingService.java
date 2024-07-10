@@ -10,7 +10,7 @@ import com.example.tripmingle.dto.etc.DeleteUserPersonalityPublishDTO;
 import com.example.tripmingle.dto.etc.UserPersonalityIdPublishDTO;
 import com.example.tripmingle.dto.etc.UserPersonalityReCalculatePublishDTO;
 import com.example.tripmingle.entity.UserPersonality;
-import com.example.tripmingle.port.out.MatchingPort;
+import com.example.tripmingle.port.out.CacheManagerPort;
 import com.example.tripmingle.port.out.PublishPort;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
-	private final MatchingPort matchingPort;
+	private final CacheManagerPort cacheManagerPort;
 	private final PublishPort publishPort;
 
 	private final RedisTemplate<String, Object> redisTemplate;
@@ -26,7 +26,7 @@ public class MatchingService {
 	private final String USER_PREFERENCES_KEY = "userPreferences-";
 
 	public List<Long> getSimilarUserIds(Long userPersonalityId) {
-		return matchingPort.getSimilarUsersByUserId(userPersonalityId);
+		return cacheManagerPort.getSimilarUsersByUserId(userPersonalityId);
 	}
 
 	public CompletableFuture<String> addUser(Long userPersonalityId, String messageId) {
@@ -37,7 +37,7 @@ public class MatchingService {
 	}
 
 	public CompletableFuture<String> prepareData(UserPersonality userPersonality, String messageId) {
-		if (matchingPort.getDeletedBit(userPersonality.getId())) {
+		if (cacheManagerPort.getDeletedBit(userPersonality.getId())) {
 			return publishPort.reCalculateUserPersonality(UserPersonalityReCalculatePublishDTO.builder()
 				.userPersonalityId(userPersonality.getId())
 				.messageId(messageId).build());

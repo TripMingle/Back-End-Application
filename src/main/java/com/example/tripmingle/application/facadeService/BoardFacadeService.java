@@ -18,6 +18,7 @@ import com.example.tripmingle.application.service.BoardLikesService;
 import com.example.tripmingle.application.service.BoardScheduleService;
 import com.example.tripmingle.application.service.BoardService;
 import com.example.tripmingle.application.service.CompanionService;
+import com.example.tripmingle.application.service.ContinentService;
 import com.example.tripmingle.application.service.CountryImageService;
 import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.common.utils.CommonUtils;
@@ -62,6 +63,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	private final CompanionService companionService;
 	private final BoardScheduleService boardScheduleService;
 	private final CountryImageService countryImageService;
+	private final ContinentService continentService;
 
 	@Override
 	public List<GetBoardsResDTO> getRecentBoards(String countryName) {
@@ -233,6 +235,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		String randomImageUrl = countryImageService.getRandomCountryImage(createBoardReqDTO.getCountryName());
+		if (randomImageUrl.equals("")) {
+			randomImageUrl = continentService.getContinentImage(createBoardReqDTO.getContinent());
+		}
 		Board board = boardService.createBoard(createBoardReqDTO, currentUser, randomImageUrl);
 		companionService.registerLeader(board, currentUser);
 		boardScheduleService.createBoardSchedule(board, currentUser, createBoardReqDTO.getCreateBoardScheduleReqDTOS());
