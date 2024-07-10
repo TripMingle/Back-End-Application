@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateOneOnOneChatRoomResDTO {
+public class EnterOneOnOneChatRoomResDTO {
 
     private Long chatRoomId;
     private Long participantId1;

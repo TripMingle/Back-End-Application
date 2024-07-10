@@ -3,6 +3,7 @@ package com.example.tripmingle.adapter.out;
 
 import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.ChatRoomUserNotFoundException;
+import com.example.tripmingle.entity.ChatRoomType;
 import com.example.tripmingle.entity.ChatRoomUser;
 import com.example.tripmingle.port.out.ChatRoomUserPersistPort;
 import com.example.tripmingle.repository.ChatRoomUserRepository;
@@ -36,5 +37,15 @@ public class ChatRoomUserPersistAdapter implements ChatRoomUserPersistPort {
     @Override
     public boolean existsUserInChatRoom(Long userId) {
         return chatRoomUserRepository.existsByUserId(userId);
+    }
+
+    @Override
+    public int countOneOnOneChatRoomUser(Long oneOnOneChatRoomId) {
+        return chatRoomUserRepository.countByIdAndChatRoomType(oneOnOneChatRoomId, ChatRoomType.ONE_ON_ONE);
+    }
+
+    @Override
+    public int countGroupChatRoomUser(Long groupChatRoomId) {
+        return chatRoomUserRepository.countByIdAndChatRoomType(groupChatRoomId, ChatRoomType.GROUP);
     }
 }

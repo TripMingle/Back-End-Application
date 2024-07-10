@@ -16,16 +16,10 @@ public class ChatRoomController {
 
     private final ChatRoomUseCase chatRoomUseCase;
 
-    @PostMapping("/group")
-    public ResponseEntity<ResultResponse> createGroupChatRoom(@RequestBody CreateGroupChatRoomReqDTO createChatRoomReqDTO) {
-        CreateChatRoomResDTO createChatRoomResDTO = chatRoomUseCase.createGroupChatRoom(createChatRoomReqDTO);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_GROUP_CHAT_ROOM_SUCCESS, createChatRoomResDTO));
-    }
-
-    @PostMapping("/one-on-one")
-    public ResponseEntity<ResultResponse> createOneOnOneChatRoom(@RequestBody CreateOneOnOneChatRoomReqDTO createOneOnOneChatRoomReqDTO) {
-        CreateOneOnOneChatRoomResDTO createOneOnOneChatRoomResDTO = chatRoomUseCase.createOneOnOneChatRoom(createOneOnOneChatRoomReqDTO);
-        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_ONE_ON_ONE_CHAT_ROOM_SUCCESS, createOneOnOneChatRoomResDTO));
+    @PostMapping("/one-on-one/enter")
+    public ResponseEntity<ResultResponse> enterOneOnOneChatRoom(@RequestBody EnterOneOnOneChatRoomReqDTO enterOneOnOneChatRoomReqDTO) {
+        EnterOneOnOneChatRoomResDTO enterOneOnOneChatRoomResDTO = chatRoomUseCase.enterOneOnOneChatRoom(enterOneOnOneChatRoomReqDTO);
+        return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_ONE_ON_ONE_CHAT_ROOM_SUCCESS, enterOneOnOneChatRoomResDTO));
     }
 
     @PostMapping("/group/enter")

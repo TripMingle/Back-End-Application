@@ -19,7 +19,7 @@ public class ChatRoomService {
     private final OneOnOneChatRoomPersistPort oneOnOneChatRoomPersistPort;
     private final ChatRoomUserPersistPort chatRoomUserPersistPort;
 
-    public GroupChatRoom createGroupChatRoom(Board board, User masterUser) {
+    public GroupChatRoom saveGroupChatRoom(Board board, User masterUser) {
         if (groupChatRoomPersistPort.existsChatRoom(board.getId(), masterUser.getId())) {
             throw new AlreadyExistsChatRoomException("Already exists chat room", ErrorCode.ALREADY_EXISTS_CHAT_ROOM);
         }
@@ -34,10 +34,6 @@ public class ChatRoomService {
         return groupChatRoomPersistPort.getGroupChatRoomByChatRoomId(chatRoomId);
     }
 
-    public OneOnOneChatRoom createOneOnOneChatRoom(OneOnOneChatRoom oneOnOneChatRoom) {
-        return oneOnOneChatRoomPersistPort.save(oneOnOneChatRoom);
-    }
-
     public ChatRoomUser joinGroupChatRoom(ChatRoomUser chatRoomUser) {
         return chatRoomUserPersistPort.save(chatRoomUser);
     }
@@ -46,16 +42,52 @@ public class ChatRoomService {
         return chatRoomUserPersistPort.getChatRoomUserByChatRoomIdAndUserId(groupChatRoomId, userId);
     }
 
-    public OneOnOneChatRoom getOneOnOneChatRoomByChatRoomId(Long oneOnOneChatRoomId) {
-        return oneOnOneChatRoomPersistPort.getOneOnOneChatRoomByChatRoomId(oneOnOneChatRoomId);
-    }
-
     public List<ChatRoomUser> getChatRoomUsersByChatRoomIdAndUserId(Long chatRoomId, Long userId) {
         return chatRoomUserPersistPort.getChatRoomUsersByChatRoomIdAndUserId(chatRoomId, userId);
     }
 
     public boolean existsUserInChatRoom(Long userId) {
         return chatRoomUserPersistPort.existsUserInChatRoom(userId);
+    }
+
+	public boolean existsGroupChatRoomByBoardId(Long boardId) {
+        return groupChatRoomPersistPort.existsGroupChatRoomByBoardId(boardId);
+	}
+
+    public GroupChatRoom getGroupChatRoomByBoardId(Long boardId) {
+        return groupChatRoomPersistPort.getGroupChatRoomByBoardId(boardId);
+    }
+
+    public boolean existsOneOnOneChatRoomByUserIds(Long currentUserId, Long contactUserId) {
+        return oneOnOneChatRoomPersistPort.existsOneOnOneChatRoomByUserIds(currentUserId, contactUserId);
+    }
+
+    public OneOnOneChatRoom saveOneOnOneChatRoom(OneOnOneChatRoom oneOnOneChatRoom) {
+        return oneOnOneChatRoomPersistPort.save(oneOnOneChatRoom);
+    }
+
+    public OneOnOneChatRoom getOneOnOneChatRoomByUserIds(Long currentUserId, Long contactUserId) {
+        return oneOnOneChatRoomPersistPort.getOneOnOneChatRoomByUserIds(currentUserId, contactUserId);
+    }
+
+    public void joinOneOnOneChatRoom(ChatRoomUser chatRoomUser) {
+        chatRoomUserPersistPort.save(chatRoomUser);
+    }
+
+    public int countOneOnOneChatRoomUser(Long oneOnOneChatRoomId) {
+        return chatRoomUserPersistPort.countOneOnOneChatRoomUser(oneOnOneChatRoomId);
+    }
+
+    public OneOnOneChatRoom getOneOnOneChatRoomByChatRoomId(Long oneOnOneChatRoomId) {
+        return oneOnOneChatRoomPersistPort.getOneOnOneChatRoomByChatRoomId(oneOnOneChatRoomId);
+    }
+
+    public void deleteOneOnOneChatRoom(OneOnOneChatRoom oneOnOneChatRoom) {
+        oneOnOneChatRoom.delete();
+    }
+
+    public int countGroupChatRoomUser(Long groupChatRoomId) {
+        return chatRoomUserPersistPort.countGroupChatRoomUser(groupChatRoomId);
     }
 }
 

@@ -8,4 +8,7 @@ public interface OneOnOneChatRoomPersistPort {
 
     OneOnOneChatRoom getOneOnOneChatRoomByChatRoomId(Long oneOnOneChatRoomId);
 
+	boolean existsOneOnOneChatRoomByUserIds(Long currentUserId, Long contactUserId);
+
+	OneOnOneChatRoom getOneOnOneChatRoomByUserIds(Long currentUserId, Long contactUserId);
 }
