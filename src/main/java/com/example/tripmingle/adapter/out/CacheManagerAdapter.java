@@ -1,5 +1,6 @@
 package com.example.tripmingle.adapter.out;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,8 @@ import com.example.tripmingle.common.exception.RedisConnectException;
 import com.example.tripmingle.common.exception.UserPersonalityNotFoundException;
 import com.example.tripmingle.common.utils.PairDeserializer;
 import com.example.tripmingle.common.utils.PairSerializer;
-import com.example.tripmingle.port.out.MatchingPort;
+import com.example.tripmingle.dto.res.country.GetContinentsResDTO;
+import com.example.tripmingle.port.out.CacheManagerPort;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,14 +29,12 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class MatchingAdapter implements MatchingPort {
+public class CacheManagerAdapter implements CacheManagerPort {
 
 	private final RedisTemplate<String, Object> redisTemplate;
-	public static final Long EQUAL_VALUE = -1L;
 	private static final String USER_PREFERENCES_KEY = "userPreferences-";
-	private static final String MAX_USER_COUNT = "maxUserCount-"; //당시 가장 큰 id
 	private static final String DELETED_BIT = "deletedBit-"; //이후 지워진게 있는지
-	private static final String CURRENT_MAX_USER_COUNT = "currentMaxUserCount"; //현재 가장 큰 id
+	private static final String CONTINENTS_KEY = "continents";
 	ObjectMapper mapper = new ObjectMapper();
 
 	@PostConstruct
@@ -50,9 +50,7 @@ public class MatchingAdapter implements MatchingPort {
 	public List<Long> getSimilarUsersByUserId(Long userPersonalityId) {
 		try {
 			String redisKey = USER_PREFERENCES_KEY + userPersonalityId;
-			System.out.println(redisKey);
 			Object json = redisTemplate.opsForValue().get(redisKey);
-			System.out.println(json);
 			if (json != null) {
 
 				log.info("Retrieved JSON for user " + userPersonalityId + ": " + json);
@@ -103,6 +101,26 @@ public class MatchingAdapter implements MatchingPort {
 			e.printStackTrace();
 			throw new RuntimeException("can't load my similar users");
 		}
+	}
+
+	@Override
+	public List<GetContinentsResDTO> getContinentsInCache() {
+		List<GetContinentsResDTO> result = new ArrayList<>();
+		try {
+			result = mapper.convertValue(
+				redisTemplate.opsForValue().get(CONTINENTS_KEY),
+				new TypeReference<List<GetContinentsResDTO>>() {
+				});
+		} catch (RedisConnectionException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
+
+	@Override
+	public void setContinentsAtCache(List<GetContinentsResDTO> getContinentsResDTOS) {
+		redisTemplate.opsForValue().set(CONTINENTS_KEY, getContinentsResDTOS);
 	}
 
 }

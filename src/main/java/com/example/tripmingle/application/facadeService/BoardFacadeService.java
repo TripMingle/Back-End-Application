@@ -238,7 +238,6 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		if (randomImageUrl.equals("")) {
 			randomImageUrl = continentService.getContinentImage(createBoardReqDTO.getContinent());
 		}
-		System.out.println(randomImageUrl);
 		Board board = boardService.createBoard(createBoardReqDTO, currentUser, randomImageUrl);
 		companionService.registerLeader(board, currentUser);
 		boardScheduleService.createBoardSchedule(board, currentUser, createBoardReqDTO.getCreateBoardScheduleReqDTOS());
