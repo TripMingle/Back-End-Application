@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class EnterGroupChatRoomReqDTO {
 
-    private Long chatRoomId;
+    private Long boardId;
 
 }

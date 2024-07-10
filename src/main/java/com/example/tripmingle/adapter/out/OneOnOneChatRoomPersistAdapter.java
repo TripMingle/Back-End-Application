@@ -21,6 +21,20 @@ public class OneOnOneChatRoomPersistAdapter implements OneOnOneChatRoomPersistPo
 
     @Override
     public OneOnOneChatRoom getOneOnOneChatRoomByChatRoomId(Long oneOnOneChatRoomId) {
-        return oneOnOneChatRoomRepository.findById(oneOnOneChatRoomId).orElseThrow(() -> new OneOnOneChatRoomNotFoundException("One on One Chat Room Not Found", ErrorCode.ONE_ON_ONE_CHAT_ROOM_NOT_FOUND));
+        return oneOnOneChatRoomRepository.findById(oneOnOneChatRoomId)
+            .orElseThrow(() -> new OneOnOneChatRoomNotFoundException("One on One Chat Room Not Found",
+                ErrorCode.ONE_ON_ONE_CHAT_ROOM_NOT_FOUND));
+    }
+
+    @Override
+    public boolean existsOneOnOneChatRoomByUserIds(Long currentUserId, Long contactUserId) {
+        return oneOnOneChatRoomRepository.existsByUser1IdAndUser2Id(currentUserId, contactUserId);
+    }
+
+    @Override
+    public OneOnOneChatRoom getOneOnOneChatRoomByUserIds(Long currentUserId, Long contactUserId) {
+        return oneOnOneChatRoomRepository.findByUser1IdAndUser2Id(currentUserId, contactUserId)
+            .orElseThrow(() -> new OneOnOneChatRoomNotFoundException("One on One Chat Room Not Found",
+                ErrorCode.ONE_ON_ONE_CHAT_ROOM_NOT_FOUND));
     }
 }

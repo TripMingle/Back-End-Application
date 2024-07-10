@@ -13,4 +13,8 @@ public interface ChatRoomUserPersistPort {
     ChatRoomUser save(ChatRoomUser chatRoomUser);
 
     boolean existsUserInChatRoom(Long userId);
+
+	int countOneOnOneChatRoomUser(Long oneOnOneChatRoomId);
+
+	int countGroupChatRoomUser(Long groupChatRoomId);
 }

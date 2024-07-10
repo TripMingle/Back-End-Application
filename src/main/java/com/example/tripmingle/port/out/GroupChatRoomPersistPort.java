@@ -8,4 +8,9 @@ public interface GroupChatRoomPersistPort {
     GroupChatRoom save(GroupChatRoom newChatRoom);
 
     GroupChatRoom getGroupChatRoomByChatRoomId(Long chatRoomId);
+
+	boolean existsGroupChatRoomByBoardId(Long boardId);
+
+	GroupChatRoom getGroupChatRoomByBoardId(Long boardId);
+
 }

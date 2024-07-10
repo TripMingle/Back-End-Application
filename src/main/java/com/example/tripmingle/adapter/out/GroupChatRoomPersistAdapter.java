@@ -30,4 +30,15 @@ public class GroupChatRoomPersistAdapter implements GroupChatRoomPersistPort {
         return groupChatRoomRepository.findById(chatRoomId)
                 .orElseThrow(() -> new ChatRoomNotFoundException("ChatRoom Not Found", CHATROOM_NOT_FOUND));
     }
+
+    @Override
+    public boolean existsGroupChatRoomByBoardId(Long boardId) {
+        return groupChatRoomRepository.existsByBoardId(boardId);
+    }
+
+    @Override
+    public GroupChatRoom getGroupChatRoomByBoardId(Long boardId) {
+        return groupChatRoomRepository.findByBoardId(boardId);
+    }
+
 }
