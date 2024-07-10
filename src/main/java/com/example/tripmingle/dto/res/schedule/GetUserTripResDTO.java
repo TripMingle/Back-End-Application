@@ -1,15 +1,16 @@
 package com.example.tripmingle.dto.res.schedule;
 
+import java.time.LocalDate;
+
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDate;
 
 @Getter
 @Builder
 public class GetUserTripResDTO {
-    private String continent;
-    private String countryName;
-    private LocalDate startDate;
-    private LocalDate endDate;
+	private Long userTripId;
+	private String continent;
+	private String countryName;
+	private LocalDate startDate;
+	private LocalDate endDate;
 }

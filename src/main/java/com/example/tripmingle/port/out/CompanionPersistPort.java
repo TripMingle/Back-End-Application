@@ -1,24 +1,27 @@
 package com.example.tripmingle.port.out;
 
-import com.example.tripmingle.entity.Board;
-import com.example.tripmingle.entity.Companion;
-import com.example.tripmingle.entity.User;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
+import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.entity.Companion;
+import com.example.tripmingle.entity.User;
 
 public interface CompanionPersistPort {
 
-    public void saveCompanion(Companion companion);
+	public void saveCompanion(Companion companion);
 
-    Companion getCompanionByBoardAndUser(Board board, User currentUser);
+	Companion getCompanionByBoardAndUser(Board board, User currentUser);
 
-    void deleteCompanion(Companion companion);
+	void deleteCompanion(Companion companion);
 
-    List<Companion> getCompanionsByBoardId(Long boardId);
+	List<Companion> getCompanionsByBoardId(Long boardId);
 
-    Page<Companion> getCompanionsByUserId(Long userId, Pageable pageable);
+	Page<Companion> getCompanionsByUserId(Long userId, Pageable pageable);
 
-    boolean existsByUserIdAndBoardId(Long userId, Long boardId);
+	boolean existsByUserIdAndBoardId(Long userId, Long boardId);
+
+	void deleteCompanionByBoardId(Long boardId);
 }
