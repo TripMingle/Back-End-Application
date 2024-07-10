@@ -38,6 +38,7 @@ public enum ErrorCode {
 	//country
 	COUNTRY_NOT_FOUND(400, "CO_001", "잘못된 나라 이름입니다."),
 	COUNTRY_IMAGE_NOT_FOUND(400, "CO_002", "나라 이미지를 찾을 수 없습니다."),
+	CONTINENT_NOT_FOUND(400, "CO_003", "대륙을 찾을 수 없습니다."),
 
 	//Json parsing
 	JSON_PARSE_EXCEPTION(400, "J001", "json 파싱에실패하였습니다."),
@@ -45,9 +46,9 @@ public enum ErrorCode {
 	//Redis
 	REDIS_CONNECT_EXCEPTION(400, "R001", "redisConnection 에 예외가 발생하였습니다."),
 
-    // auth
-    LOGOUT_USER(400, "A001", "로그아웃된 유저입니다."),
-    TOKEN_NOT_FOUND(404, "A002", "토큰이 없습니다."),
+	// auth
+	LOGOUT_USER(400, "A001", "로그아웃된 유저입니다."),
+	TOKEN_NOT_FOUND(404, "A002", "토큰이 없습니다."),
 	//S3
 	EMPTY_FILE_EXCEPTION(400, "S001", "파일이 존재하지 않습니다."),
 	IO_EXCEPTION_ON_IMAGE_UPLOAD(400, "S002", "파일 업로드 오류가 발생하였습니다."),
