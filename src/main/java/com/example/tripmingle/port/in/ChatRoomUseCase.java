@@ -4,9 +4,8 @@ import com.example.tripmingle.dto.req.chat.*;
 import com.example.tripmingle.dto.res.chat.*;
 
 public interface ChatRoomUseCase {
-    CreateChatRoomResDTO createGroupChatRoom(CreateGroupChatRoomReqDTO createGroupChatRoomReqDTO);
 
-    CreateOneOnOneChatRoomResDTO createOneOnOneChatRoom(CreateOneOnOneChatRoomReqDTO createOneOnOneChatRoomReqDTO);
+    EnterOneOnOneChatRoomResDTO enterOneOnOneChatRoom(EnterOneOnOneChatRoomReqDTO enterOneOnOneChatRoomReqDTO);
 
     EnterGroupChatRoomResDTO enterGroupChatRoom(EnterGroupChatRoomReqDTO enterGroupChatRoomReqDTO);
 

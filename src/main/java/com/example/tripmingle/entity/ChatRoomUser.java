@@ -1,5 +1,7 @@
 package com.example.tripmingle.entity;
 
+import org.hibernate.annotations.Where;
+
 import com.example.tripmingle.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "is_deleted = false")
 public class ChatRoomUser extends BaseEntity {
 
     @Id
