@@ -85,6 +85,7 @@ public enum ResultCode {
 	UPLOAD_COUNTRY_IMAGE_SUCCESS(200, "C003", "나라 이미지 업로드에 성공하였습니다."),
 	DELETE_COUNTRY_IMAGE_SUCCESS(200, "C004", "나라 이미지 삭제에 성공하였습니다."),
 	UPLOAD_PRIMARY_COUNTRY_IMAGE_SUCCESS(200, "C005", "나라 대표이미지 업로드에 성공하였습니다."),
+	GET_CONTINENT_SUCCESS(200, "C006", "대륙 조회에 성공하였습니다."),
 
 	// chat
 	GET_ALL_CHAT_MESSAGES(200, "CM001", "전체 채팅 조회 성공"),

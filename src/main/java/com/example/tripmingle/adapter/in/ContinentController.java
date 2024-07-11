@@ -27,7 +27,7 @@ public class ContinentController {
 	@GetMapping("")
 	public ResponseEntity<ResultResponse> getContinents() {
 		List<GetContinentsResDTO> getContinentsResDTOS = continentUseCase.getContinents();
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COUNTRIES_BY_KEYWORD_SUCCESS, getContinentsResDTOS));
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_CONTINENT_SUCCESS, getContinentsResDTOS));
 	}
 
 }

@@ -29,8 +29,13 @@ public class CountryFacadeService implements CountryUseCase {
 
 	@Override
 	public List<GetCountriesResDTO> getCountries(String continent) {
+		List<GetCountriesResDTO> getCountriesResDTOS = countryService.getCountriesAtCache(continent);
+		if (getCountriesResDTOS != null) {
+			return getCountriesResDTOS;
+		}
+
 		List<Country> countries = countryService.getCountriesByContinent(continent);
-		return countries.stream().map(
+		getCountriesResDTOS = countries.stream().map(
 			country -> {
 				Optional<CountryImage> countryImageOptional = countryImageService.getPrimaryImageByCountryId(
 					country.getId());
@@ -51,6 +56,10 @@ public class CountryFacadeService implements CountryUseCase {
 					.primaryImageUrl(url)
 					.build();
 			}).collect(Collectors.toList());
+
+		countryService.setCountryAtCache(continent, getCountriesResDTOS);
+
+		return getCountriesResDTOS;
 	}
 
 	@Override

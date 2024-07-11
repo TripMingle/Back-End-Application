@@ -15,6 +15,7 @@ import com.example.tripmingle.common.exception.UserPersonalityNotFoundException;
 import com.example.tripmingle.common.utils.PairDeserializer;
 import com.example.tripmingle.common.utils.PairSerializer;
 import com.example.tripmingle.dto.res.country.GetContinentsResDTO;
+import com.example.tripmingle.dto.res.country.GetCountriesResDTO;
 import com.example.tripmingle.port.out.CacheManagerPort;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,6 +36,7 @@ public class CacheManagerAdapter implements CacheManagerPort {
 	private static final String USER_PREFERENCES_KEY = "userPreferences-";
 	private static final String DELETED_BIT = "deletedBit-"; //이후 지워진게 있는지
 	private static final String CONTINENTS_KEY = "continents";
+	private static final String COUNTRY_KEY = "country-";
 	ObjectMapper mapper = new ObjectMapper();
 
 	@PostConstruct
@@ -121,6 +123,56 @@ public class CacheManagerAdapter implements CacheManagerPort {
 	@Override
 	public void setContinentsAtCache(List<GetContinentsResDTO> getContinentsResDTOS) {
 		redisTemplate.opsForValue().set(CONTINENTS_KEY, getContinentsResDTOS);
+	}
+
+	@Override
+	public List<GetCountriesResDTO> getCountriesAtCache(String continent) {
+		List<GetCountriesResDTO> result = new ArrayList<>();
+		String continentName = setContinentName(continent);
+		try {
+			result = mapper.convertValue(
+				redisTemplate.opsForValue().get(COUNTRY_KEY + continentName),
+				new TypeReference<List<GetCountriesResDTO>>() {
+				});
+		} catch (RedisConnectionException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return result;
+	}
+
+	@Override
+	public void setCountriesAtCache(String continent, List<GetCountriesResDTO> getCountriesResDTOS) {
+		String continentName = setContinentName(continent);
+		redisTemplate.opsForValue().set(COUNTRY_KEY + continentName, getCountriesResDTOS);
+	}
+
+	private String setContinentName(String continent) {
+		switch (continent.toLowerCase()) {
+			case "아시아":
+			case "asia":
+				return "asia";
+			case "유럽":
+			case "europe":
+				return "europe";
+			case "북미":
+			case "north america":
+				return "north america";
+			case "남미":
+			case "south america":
+				return "south america";
+			case "아프리카":
+			case "africa":
+				return "africa";
+			case "오세아니아":
+			case "oceania":
+				return "oceania";
+			case "남극":
+			case "antarctica":
+				return "antarctica";
+			default:
+				throw new IllegalArgumentException("Unknown continent: " + continent);
+		}
 	}
 
 }
