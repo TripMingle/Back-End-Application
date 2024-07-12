@@ -155,10 +155,10 @@ public class CacheManagerAdapter implements CacheManagerPort {
 			case "유럽":
 			case "europe":
 				return "europe";
-			case "북미":
+			case "북아메리카":
 			case "north america":
 				return "north america";
-			case "남미":
+			case "남아메리카":
 			case "south america":
 				return "south america";
 			case "아프리카":
@@ -167,9 +167,6 @@ public class CacheManagerAdapter implements CacheManagerPort {
 			case "오세아니아":
 			case "oceania":
 				return "oceania";
-			case "남극":
-			case "antarctica":
-				return "antarctica";
 			default:
 				throw new IllegalArgumentException("Unknown continent: " + continent);
 		}

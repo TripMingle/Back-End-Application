@@ -1,8 +1,5 @@
 package com.example.tripmingle.entity;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -42,13 +39,7 @@ public class UserPersonality {
 	private double adventure; // 선호 활동 - 탐험
 	private double personality; // 성격
 	private double schedule; // 일정 계획 성향
-
-	public List<Double> toFeatureVector() {
-		return Arrays.asList(
-			gender, vegan, islam, hindu, smoking, budget,
-			accommodationFlexibility, foodFlexibility, activity, instagramPicture,
-			foodExploration, adventure, personality, schedule
-		);
-	}
+	private double shopping; // 쇼핑성향
+	private double drink; //음주 성향
 
 }
