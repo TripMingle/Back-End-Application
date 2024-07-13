@@ -69,9 +69,8 @@ public class RedisMessageSubscriber implements MessageListener {
 			log.info(channel + " : " + result);
 
 			if (result.equals(MATCHING_SUCCESS)) {
-				String boardId = jsonNode.get("boardId")
-					.toString();
-				messagePublisher.completeMatchingResponse(messageId, result, boardId);
+				String boardIdStr = jsonNode.get("boardId").toString();
+				messagePublisher.completeMatchingResponse(messageId, result, boardIdStr);
 			} else {
 				messagePublisher.completeResponse(messageId, result);
 			}

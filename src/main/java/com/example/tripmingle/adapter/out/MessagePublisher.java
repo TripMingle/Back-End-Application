@@ -8,7 +8,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.example.tripmingle.adapter.in.RedisMessageSubscriber;
 import com.example.tripmingle.dto.etc.DeleteUserPersonalityPublishDTO;
 import com.example.tripmingle.dto.etc.MatchingBoardPublishDTO;
 import com.example.tripmingle.dto.etc.UserPersonalityIdPublishDTO;
@@ -128,10 +127,7 @@ public class MessagePublisher implements PublishPort {
 	public static void completeMatchingResponse(String messageId, String result, String boardId) {
 		CompletableFuture<String> future = responseFutures.remove(messageId);
 		if (future != null) {
-			if (result.equals(RedisMessageSubscriber.FAIL_TO_MATCHING))
-				future.complete(result);
-			else
-				future.complete(boardId);
+			future.complete(boardId);
 		}
 	}
 }

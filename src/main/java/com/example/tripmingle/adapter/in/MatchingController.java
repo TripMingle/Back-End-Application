@@ -1,5 +1,7 @@
 package com.example.tripmingle.adapter.in;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,7 +69,7 @@ public class MatchingController {
 	@PostMapping("/board")
 	//게시물 매칭
 	public ResponseEntity<ResultResponse> matchingBoard(@RequestBody MatchingBoardReqDTO matchingBoardReqDTO) {
-		MatchingBoardResDTO matchingBoardResDTO = matchingUseCase.matchingBoard(matchingBoardReqDTO);
+		List<MatchingBoardResDTO> matchingBoardResDTO = matchingUseCase.matchingBoard(matchingBoardReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MATCHING_BOARD_SUCCESS, matchingBoardResDTO));
 	}
 
