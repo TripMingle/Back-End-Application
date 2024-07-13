@@ -76,6 +76,9 @@ dependencies {
     // mongodb
     //implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+    //parser
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+
 }
 
 dependencyManagement {

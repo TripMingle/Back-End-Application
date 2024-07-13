@@ -8,12 +8,16 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.example.tripmingle.adapter.in.RedisMessageSubscriber;
 import com.example.tripmingle.dto.etc.DeleteUserPersonalityPublishDTO;
+import com.example.tripmingle.dto.etc.MatchingBoardPublishDTO;
 import com.example.tripmingle.dto.etc.UserPersonalityIdPublishDTO;
 import com.example.tripmingle.dto.etc.UserPersonalityReCalculatePublishDTO;
 import com.example.tripmingle.port.out.PublishPort;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -25,12 +29,18 @@ public class MessagePublisher implements PublishPort {
 	private static final String ADD_USER_PUBLISH = "pubsub:addUser";
 	public static final String RE_CALCULATE_USER_PUBLISH = "pubsub:reCalculateUser";
 	public static final String DELETE_USER_PUBLISH = "pubsub:deleteUser";
+	public static final String MATCHING_USER = "pubsub:matching";
 
 	public MessagePublisher(RedisTemplate<String, Object> redisTemplate) {
 		this.redisTemplate = redisTemplate;
 	}
 
 	public static ConcurrentMap<String, CompletableFuture<String>> responseFutures = new ConcurrentHashMap<>();
+
+	@PostConstruct
+	private void init() {
+		objectMapper.registerModule(new JavaTimeModule());
+	}
 
 	@Async
 	public CompletableFuture<String> addUserPublish(UserPersonalityIdPublishDTO userPersonalityIdPublishDTO) {
@@ -90,6 +100,24 @@ public class MessagePublisher implements PublishPort {
 		return future;
 	}
 
+	@Override
+	public CompletableFuture<String> matchingBoard(MatchingBoardPublishDTO matchingBoardPublishDTO) {
+		CompletableFuture<String> future = new CompletableFuture<>();
+		responseFutures.put(matchingBoardPublishDTO.getMessageId(), future);
+		try {
+			String jsonMessage = objectMapper.writeValueAsString(matchingBoardPublishDTO);
+
+			redisTemplate.convertAndSend(MATCHING_USER, jsonMessage);
+			log.info("Published message: " + jsonMessage + " to topic: " + MATCHING_USER);
+		} catch (Exception e) {
+			future.completeExceptionally(e);
+			e.printStackTrace();
+		}
+
+		return future;
+
+	}
+
 	public static void completeResponse(String messageId, String response) {
 		CompletableFuture<String> future = responseFutures.remove(messageId);
 		if (future != null) {
@@ -97,4 +125,13 @@ public class MessagePublisher implements PublishPort {
 		}
 	}
 
+	public static void completeMatchingResponse(String messageId, String result, String boardId) {
+		CompletableFuture<String> future = responseFutures.remove(messageId);
+		if (future != null) {
+			if (result.equals(RedisMessageSubscriber.FAIL_TO_MATCHING))
+				future.complete(result);
+			else
+				future.complete(boardId);
+		}
+	}
 }

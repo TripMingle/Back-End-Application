@@ -63,7 +63,8 @@ public class CountryController {
 		@PathVariable(value = "country-name") String countryName,
 		@RequestPart("image") MultipartFile image) {
 		UploadCountryImageResDTO uploadCountryImageResDTO = countryUseCase.uploadCountryImage(countryName, image, true);
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPLOAD_COUNTRY_IMAGE_SUCCESS, uploadCountryImageResDTO));
+		return ResponseEntity.ok(
+			ResultResponse.of(ResultCode.UPLOAD_PRIMARY_COUNTRY_IMAGE_SUCCESS, uploadCountryImageResDTO));
 	}
 
 	@Operation(summary = "국가 사진 삭제")

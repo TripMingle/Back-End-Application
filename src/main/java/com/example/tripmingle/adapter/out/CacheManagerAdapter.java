@@ -21,6 +21,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.lettuce.core.RedisConnectionException;
 import jakarta.annotation.PostConstruct;
@@ -44,6 +45,7 @@ public class CacheManagerAdapter implements CacheManagerPort {
 		SimpleModule module = new SimpleModule();
 		module.addSerializer((Class<Pair<Long, Double>>)(Class<?>)Pair.class, new PairSerializer());
 		module.addDeserializer((Class<Pair<Long, Double>>)(Class<?>)Pair.class, new PairDeserializer());
+		mapper.registerModule(new JavaTimeModule());
 		mapper.registerModule(module);
 
 	}
