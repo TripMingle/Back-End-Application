@@ -39,12 +39,36 @@ public class CountryFacadeService implements CountryUseCase {
 			country -> {
 				Optional<CountryImage> countryImageOptional = countryImageService.getPrimaryImageByCountryId(
 					country.getId());
-				String url = "";
-				if (countryImageOptional.isPresent()) {
-					url = countryImageOptional.get().getImageUrl();
-				} else {
-					url = continentService.getContinentImage(country.getContinent());
-				}
+				String url = countryImageOptional.isPresent() ?
+					countryImageOptional.get().getImageUrl() :
+					continentService.getContinentImage(country.getContinent());
+
+				return GetCountriesResDTO.builder()
+					.countryName(country.getCountry())
+					.countryNameEnglish(country.getCountryEnglish())
+					.continentName(country.getContinent())
+					.continentNameEnglish(country.getContinentEnglish())
+					.capitalName(country.getCapital())
+					.capitalNameEnglish(country.getCapitalEnglish())
+					.primaryImageUrl(url)
+					.build();
+			}).collect(Collectors.toList());
+
+		countryService.setCountryAtCache(continent, getCountriesResDTOS);
+
+		return getCountriesResDTOS;
+	}
+
+	public List<GetCountriesResDTO> getCountriesWithoutCache(String continent) {
+
+		List<Country> countries = countryService.getCountriesByContinent(continent);
+		List<GetCountriesResDTO> getCountriesResDTOS = countries.stream().map(
+			country -> {
+				Optional<CountryImage> countryImageOptional = countryImageService.getPrimaryImageByCountryId(
+					country.getId());
+				String url = countryImageOptional.isPresent() ?
+					countryImageOptional.get().getImageUrl() :
+					continentService.getContinentImage(country.getContinent());
 
 				return GetCountriesResDTO.builder()
 					.countryName(country.getCountry())
@@ -69,12 +93,9 @@ public class CountryFacadeService implements CountryUseCase {
 			country -> {
 				Optional<CountryImage> countryImageOptional = countryImageService.getPrimaryImageByCountryId(
 					country.getId());
-				String url = "";
-				if (countryImageOptional.isPresent()) {
-					url = countryImageOptional.get().getImageUrl();
-				} else {
-					url = continentService.getContinentImage(country.getContinent());
-				}
+				String url = countryImageOptional.isPresent() ?
+					countryImageOptional.get().getImageUrl() :
+					continentService.getContinentImage(country.getContinent());
 
 				return GetCountriesResDTO.builder()
 					.countryName(country.getCountry())

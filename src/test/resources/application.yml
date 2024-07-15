@@ -7,13 +7,14 @@ spring:
     username: ${database.name}
     password: ${database.password}
   jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    properties:
+      hibernate:
+        #show_sql: true
+        format_sql: true
   jwt:
     secret: ${jwt.secret-key}
     access-token-expiration: 6000000000000
@@ -22,6 +23,16 @@ spring:
     redis:
       host: localhost
       port: 6379
+    mongodb:
+      host: localhost
+      port: 27017
+      uri: mongodb://localhost:27017/chat-system
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
+      resolve-lazily: true
 oauth2:
   kakao:
     infoUrl: https://kapi.kakao.com
@@ -29,9 +40,20 @@ oauth2:
     clientId: ${kakao.rest-api-key}
     secretKey: ${kakao.client-secret}
     grant_type: authorization_code
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG
+
+server:
+  servlet:
+    session:
+      timeout: 30s
 
 springdoc:
-  packages-to-scan: com.example.tripmingle.src
+  packages-to-scan: com
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
@@ -39,3 +61,18 @@ springdoc:
     disable-swagger-default-url: true
     display-request-duration: true
     operations-sorter: alpha
+
+cors:
+  allowed-origins: ${allowed-origins}
+
+cloud:
+  aws:
+    s3:
+      bucket: tripmingles3
+    credentials:
+      accessKey: ${access-key}
+      secretKey: ${secret-key}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
