@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import com.example.tripmingle.adapter.out.MessagePublisher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,13 @@ public class RedisMessageSubscriber implements MessageListener {
 	public static final String FAIL_TO_RE_CALCULATE_USER_PERSONALITY = "fail to recalculate user personality";
 	public static final String DELETE_USER_PERSONALITY_SUCCESS = "delete user personality success";
 	public static final String FAIL_TO_DELETE_USER_PERSONALITY = "tail to delete user personality";
+	public static final String MATCHING_SUCCESS = "matching success";
+	public static final String FAIL_TO_MATCHING = "fail to matching";
+
+	@PostConstruct
+	private void init() {
+		objectMapper.registerModule(new JavaTimeModule());
+	}
 
 	@Override
 	public void onMessage(Message message, byte[] pattern) {
@@ -47,6 +56,8 @@ public class RedisMessageSubscriber implements MessageListener {
 		}
 		messageBody = cleanedMessageBody.substring(1, cleanedMessageBody.length() - 1).toString();
 
+		log.info("channel : " + channel + " message : " + messageBody);
+
 		try {
 			JsonNode jsonNode = objectMapper.readTree(messageBody);
 			String result = jsonNode.get("message")
@@ -56,9 +67,13 @@ public class RedisMessageSubscriber implements MessageListener {
 				.toString()
 				.substring(1, jsonNode.get("messageId").toString().length() - 1);
 			log.info(channel + " : " + result);
-			System.out.println(channel + " : " + result);
 
-			messagePublisher.completeResponse(messageId, result);
+			if (result.equals(MATCHING_SUCCESS)) {
+				String boardIdStr = jsonNode.get("boardId").toString();
+				messagePublisher.completeMatchingResponse(messageId, result, boardIdStr);
+			} else {
+				messagePublisher.completeResponse(messageId, result);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -41,5 +41,6 @@ public class UserPersonality {
 	private double schedule; // 일정 계획 성향
 	private double shopping; // 쇼핑성향
 	private double drink; //음주 성향
+	private double ageRange; // 나이대, 자동생성
 
 }

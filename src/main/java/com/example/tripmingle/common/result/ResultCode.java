@@ -52,6 +52,7 @@ public enum ResultCode {
 	GET_MY_USER_MATCHING_SUCCESS(200, "M001", "나와 어울리는 유저 조회 성공"),
 	ADD_USER_PERSONALITY_SUCCESS(200, "M002", "유저 성향 등록 성공"),
 	MODIFY_USER_PERSONALITY_SUCCESS(200, "M003", "유저 성향 변경 성공"),
+	MATCHING_BOARD_SUCCESS(200, "M004", "보드 매칭 성공"),
 
 	//OAuth
 	OAUTH_LOGIN_SUCCESS(200, "O001", "소셜 로그인 성공"),

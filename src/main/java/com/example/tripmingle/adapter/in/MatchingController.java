@@ -1,5 +1,7 @@
 package com.example.tripmingle.adapter.in;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
+import com.example.tripmingle.dto.req.matching.MatchingBoardReqDTO;
 import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import com.example.tripmingle.dto.res.matching.AddUserResDTO;
+import com.example.tripmingle.dto.res.matching.MatchingBoardResDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
 import com.example.tripmingle.entity.UserPersonality;
 import com.example.tripmingle.port.in.MatchingUseCase;
@@ -61,7 +65,13 @@ public class MatchingController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_USER_PERSONALITY_SUCCESS, addUserResDTO));
 	}
 
-	//유저성향 삭제
+	@Operation(summary = "나와 어울리는 게시물 매칭")
+	@PostMapping("/board")
+	//게시물 매칭
+	public ResponseEntity<ResultResponse> matchingBoard(@RequestBody MatchingBoardReqDTO matchingBoardReqDTO) {
+		List<MatchingBoardResDTO> matchingBoardResDTO = matchingUseCase.matchingBoard(matchingBoardReqDTO);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.MATCHING_BOARD_SUCCESS, matchingBoardResDTO));
+	}
 
 }
 
