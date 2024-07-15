@@ -63,6 +63,8 @@ public class UserPersonalityService {
 			.adventure(postUserPersonalityReqDTO.getAdventure())
 			.personality(postUserPersonalityReqDTO.getPersonality())
 			.schedule(postUserPersonalityReqDTO.getSchedule())
+			.shopping(postUserPersonalityReqDTO.getShopping())
+			.drink(postUserPersonalityReqDTO.getDrink())
 			.ageRange(ageRange)
 			.build();
 		return userPersonalityPersistPort.saveUserPersonality(userPersonality);
