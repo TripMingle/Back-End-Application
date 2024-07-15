@@ -1,6 +1,7 @@
 package com.example.tripmingle.entity;
 
 import com.example.tripmingle.common.entity.BaseEntity;
+import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,4 +78,21 @@ public class User extends BaseEntity {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public void updateUserMyPage(PatchUserMyPageReqDTO patchUserMyPageReqDTO) {
+		if (patchUserMyPageReqDTO.getUserImageUrl() != null) {
+			this.userImageUrl = patchUserMyPageReqDTO.getUserImageUrl();
+		}
+		if (patchUserMyPageReqDTO.getUserNickName() != null) {
+			this.nickName = patchUserMyPageReqDTO.getUserNickName();
+		}
+		if (patchUserMyPageReqDTO.getNationality() != null) {
+			this.nationality = patchUserMyPageReqDTO.getNationality();
+		}
+		if (patchUserMyPageReqDTO.getPhoneNumber() != null) {
+			this.phoneNumber = patchUserMyPageReqDTO.getPhoneNumber();
+		}
+		if (patchUserMyPageReqDTO.getUserEmail() != null) {
+			this.email = patchUserMyPageReqDTO.getUserEmail();
+		}
+	}
 }

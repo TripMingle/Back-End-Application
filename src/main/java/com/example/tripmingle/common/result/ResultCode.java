@@ -97,6 +97,9 @@ public enum ResultCode {
 	USER_ENTER_CHAT_ROOM_SUCCESS(200, "GCR002", "그룹 채팅방 참여 성공"),
 	EXIT_GROUP_CHAT_ROOM_SUCCESS(200, "GCR003", "그룹 채팅방 퇴장 성공"),
 	EXIT_ONE_ON_ONE_CHAT_ROOM_SUCCESS(200, "O3CR002", "일대일 채팅방 퇴장 성공"),
+
+	// user
+	UPDATE_USER_MY_PAGE_SUCCESS(200, "UMP001", "유저 마이페이지 수정 성공"),
 	;
 	private final int status;
 	private final String code;
