@@ -1,14 +1,15 @@
 package com.example.tripmingle.dto.req.posting;
 
 import com.example.tripmingle.entity.PostingType;
+
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
+@Builder
 public class GetPreviewPostingReqDTO {
 
-    private String country;
-    private PostingType postingType;
+	private String country;
+	private PostingType postingType;
 
 }
