@@ -65,7 +65,7 @@ public class BoardController {
 		, @RequestParam(value = "gender", required = false) String gender
 		, @RequestParam(value = "language", required = false) String language
 		, @RequestParam(value = "page", defaultValue = "0") int page) {
-		Pageable pageable = PageRequest.of(page, RECENT_PAGE_SIZE,
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE,
 			Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		GetAllBoardReqDTO getAllBoardReqDTO = GetAllBoardReqDTO.builder()
 			.language(language)
