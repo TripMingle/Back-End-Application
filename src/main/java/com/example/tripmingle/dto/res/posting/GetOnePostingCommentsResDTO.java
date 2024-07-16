@@ -15,6 +15,7 @@ public class GetOnePostingCommentsResDTO {
 	private String userNickName;
 	private String comment;
 	private LocalDateTime createdAt;
+	private boolean isMine;
 	private List<GetOnePostingCoCommentResDTO> postingCoComment;
 
 }

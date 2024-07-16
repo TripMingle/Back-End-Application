@@ -14,6 +14,7 @@ public class GetOnePostingCoCommentResDTO {
 	private String userImageUrl;
 	private String userNickName;
 	private String coComment;
+	private boolean isMine;
 	private LocalDateTime createdAt;
 
 }

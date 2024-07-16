@@ -20,6 +20,7 @@ public class GetOnePostingResDTO {
 	private String userGender;
 	private String userNationality;
 	private String selfIntroduce;
+	private boolean isMine;
 	private double userTemperature;
 	private boolean myLikeState;
 	private int commentCount;

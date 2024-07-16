@@ -102,10 +102,11 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
 	@Override
 	public GetOnePostingResDTO getOnePosting(Long postingId) {
+		User currentUser = userService.getCurrentUser();
 		Posting posting = postingService.getOnePosting(postingId);
 		boolean postingLikesState = postingLikesService.getPostingLikesState(posting);
 		List<PostingComment> postingComments = postingCommentService.getPostingComments(postingId);
-		List<GetOnePostingCommentsResDTO> commentsInOnePosting = getCommentsInPosting(postingComments);
+		List<GetOnePostingCommentsResDTO> commentsInOnePosting = getCommentsInPosting(postingComments, currentUser);
 		return GetOnePostingResDTO.builder()
 			.title(posting.getTitle())
 			.content(posting.getContent())
@@ -119,6 +120,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.userNationality(posting.getUser().getNationality())
 			.selfIntroduce(
 				posting.getUser().getSelfIntroduction() == null ? "" : posting.getUser().getSelfIntroduction())
+			.isMine(posting.getUser().getId().equals(currentUser.getId()))
 			.userTemperature(posting.getUser().getUserScore())
 			.myLikeState(postingLikesState)
 			.commentCount(posting.getCommentCount())
@@ -126,7 +128,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.build();
 	}
 
-	private List<GetOnePostingCommentsResDTO> getCommentsInPosting(List<PostingComment> postingComments) {
+	private List<GetOnePostingCommentsResDTO> getCommentsInPosting(List<PostingComment> postingComments,
+		User currentUser) {
 		return postingComments.stream().filter(filter -> filter.isParentComment())
 			.map(comments -> GetOnePostingCommentsResDTO.builder()
 				.commentId(comments.getId())
@@ -134,6 +137,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userNickName(comments.getUser().getNickName())
 				.comment(comments.getComment())
 				.createdAt(comments.getCreatedAt())
+				.isMine(comments.getUser().getId().equals(currentUser.getId()))
 				.postingCoComment(postingComments.stream()
 					.filter(filter -> !filter.isParentComment() && filter.getPostingComment()
 						.getId()
@@ -146,6 +150,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 						.userNickName(cocomments.getUser().getNickName())
 						.coComment(cocomments.getComment())
 						.createdAt(cocomments.getCreatedAt())
+						.isMine(cocomments.getUser().getId().equals(currentUser.getId()))
 						.build()).collect(Collectors.toList()))
 				.build()).toList();
 	}
