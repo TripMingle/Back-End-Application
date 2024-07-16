@@ -172,7 +172,8 @@ public class PostingController {
 
 	@Operation(summary = "포스트 인기도 순 조회")
 	@GetMapping("/likes/popularity")
-	public ResponseEntity<ResultResponse> getPopularityPostings(@RequestParam(value = "page", defaultValue = "0"),
+	public ResponseEntity<ResultResponse> getPopularityPostings(
+		@RequestParam(value = "page", defaultValue = "0") int page,
 		@RequestParam("country") String country,
 		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
