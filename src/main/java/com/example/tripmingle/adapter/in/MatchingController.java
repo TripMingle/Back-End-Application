@@ -21,7 +21,6 @@ import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import com.example.tripmingle.dto.res.matching.AddUserResDTO;
 import com.example.tripmingle.dto.res.matching.MatchingBoardResDTO;
 import com.example.tripmingle.dto.res.matching.MatchingUserResDTO;
-import com.example.tripmingle.entity.UserPersonality;
 import com.example.tripmingle.port.in.MatchingUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,8 +48,8 @@ public class MatchingController {
 	@PostMapping("/userPersonality")
 	public ResponseEntity<ResultResponse> addUserPersonality(
 		@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
-		UserPersonality userPersonality = matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO);
-		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(userPersonality);
+		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(
+			matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO));
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS, addUserResDTO));
 	}
 
@@ -59,9 +58,8 @@ public class MatchingController {
 	//유저성향 변경
 	public ResponseEntity<ResultResponse> modifyPersonality(
 		@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
-
-		UserPersonality userPersonality = matchingUseCase.deleteAndSaveUserPersonality(postUserPersonalityReqDTO);
-		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(userPersonality);
+		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(
+			matchingUseCase.deleteAndSaveUserPersonality(postUserPersonalityReqDTO));
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_USER_PERSONALITY_SUCCESS, addUserResDTO));
 	}
 

@@ -76,7 +76,7 @@ class MatchingFacadeServiceTest {
 					1.0, 1.0);
 				UserPersonality userPersonality = matchingFacadeService.saveUserPersonalityForTest(user,
 					postUserPersonalityReqDTO);
-				matchingFacadeService.addUserPersonality(userPersonality);
+				matchingFacadeService.addUserPersonality(userPersonality.getId());
 			} else {
 				matchingFacadeService.getMyMatchingUsersWithCache(user);
 			}
