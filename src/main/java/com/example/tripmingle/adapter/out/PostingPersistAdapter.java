@@ -28,7 +28,7 @@ public class PostingPersistAdapter implements PostingPersistPort {
 
 	@Override
 	public Posting getPostingById(Long postingId) {
-		return postingRepository.findById(postingId)
+		return postingRepository.findByIdWithPessimisticLock(postingId)
 			.orElseThrow(() -> new PostingNotFoundException("Posting Not Found.", ErrorCode.POSING_NOT_FOUND));
 	}
 
