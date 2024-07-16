@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripmingle.common.result.ResultResponse;
+import com.example.tripmingle.dto.req.posting.DeletePostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.GetAllPostingsReqDTO;
 import com.example.tripmingle.dto.req.posting.GetPreviewPostingReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
@@ -153,9 +154,11 @@ public class PostingController {
 
 	// 포스트 댓글 삭제
 	@Operation(summary = "포스트 댓글 삭제")
-	@DeleteMapping("/comments/{commentId}")
-	public ResponseEntity<ResultResponse> deletePostingComment(@PathVariable("commentId") Long commentId) {
-		DeletePostingCommentResDTO deletePostingCommentResDTO = postingCommentUseCase.deletePostingComment(commentId);
+	@DeleteMapping("/comments")
+	public ResponseEntity<ResultResponse> deletePostingComment(
+		@RequestBody DeletePostingCommentReqDTO deletePostingCommentReqDTO) {
+		DeletePostingCommentResDTO deletePostingCommentResDTO = postingCommentUseCase.deletePostingComment(
+			deletePostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
 	}
 

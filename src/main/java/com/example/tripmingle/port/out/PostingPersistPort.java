@@ -14,6 +14,8 @@ public interface PostingPersistPort {
 
 	Posting getPostingById(Long postingId);
 
+	Posting getPostingByIdWithPessimisticLock(Long postingId);
+
 	List<Posting> findAllPostingForPreview(String country, PostingType postingType);
 
 	Page<Posting> getAllPostings(String country, PostingType postingType, Pageable pageable);
