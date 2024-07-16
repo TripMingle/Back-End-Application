@@ -57,6 +57,10 @@ public class PostingService {
 		return postingPersistPort.getPostingById(postingId);
 	}
 
+	public Posting getOnePostingWithPessimisticLock(Long postingId) {
+		return postingPersistPort.getPostingByIdWithPessimisticLock(postingId);
+	}
+
 	public Page<Posting> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {
 		return postingPersistPort.getAllPostings(getAllPostingsReqDTO.getCountry(),
 			getAllPostingsReqDTO.getPostingType(), pageable);

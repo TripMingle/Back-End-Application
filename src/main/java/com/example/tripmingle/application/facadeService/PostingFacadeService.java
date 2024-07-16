@@ -12,6 +12,10 @@ import com.example.tripmingle.application.service.PostingCommentService;
 import com.example.tripmingle.application.service.PostingLikesService;
 import com.example.tripmingle.application.service.PostingService;
 import com.example.tripmingle.application.service.UserService;
+import com.example.tripmingle.common.error.ErrorCode;
+import com.example.tripmingle.common.exception.InvalidPostingCommentAccess;
+import com.example.tripmingle.common.exception.InvalidUserAccessException;
+import com.example.tripmingle.dto.req.posting.DeletePostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.GetAllPostingsReqDTO;
 import com.example.tripmingle.dto.req.posting.GetPreviewPostingReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
@@ -74,6 +78,9 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	public DeletePostingResDTO deletePosting(Long postingId) {
 		User currentUser = userService.getCurrentUser();
 		Posting posting = postingService.getOnePosting(postingId);
+		if (!posting.getUser().getId().equals(currentUser.getId())) {
+			throw new InvalidUserAccessException("Invalid User Access.", ErrorCode.INVALID_USER_ACCESS);
+		}
 		postingCommentService.deletePostingCommentsWithPosting(postingId);
 		posting.deletePostingComments();
 		postingLikesService.deletePostingLikesWithPosting(postingId);
@@ -100,6 +107,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public GetOnePostingResDTO getOnePosting(Long postingId) {
 		User currentUser = userService.getCurrentUser();
@@ -193,12 +201,29 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	@Override
 	public PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO) {
 		User currentUser = userService.getCurrentUser();
-		Posting posting = postingService.getOnePosting(postPostingCommentReqDTO.getPostingId());
+		Posting posting = postingService.getOnePostingWithPessimisticLock(postPostingCommentReqDTO.getPostingId());
+		validatePostingCommentBelongsToPosting(posting, postPostingCommentReqDTO);
 		Long newPostingCommentId = postingCommentService.createPostingComment(postPostingCommentReqDTO, posting,
 			currentUser);
 		return PostPostingCommentResDTO.builder()
 			.postingCommentId(newPostingCommentId)
 			.build();
+	}
+
+	private void validatePostingCommentBelongsToPosting(Posting posting,
+		PostPostingCommentReqDTO postPostingCommentReqDTO) {
+		if (!postPostingCommentReqDTO.getParentCommentId().equals(-1L)) {
+			PostingComment postingComment = postingCommentService.getPostingCommentsByPostingCommentId(
+				postPostingCommentReqDTO.getParentCommentId());
+			comparePostingWithPostingInPostingComment(posting, postingComment);
+		}
+	}
+
+	private void comparePostingWithPostingInPostingComment(Posting posting, PostingComment postingComment) {
+		if (!posting.getId().equals(postingComment.getPosting().getId())) {
+			throw new InvalidPostingCommentAccess("Invalid posting comment access",
+				ErrorCode.INVALID_POSTING_COMMENT_ACCESS);
+		}
 	}
 
 	@Transactional
@@ -213,18 +238,21 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
 	@Transactional
 	@Override
-	public DeletePostingCommentResDTO deletePostingComment(Long commentId) {
+	public DeletePostingCommentResDTO deletePostingComment(DeletePostingCommentReqDTO deletePostingCommentReqDTO) {
 		User currentUser = userService.getCurrentUser();
-		Long postingCommentId = postingCommentService.deletePostingComment(commentId, currentUser);
+		Posting posting = postingService.getOnePostingWithPessimisticLock(deletePostingCommentReqDTO.getPostingId());
+		int deletePostingCommentCount = postingCommentService.deletePostingComment(
+			deletePostingCommentReqDTO.getPostingCommentId(), currentUser);
+		posting.decreasePostingCommentCount(deletePostingCommentCount);
 		return DeletePostingCommentResDTO.builder()
-			.postingCommentId(postingCommentId)
+			.postingCommentId(deletePostingCommentReqDTO.getPostingCommentId())
 			.build();
 	}
 
 	@Transactional
 	@Override
 	public PostingLikeToggleStateResDTO togglePostingLikes(Long postingId) {
-		Posting posting = postingService.getOnePosting(postingId);
+		Posting posting = postingService.getOnePostingWithPessimisticLock(postingId);
 		boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
 		posting.updatePostingLikeCount(postingToggleState);
 		return PostingLikeToggleStateResDTO.builder()

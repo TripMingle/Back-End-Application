@@ -6,11 +6,14 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingType;
+
+import jakarta.persistence.LockModeType;
 
 @Repository
 public interface PostingRepository extends JpaRepository<Posting, Long> {
@@ -26,4 +29,8 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
 	@Query("select p from Posting p where p.country = :country and p.postingType = :postingType order by p.likeCount desc, p.createdAt desc")
 	Page<Posting> findAllByCountryAndPostingTypeOrderByLikeCountAndCreatedAt(String country, PostingType postingType,
 		Pageable pageable);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("select p from Posting p where p.id = :postingId")
+	Optional<Posting> findByIdWithPessimisticLock(Long postingId);
 }

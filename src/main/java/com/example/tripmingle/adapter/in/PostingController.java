@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripmingle.common.result.ResultResponse;
+import com.example.tripmingle.dto.req.posting.DeletePostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.GetAllPostingsReqDTO;
 import com.example.tripmingle.dto.req.posting.GetPreviewPostingReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
@@ -103,10 +104,10 @@ public class PostingController {
 
 	// 포스트 전체조회
 	@Operation(summary = "포스트 전체 조회")
-	@GetMapping("/{page}")
+	@GetMapping
 	public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("country") String country,
 		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType,
-		@PathVariable("page") int page) {
+		@RequestParam(value = "page", defaultValue = "0") int page) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		GetAllPostingsReqDTO getAllPostingsReqDTO = GetAllPostingsReqDTO.builder()
 			.country(country)
@@ -119,10 +120,10 @@ public class PostingController {
 
 	// 포스트 검색 조회
 	@Operation(summary = "포스트 검색 조회")
-	@GetMapping("/search/{page}")
+	@GetMapping("/search")
 	public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
 		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType,
-		@PathVariable("page") int page) {
+		@RequestParam(value = "page", defaultValue = "0") int page) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		List<GetThumbNailPostingResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword,
 			postingType,
@@ -153,9 +154,11 @@ public class PostingController {
 
 	// 포스트 댓글 삭제
 	@Operation(summary = "포스트 댓글 삭제")
-	@DeleteMapping("/comments/{commentId}")
-	public ResponseEntity<ResultResponse> deletePostingComment(@PathVariable("commentId") Long commentId) {
-		DeletePostingCommentResDTO deletePostingCommentResDTO = postingCommentUseCase.deletePostingComment(commentId);
+	@DeleteMapping("/comments")
+	public ResponseEntity<ResultResponse> deletePostingComment(
+		@RequestBody DeletePostingCommentReqDTO deletePostingCommentReqDTO) {
+		DeletePostingCommentResDTO deletePostingCommentResDTO = postingCommentUseCase.deletePostingComment(
+			deletePostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
 	}
 
@@ -168,8 +171,9 @@ public class PostingController {
 	}
 
 	@Operation(summary = "포스트 인기도 순 조회")
-	@GetMapping("/likes/popularity/{page}")
-	public ResponseEntity<ResultResponse> getPopularityPostings(@PathVariable("page") int page,
+	@GetMapping("/likes/popularity")
+	public ResponseEntity<ResultResponse> getPopularityPostings(
+		@RequestParam(value = "page", defaultValue = "0") int page,
 		@RequestParam("country") String country,
 		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
@@ -186,9 +190,9 @@ public class PostingController {
 
 	// 내가 좋아요한 포스트 조회
 	@Operation(summary = "내가 좋아요한 포스트 조회")
-	@GetMapping("/my-likes/{page}")
+	@GetMapping("/my-likes")
 	public ResponseEntity<ResultResponse> getMyLikedPostings(
-		@PathVariable("page") int page) {
+		@RequestParam(value = "page", defaultValue = "0") int page) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_ID_CRITERIA));
 		GetAllLikedPostingResDTO getAllPostingsResDTOList = postingUseCase.getMyLikedPostings(pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));

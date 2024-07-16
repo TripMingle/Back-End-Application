@@ -19,6 +19,7 @@ import com.example.tripmingle.common.exception.CompanionNotFound;
 import com.example.tripmingle.common.exception.ContinentNotFoundException;
 import com.example.tripmingle.common.exception.CountryImageNotFoundException;
 import com.example.tripmingle.common.exception.CountryNotFoundException;
+import com.example.tripmingle.common.exception.InvalidPostingCommentAccess;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.common.exception.JsonParsingException;
 import com.example.tripmingle.common.exception.LeaderCannotLeaveException;
@@ -240,6 +241,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ContinentNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleContinentNotFoundException(ContinentNotFoundException ex) {
 		log.error("handleContinentNotFoundException", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(InvalidPostingCommentAccess.class)
+	public ResponseEntity<ErrorResponse> handleInvalidPostingCommentException(InvalidPostingCommentAccess ex) {
+		log.error("handleInvalidPostingCommentException", ex);
 		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
 	}

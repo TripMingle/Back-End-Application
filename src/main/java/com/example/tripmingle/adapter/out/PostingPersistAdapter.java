@@ -33,6 +33,12 @@ public class PostingPersistAdapter implements PostingPersistPort {
 	}
 
 	@Override
+	public Posting getPostingByIdWithPessimisticLock(Long postingId) {
+		return postingRepository.findByIdWithPessimisticLock(postingId)
+			.orElseThrow(() -> new PostingNotFoundException("Posting Not Found.", ErrorCode.POSING_NOT_FOUND));
+	}
+
+	@Override
 	public List<Posting> findAllPostingForPreview(String country, PostingType postingType) {
 		return postingRepository.findTop4ByCountryAndPostingTypeOrderByCreatedAtDesc(country, postingType);
 	}

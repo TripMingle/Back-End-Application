@@ -1,5 +1,6 @@
 package com.example.tripmingle.port.in;
 
+import com.example.tripmingle.dto.req.posting.DeletePostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.res.posting.DeletePostingCommentResDTO;
@@ -11,5 +12,5 @@ public interface PostingCommentUseCase {
 
 	PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO);
 
-	DeletePostingCommentResDTO deletePostingComment(Long commentId);
+	DeletePostingCommentResDTO deletePostingComment(DeletePostingCommentReqDTO deletePostingCommentReqDTO);
 }
