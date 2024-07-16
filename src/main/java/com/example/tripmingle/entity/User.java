@@ -61,6 +61,9 @@ public class User extends BaseEntity {
 	@Column(nullable = true)
 	private String userImageUrl;
 
+	@Column(nullable = false)
+	private double userScore;
+
 	@Builder(toBuilder = true)
 	public User(String email, String password, String role, String loginType, String oauthId, String nickName,
 		String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber) {
@@ -76,6 +79,7 @@ public class User extends BaseEntity {
 		this.nationality = nationality;
 		this.selfIntroduction = selfIntroduction;
 		this.phoneNumber = phoneNumber;
+		this.userScore = 36.5;
 	}
 
 	public void updateUserMyPage(PatchUserMyPageReqDTO patchUserMyPageReqDTO) {

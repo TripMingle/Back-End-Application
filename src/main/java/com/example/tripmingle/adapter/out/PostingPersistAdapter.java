@@ -47,4 +47,9 @@ public class PostingPersistAdapter implements PostingPersistPort {
 		return postingRepository.findAllBySearching(keyword.toLowerCase(), pageable);
 	}
 
+	@Override
+	public Page<Posting> getAllPopularityPostings(String country, PostingType postingType, Pageable pageable) {
+		return postingRepository.findAllByCountryAndPostingTypeOrderByLikeCountAndCreatedAt(country, postingType,
+			pageable);
+	}
 }

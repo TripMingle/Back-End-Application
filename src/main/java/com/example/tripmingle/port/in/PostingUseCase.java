@@ -35,4 +35,7 @@ public interface PostingUseCase {
 	PostingLikeToggleStateResDTO togglePostingLikes(Long postingId);
 
 	GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable);
+
+	List<GetThumbNailPostingResDTO> getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
+		Pageable pageable);
 }

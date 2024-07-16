@@ -4,9 +4,9 @@ import static com.example.tripmingle.common.result.ResultCode.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,10 +101,11 @@ public class PostingController {
 
 	// 포스트 전체조회
 	@Operation(summary = "포스트 전체 조회")
-	@GetMapping("")
+	@GetMapping("/{page}")
 	public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("country") String country,
 		@RequestParam("postingType") String postingType,
-		@PageableDefault(size = 16, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		@PathVariable("page") int page) {
+		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
 		GetAllPostingsReqDTO getAllPostingsReqDTO = GetAllPostingsReqDTO.builder()
 			.country(country)
 			.postingType(PostingType.valueOf(postingType))
@@ -116,9 +117,10 @@ public class PostingController {
 
 	// 포스트 검색 조회
 	@Operation(summary = "포스트 검색 조회")
-	@GetMapping("/search")
+	@GetMapping("/search/{page}")
 	public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
-		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		@PathVariable("page") int page) {
+		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
 		List<GetThumbNailPostingResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword,
 			pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
@@ -154,18 +156,35 @@ public class PostingController {
 	}
 
 	// 포스트 좋아요
-	@Operation(summary = "포스트 좋아요")
+	@Operation(summary = "포스트 좋아요 버튼 누르기")
 	@PostMapping("/likes/{postingId}")
 	public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
 		PostingLikeToggleStateResDTO postingLikeToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
 		return ResponseEntity.ok(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingLikeToggleStateResDTO));
 	}
 
+	@Operation(summary = "포스트 인기도 순 조회")
+	@GetMapping("/likes/popularity/{page}")
+	public ResponseEntity<ResultResponse> getPopularityPostings(@PathVariable("page") int page,
+		@RequestParam("country") String country, @RequestParam("postingType") String postingType) {
+		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
+		GetAllPostingsReqDTO getAllPostingsReqDTO = GetAllPostingsReqDTO.builder()
+			.country(country)
+			.postingType(PostingType.valueOf(postingType))
+			.build();
+		List<GetThumbNailPostingResDTO> getAllPopularityPostingsResDTOList = postingUseCase.getAllPopularityPostings(
+			getAllPostingsReqDTO,
+			pageable);
+		return ResponseEntity.ok(
+			ResultResponse.of(GET_ALL_POPULARITY_POSTINGS_SUCCESS, getAllPopularityPostingsResDTOList));
+	}
+
 	// 내가 좋아요한 포스트 조회
 	@Operation(summary = "내가 좋아요한 포스트 조회")
-	@GetMapping("/likes")
+	@GetMapping("/likes/{page}")
 	public ResponseEntity<ResultResponse> getMyLikedPostings(
-		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		@PathVariable("page") int page) {
+		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
 		GetAllLikedPostingResDTO getAllPostingsResDTOList = postingUseCase.getMyLikedPostings(pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
 	}

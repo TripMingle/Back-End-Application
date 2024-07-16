@@ -18,8 +18,10 @@ import com.example.tripmingle.dto.res.user.UploadUserImageResDTO;
 import com.example.tripmingle.port.in.UserUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "유저")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")

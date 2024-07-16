@@ -22,4 +22,8 @@ public interface PostingRepository extends JpaRepository<Posting, Long> {
 	Page<Posting> findAllBySearching(String keyword, Pageable pageable);
 
 	List<Posting> findTop4ByCountryAndPostingTypeOrderByCreatedAtDesc(String country, PostingType postingType);
+
+	@Query("select p from Posting p where p.country = :country and p.postingType = :postingType order by p.likeCount, p.createdAt")
+	Page<Posting> findAllByCountryAndPostingTypeOrderByLikeCountAndCreatedAt(String country, PostingType postingType,
+		Pageable pageable);
 }

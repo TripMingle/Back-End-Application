@@ -67,6 +67,7 @@ public enum ResultCode {
 	GET_ALL_POSTINGS_SUCCESS(200, "P006", "전체 포스팅 조회 성공"),
 	GET_SEARCH_POSTINGS_SUCCESS(200, "P007", "검색된 포스팅 조회 성공"),
 	GET_ALL_LIKED_POSTING_SUCCESS(200, "P008", "좋아요 포스팅 전체 조회 성공"),
+	GET_ALL_POPULARITY_POSTINGS_SUCCESS(200, "P009", "인기도 순 포스팅 조회 성공"),
 
 	// posting comment
 	POST_POSTING_COMMENT_SUCCESS(200, "PC001", "포스팅 댓글 달기 성공"),

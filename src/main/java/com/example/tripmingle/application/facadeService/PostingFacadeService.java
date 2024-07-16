@@ -112,14 +112,14 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.content(posting.getContent())
 			.country(posting.getCountry())
 			.createAt(posting.getCreatedAt())
-			.heartCount(0L)
 			.postingComments(commentsInOnePosting)
+			.userImageUrl(posting.getUser().getUserImageUrl())
 			.userNickName(posting.getUser().getNickName())
 			.userAgeRange(posting.getUser().getAgeRange())
 			.userGender(posting.getUser().getGender())
 			.userNationality(posting.getUser().getNationality())
 			.selfIntroduce(posting.getUser().getSelfIntroduction())
-			.userTemperature("36.5")
+			.userTemperature(posting.getUser().getUserScore())
 			.myLikeState(postingLikesState)
 			.commentCount(posting.getCommentCount())
 			.likeCount(postingLikesService.getPostingTotalLikeCount(posting.getId()))
@@ -216,6 +216,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	public PostingLikeToggleStateResDTO togglePostingLikes(Long postingId) {
 		Posting posting = postingService.getOnePosting(postingId);
 		boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
+		posting.updatePostingLikeCount(postingToggleState);
 		return PostingLikeToggleStateResDTO.builder()
 			.postingId(postingId)
 			.postingToggleState(postingToggleState)
@@ -245,6 +246,23 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.commentCount(postingLikes.getPosting().getCommentCount())
 				.likeCount(postingLikesService.getPostingTotalLikeCount(postingLikes.getPosting().getId()))
 				.country(postingLikes.getPosting().getCountry())
+				.build())
+			.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GetThumbNailPostingResDTO> getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
+		Pageable pageable) {
+		Page<Posting> postings = postingService.getAllPopularityPostings(getAllPostingsReqDTO, pageable);
+		return postings.stream()
+			.map(posting -> GetThumbNailPostingResDTO.builder()
+				.postingId(posting.getId())
+				.title(posting.getTitle())
+				.content(posting.getContent())
+				.userImageUrl(posting.getUser().getUserImageUrl())
+				.userNickName(posting.getUser().getNickName())
+				.userAgeRange(posting.getUser().getAgeRange())
+				.userGender(posting.getUser().getGender())
 				.build())
 			.collect(Collectors.toList());
 	}
