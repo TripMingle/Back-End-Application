@@ -303,6 +303,12 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		Long parentBoardCommentId =
 			boardComment.isParentBoardCommentNull() ? -1 : boardComment.getParentBoardComment().getId();
 
+		if (!parentBoardCommentId.equals(-1)) {
+			if (!createBoardCommentReqDTO.getBoardId().equals(parentBoardCommentId)) {
+				throw new IllegalArgumentException("board id not equal");
+			}
+		}
+
 		return CreateBoardCommentResDTO.builder()
 			.parentBoardCommentId(parentBoardCommentId)
 			.BoardCommentId(boardComment.getId())
