@@ -67,6 +67,7 @@ public enum ResultCode {
 	GET_ALL_POSTINGS_SUCCESS(200, "P006", "전체 포스팅 조회 성공"),
 	GET_SEARCH_POSTINGS_SUCCESS(200, "P007", "검색된 포스팅 조회 성공"),
 	GET_ALL_LIKED_POSTING_SUCCESS(200, "P008", "좋아요 포스팅 전체 조회 성공"),
+	GET_ALL_POPULARITY_POSTINGS_SUCCESS(200, "P009", "인기도 순 포스팅 조회 성공"),
 
 	// posting comment
 	POST_POSTING_COMMENT_SUCCESS(200, "PC001", "포스팅 댓글 달기 성공"),
@@ -97,6 +98,10 @@ public enum ResultCode {
 	USER_ENTER_CHAT_ROOM_SUCCESS(200, "GCR002", "그룹 채팅방 참여 성공"),
 	EXIT_GROUP_CHAT_ROOM_SUCCESS(200, "GCR003", "그룹 채팅방 퇴장 성공"),
 	EXIT_ONE_ON_ONE_CHAT_ROOM_SUCCESS(200, "O3CR002", "일대일 채팅방 퇴장 성공"),
+
+	// user
+	UPDATE_USER_MY_PAGE_SUCCESS(200, "UMP001", "유저 마이페이지 수정 성공"),
+	UPLOAD_USER_IMAGE_SUCCESS(200, "UMP002", "유저 이미지 업로드 성공"),
 	;
 	private final int status;
 	private final String code;

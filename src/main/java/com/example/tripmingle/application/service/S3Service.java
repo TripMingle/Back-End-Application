@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class S3Service {
 	private final S3StoragePort s3StoragePort;
 
-	public String uploadCountryImage(MultipartFile image) {
+	public String uploadImage(MultipartFile image) {
 		return s3StoragePort.upload(image);
 	}
 

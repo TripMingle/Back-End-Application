@@ -111,7 +111,7 @@ public class CountryFacadeService implements CountryUseCase {
 
 	@Override
 	public UploadCountryImageResDTO uploadCountryImage(String countryName, MultipartFile image, boolean isPrimary) {
-		String imageUrl = s3Service.uploadCountryImage(image);
+		String imageUrl = s3Service.uploadImage(image);
 		Country country = countryService.getCountryByCountryName(countryName);
 		countryImageService.saveImage(country, imageUrl, isPrimary);
 		return UploadCountryImageResDTO.builder().imageUrl(imageUrl).build();
