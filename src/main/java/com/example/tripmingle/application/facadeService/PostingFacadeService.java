@@ -107,6 +107,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public GetOnePostingResDTO getOnePosting(Long postingId) {
 		User currentUser = userService.getCurrentUser();
