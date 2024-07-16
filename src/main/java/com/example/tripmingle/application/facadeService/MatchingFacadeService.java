@@ -117,26 +117,6 @@ public class MatchingFacadeService implements MatchingUseCase {
 	}
 
 	@Override
-	@Transactional
-	public void deleteUserPersonality() {
-		User currentUser = userService.getCurrentUser();
-		UserPersonality userPersonality = userPersonalityService.getUserPersonalityByUserId(currentUser.getId());
-		userPersonalityService.delete(currentUser, userPersonality);
-		String messageId = UUID.randomUUID().toString();
-		String response = "";
-		try {
-			CompletableFuture<String> future = matchingService.deleteUserPersonality(userPersonality.getId(),
-				messageId);
-			response = future.get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (response.equals(RedisMessageSubscriber.FAIL_TO_DELETE_USER_PERSONALITY)) {
-			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
-		}
-	}
-
-	@Override
 	public List<MatchingBoardResDTO> matchingBoard(MatchingBoardReqDTO matchingBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		String messageId = UUID.randomUUID().toString();
@@ -187,6 +167,28 @@ public class MatchingFacadeService implements MatchingUseCase {
 				.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
 				.build();
 		}).collect(Collectors.toList());
+	}
+
+	@Override
+	@Transactional
+	public UserPersonality deleteAndSaveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+		User currentUser = userService.getCurrentUser();
+		UserPersonality userPersonality = userPersonalityService.getUserPersonalityByUserId(currentUser.getId());
+		userPersonalityService.delete(currentUser, userPersonality);
+		String messageId = UUID.randomUUID().toString();
+		String response = "";
+		try {
+			CompletableFuture<String> future = matchingService.deleteUserPersonality(userPersonality.getId(),
+				messageId);
+			response = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (response.equals(RedisMessageSubscriber.FAIL_TO_DELETE_USER_PERSONALITY)) {
+			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
+		}
+		return userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
+
 	}
 
 	@Override

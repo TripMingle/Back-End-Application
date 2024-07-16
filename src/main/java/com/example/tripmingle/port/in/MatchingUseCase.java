@@ -19,7 +19,7 @@ public interface MatchingUseCase {
 
 	UserPersonality saveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
 
-	void deleteUserPersonality();
-
 	List<MatchingBoardResDTO> matchingBoard(MatchingBoardReqDTO matchingBoardReqDTO);
+
+	UserPersonality deleteAndSaveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
 }

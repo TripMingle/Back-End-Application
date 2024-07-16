@@ -59,8 +59,8 @@ public class MatchingController {
 	//유저성향 변경
 	public ResponseEntity<ResultResponse> modifyPersonality(
 		@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
-		matchingUseCase.deleteUserPersonality();
-		UserPersonality userPersonality = matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO);
+
+		UserPersonality userPersonality = matchingUseCase.deleteAndSaveUserPersonality(postUserPersonalityReqDTO);
 		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(userPersonality);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_USER_PERSONALITY_SUCCESS, addUserResDTO));
 	}
