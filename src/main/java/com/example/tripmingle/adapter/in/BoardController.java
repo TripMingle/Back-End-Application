@@ -160,7 +160,7 @@ public class BoardController {
 	//내가 북마크한 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyBookMarkedBoards(
 		@RequestParam(value = "page", defaultValue = "0") int page) {
-		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_ID_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
 	}
@@ -177,7 +177,7 @@ public class BoardController {
 	@GetMapping("/likes")
 	//내가 좋아요한 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyLikedBoards(@RequestParam(value = "page", defaultValue = "0") int page) {
-		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_ID_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
 	}
