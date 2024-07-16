@@ -143,9 +143,9 @@ public class PostingController {
 	// 포스트 댓글 수정
 	@Operation(summary = "포스트 댓글 수정")
 	@PatchMapping("/comments/{commentId}")
-	public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("commentId") Long commentId,
+	public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("commentId") Long postCommentId,
 		@RequestBody PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
-		patchPostingCommentReqDTO.setPostingCommentId(commentId);
+		patchPostingCommentReqDTO.setPostingCommentId(postCommentId);
 		PatchPostingCommentResDTO patchPostingCommentResDTO = postingCommentUseCase.updatePostingComment(
 			patchPostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
