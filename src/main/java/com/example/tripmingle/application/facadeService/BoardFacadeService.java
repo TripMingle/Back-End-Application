@@ -302,9 +302,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			currentUser);
 		Long parentBoardCommentId =
 			boardComment.isParentBoardCommentNull() ? -1 : boardComment.getParentBoardComment().getId();
-
-		if (!parentBoardCommentId.equals(-1)) {
-			if (!createBoardCommentReqDTO.getBoardId().equals(parentBoardCommentId)) {
+		
+		if (!parentBoardCommentId.equals(-1L)) {
+			Board board1 = boardCommentService.getBoardByCommentId(parentBoardCommentId);
+			if (!createBoardCommentReqDTO.getBoardId().equals(board1.getId())) {
 				throw new IllegalArgumentException("board id not equal");
 			}
 		}
