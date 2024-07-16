@@ -37,7 +37,6 @@ public class GetBoardInfoResDTO {
 	private boolean isBookMarked;
 	private boolean isParticipating;
 	private boolean isExpired;
-	//지났는지 안지났는지
 
 	//게시글 작성자
 	private Long userId;
@@ -46,8 +45,8 @@ public class GetBoardInfoResDTO {
 	private String gender;
 	private String nationality;
 	private String selfIntroduction;
-	//온도
-	//사진
+	private String userImageUrl;
+	private double userRating;
 	private String imageUrl;
 
 	//댓글
