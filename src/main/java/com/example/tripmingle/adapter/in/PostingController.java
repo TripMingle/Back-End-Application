@@ -55,7 +55,7 @@ public class PostingController {
 
 	//포스트 게시하기
 	@Operation(summary = "포스트 작성")
-	@PostMapping("")
+	@PostMapping
 	public ResponseEntity<ResultResponse> createPosting(@RequestBody PostPostingReqDTO postPostingReqDTO) {
 		PostPostingResDTO postPostingResDTO = postingUseCase.createPosting(postPostingReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
@@ -63,7 +63,7 @@ public class PostingController {
 
 	//포스트 수정하기
 	@Operation(summary = "포스트 수정")
-	@PatchMapping("")
+	@PatchMapping
 	public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
 		PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
@@ -93,7 +93,7 @@ public class PostingController {
 
 	// 포스트 상세조회
 	@Operation(summary = "포스트 상세 조회")
-	@GetMapping("/{postingId}")
+	@GetMapping("/details/{postingId}")
 	public ResponseEntity<ResultResponse> getOnePosting(@PathVariable("postingId") Long postingId) {
 		GetOnePostingResDTO getOnePostingResDTO = postingUseCase.getOnePosting(postingId);
 		return ResponseEntity.ok(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));

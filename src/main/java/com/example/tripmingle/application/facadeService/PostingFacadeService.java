@@ -93,7 +93,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.postingId(posting.getId())
 				.title(posting.getTitle())
 				.content(posting.getContent())
-				.userImageUrl(posting.getUser().getUserImageUrl())
+				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
@@ -113,12 +113,13 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.country(posting.getCountry())
 			.createAt(posting.getCreatedAt())
 			.postingComments(commentsInOnePosting)
-			.userImageUrl(posting.getUser().getUserImageUrl())
+			.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 			.userNickName(posting.getUser().getNickName())
 			.userAgeRange(posting.getUser().getAgeRange())
 			.userGender(posting.getUser().getGender())
 			.userNationality(posting.getUser().getNationality())
-			.selfIntroduce(posting.getUser().getSelfIntroduction())
+			.selfIntroduce(
+				posting.getUser().getSelfIntroduction() == null ? "" : posting.getUser().getSelfIntroduction())
 			.userTemperature(posting.getUser().getUserScore())
 			.myLikeState(postingLikesState)
 			.commentCount(posting.getCommentCount())
@@ -126,6 +127,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.build();
 	}
 
+	// TODO 유저 사진 url 넣기
 	private List<GetOnePostingCommentsResDTO> getCommentsInPosting(List<PostingComment> postingComments) {
 		return postingComments.stream().filter(filter -> filter.isParentComment())
 			.map(comments -> GetOnePostingCommentsResDTO.builder()
@@ -157,7 +159,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
-				.userImageUrl(posting.getUser().getUserImageUrl())
+				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -174,7 +176,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
-				.userImageUrl(posting.getUser().getUserImageUrl())
+				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -259,7 +261,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.postingId(posting.getId())
 				.title(posting.getTitle())
 				.content(posting.getContent())
-				.userImageUrl(posting.getUser().getUserImageUrl())
+				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
