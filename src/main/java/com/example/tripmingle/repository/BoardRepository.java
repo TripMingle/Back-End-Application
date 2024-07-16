@@ -30,7 +30,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	Page<Board> findByCountryName(String countryName, Pageable pageable);
 
 	default List<Board> findRecentBoardsByCountryName(String countryName) {
-		Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+		Pageable pageable = PageRequest.of(0, 4, Sort.by("createdAt").descending());
 		Page<Board> page = findByCountryName(countryName, pageable);
 		return page.getContent();
 	}
