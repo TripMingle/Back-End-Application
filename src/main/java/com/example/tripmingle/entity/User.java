@@ -79,9 +79,6 @@ public class User extends BaseEntity {
 	}
 
 	public void updateUserMyPage(PatchUserMyPageReqDTO patchUserMyPageReqDTO) {
-		if (patchUserMyPageReqDTO.getUserImageUrl() != null) {
-			this.userImageUrl = patchUserMyPageReqDTO.getUserImageUrl();
-		}
 		if (patchUserMyPageReqDTO.getUserNickName() != null) {
 			this.nickName = patchUserMyPageReqDTO.getUserNickName();
 		}
@@ -94,5 +91,9 @@ public class User extends BaseEntity {
 		if (patchUserMyPageReqDTO.getUserEmail() != null) {
 			this.email = patchUserMyPageReqDTO.getUserEmail();
 		}
+	}
+
+	public void uploadUserImage(String userImageUrl) {
+		this.userImageUrl = userImageUrl;
 	}
 }

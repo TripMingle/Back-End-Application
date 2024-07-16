@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class PatchUserMyPageReqDTO {
 
-	private String userImageUrl;
 	private String userNickName;
 	private String nationality;
 	private String phoneNumber;
