@@ -122,6 +122,7 @@ public class ScheduleFacadeService implements BoardScheduleUseCase, UserSchedule
 			userSchedule -> {
 				return UserScheduleResDTO.builder()
 					.userTripId(userTrip.getId())
+					.userScheduleId(userSchedule.getId())
 					.date(userSchedule.getDate())
 					.placeName(userSchedule.getPlaceName())
 					.number(userSchedule.getNumber())
