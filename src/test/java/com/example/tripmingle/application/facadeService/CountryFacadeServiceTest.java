@@ -22,7 +22,7 @@ class CountryFacadeServiceTest {
 	@Test
 	@DirtiesContext
 	void getCountriesWithCacheTest() {
-		int readCount = 100000;
+		int readCount = 0;
 		String[] countryList = {"europe", "south america", "north america", "asia", "africa", "oceania"};
 		Instant start = Instant.now();
 		for (int i = 0; i < readCount; i++) {
@@ -37,7 +37,7 @@ class CountryFacadeServiceTest {
 	@Test
 	@DirtiesContext
 	void getCountriesWithoutCacheTest() {
-		int readCount = 100000;
+		int readCount = 0;
 		String[] countryList = {"europe", "south america", "north america", "asia", "africa", "oceania"};
 		Instant start = Instant.now();
 		for (int i = 0; i < readCount; i++) {

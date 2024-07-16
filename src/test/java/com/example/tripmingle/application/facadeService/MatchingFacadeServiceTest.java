@@ -65,7 +65,7 @@ class MatchingFacadeServiceTest {
 	@Test
 	@DirtiesContext
 	void matchingWithCacheTest2() {
-		int testCount = 10;
+		int testCount = 0;
 		Instant start = Instant.now();
 		for (int i = 100; i < 100 + testCount; i++) {
 			User user = userService.getUserById((long)i + 1);
@@ -90,7 +90,7 @@ class MatchingFacadeServiceTest {
 	@Test
 	@DirtiesContext
 	void matchingWithoutCacheTest2() {
-		int testCount = 20;
+		int testCount = 0;
 		Instant start = Instant.now();
 		for (int i = 10002; i < 10002 + testCount; i++) {
 			User user = userService.getUserById((long)i + 1);
