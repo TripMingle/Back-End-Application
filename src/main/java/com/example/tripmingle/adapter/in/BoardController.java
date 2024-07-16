@@ -1,11 +1,13 @@
 package com.example.tripmingle.adapter.in;
 
+import static com.example.tripmingle.common.constants.Constants.*;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +64,8 @@ public class BoardController {
 	public ResponseEntity<ResultResponse> getAllBoards(@PathVariable(value = "country-name") String countryName
 		, @RequestParam(value = "gender", required = false) String gender
 		, @RequestParam(value = "language", required = false) String language
-		, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		, @RequestParam(value = "page", defaultValue = "0") int page) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		GetAllBoardReqDTO getAllBoardReqDTO = GetAllBoardReqDTO.builder()
 			.language(language)
 			.gender(gender)
@@ -110,7 +113,8 @@ public class BoardController {
 	//게시글 검색
 	public ResponseEntity<ResultResponse> searchBoard(@PathVariable(value = "country-name") String countryName
 		, @RequestParam String keyword
-		, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		, @RequestParam(value = "page", defaultValue = "0") int page) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(countryName, keyword, pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
 	}
@@ -155,7 +159,8 @@ public class BoardController {
 	@GetMapping("/bookmark")
 	//내가 북마크한 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyBookMarkedBoards(
-		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		@RequestParam(value = "page", defaultValue = "0") int page) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyBookMarkedBoards(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_BOOK_MARK_SUCCESS, getBoardsResDTO));
 	}
@@ -171,8 +176,8 @@ public class BoardController {
 	@Operation(summary = "내가 좋아요한 게시물 조회")
 	@GetMapping("/likes")
 	//내가 좋아요한 모든 게시물 조회
-	public ResponseEntity<ResultResponse> getMyLikedBoards(
-		@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+	public ResponseEntity<ResultResponse> getMyLikedBoards(@RequestParam(value = "page", defaultValue = "0") int page) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTO = boardUseCase.getMyLikedBoards(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_LIKES_SUCCESS, getBoardsResDTO));
 	}
@@ -180,8 +185,8 @@ public class BoardController {
 	@Operation(summary = "내가 방장인 동행게시물 조회")
 	@GetMapping("/mine")
 	//내가 방장인 모든 게시물 조회
-	public ResponseEntity<ResultResponse> getMyBoards(
-		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+	public ResponseEntity<ResultResponse> getMyBoards(@RequestParam(value = "page", defaultValue = "0") int page) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyBoards(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_BOARD_SUCCESS, getBoardsResDTOS));
 	}
@@ -207,7 +212,8 @@ public class BoardController {
 	@GetMapping("/my-companion")
 	//내가 참여하고있는 모든 게시물 조회
 	public ResponseEntity<ResultResponse> getMyCompanionBoards(
-		@PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+		@RequestParam(value = "page", defaultValue = "0") int page) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getMyCompanionBoards(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_COMPANIONS_BOARDS_SUCCESS, getBoardsResDTOS));
 	}
