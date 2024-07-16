@@ -1,5 +1,7 @@
 package com.example.tripmingle.dto.res.posting;
 
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,9 +9,11 @@ import lombok.Getter;
 @Builder
 public class GetOnePostingCoCommentResDTO {
 
-    private Long coCommentId;
-    private Long parentCommentId;
-    private String userNickName;
-    private String coComment;
+	private Long coCommentId;
+	private Long parentCommentId;
+	private String userImageUrl;
+	private String userNickName;
+	private String coComment;
+	private LocalDateTime createdAt;
 
 }

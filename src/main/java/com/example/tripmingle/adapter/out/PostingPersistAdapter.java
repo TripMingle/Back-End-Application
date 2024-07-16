@@ -43,8 +43,8 @@ public class PostingPersistAdapter implements PostingPersistPort {
 	}
 
 	@Override
-	public Page<Posting> getSearchPostings(String keyword, Pageable pageable) {
-		return postingRepository.findAllBySearching(keyword.toLowerCase(), pageable);
+	public Page<Posting> getSearchPostings(String keyword, String postingType, Pageable pageable) {
+		return postingRepository.findAllBySearching(keyword.toLowerCase(), PostingType.valueOf(postingType), pageable);
 	}
 
 	@Override

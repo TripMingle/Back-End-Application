@@ -1,5 +1,6 @@
 package com.example.tripmingle.adapter.in;
 
+import static com.example.tripmingle.common.constants.Constants.*;
 import static com.example.tripmingle.common.result.ResultCode.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -81,7 +83,7 @@ public class PostingController {
 	@Operation(summary = "포스트 미리보기")
 	@GetMapping("/preview")
 	public ResponseEntity<ResultResponse> getPreviewPostings(@RequestParam("country") String country,
-		@RequestParam("postingType") String postingType) {
+		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType) {
 		GetPreviewPostingReqDTO getPreviewPostingReqDTO = GetPreviewPostingReqDTO.builder()
 			.country(country)
 			.postingType(PostingType.valueOf(postingType))
@@ -103,9 +105,9 @@ public class PostingController {
 	@Operation(summary = "포스트 전체 조회")
 	@GetMapping("/{page}")
 	public ResponseEntity<ResultResponse> getAllPostings(@RequestParam("country") String country,
-		@RequestParam("postingType") String postingType,
+		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType,
 		@PathVariable("page") int page) {
-		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		GetAllPostingsReqDTO getAllPostingsReqDTO = GetAllPostingsReqDTO.builder()
 			.country(country)
 			.postingType(PostingType.valueOf(postingType))
@@ -119,9 +121,11 @@ public class PostingController {
 	@Operation(summary = "포스트 검색 조회")
 	@GetMapping("/search/{page}")
 	public ResponseEntity<ResultResponse> getSearchPostings(@RequestParam("keyword") String keyword,
+		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType,
 		@PathVariable("page") int page) {
-		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
 		List<GetThumbNailPostingResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword,
+			postingType,
 			pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
 	}
@@ -166,8 +170,9 @@ public class PostingController {
 	@Operation(summary = "포스트 인기도 순 조회")
 	@GetMapping("/likes/popularity/{page}")
 	public ResponseEntity<ResultResponse> getPopularityPostings(@PathVariable("page") int page,
-		@RequestParam("country") String country, @RequestParam("postingType") String postingType) {
-		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
+		@RequestParam("country") String country,
+		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType) {
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		GetAllPostingsReqDTO getAllPostingsReqDTO = GetAllPostingsReqDTO.builder()
 			.country(country)
 			.postingType(PostingType.valueOf(postingType))
@@ -181,10 +186,10 @@ public class PostingController {
 
 	// 내가 좋아요한 포스트 조회
 	@Operation(summary = "내가 좋아요한 포스트 조회")
-	@GetMapping("/likes/{page}")
+	@GetMapping("/my-likes/{page}")
 	public ResponseEntity<ResultResponse> getMyLikedPostings(
 		@PathVariable("page") int page) {
-		Pageable pageable = PageRequest.of(page, 16, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_ID_CRITERIA));
 		GetAllLikedPostingResDTO getAllPostingsResDTOList = postingUseCase.getMyLikedPostings(pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_ALL_LIKED_POSTING_SUCCESS, getAllPostingsResDTOList));
 	}

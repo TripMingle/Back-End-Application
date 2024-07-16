@@ -18,7 +18,7 @@ public interface PostingPersistPort {
 
 	Page<Posting> getAllPostings(String country, PostingType postingType, Pageable pageable);
 
-	Page<Posting> getSearchPostings(String keyword, Pageable pageable);
+	Page<Posting> getSearchPostings(String keyword, String postingType, Pageable pageable);
 
 	Page<Posting> getAllPopularityPostings(String country, PostingType postingType, Pageable pageable);
 }

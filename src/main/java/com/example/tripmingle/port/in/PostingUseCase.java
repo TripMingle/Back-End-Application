@@ -30,7 +30,7 @@ public interface PostingUseCase {
 
 	List<GetThumbNailPostingResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
 
-	List<GetThumbNailPostingResDTO> getSearchPostings(String keyword, Pageable pageable);
+	List<GetThumbNailPostingResDTO> getSearchPostings(String keyword, String postingType, Pageable pageable);
 
 	PostingLikeToggleStateResDTO togglePostingLikes(Long postingId);
 

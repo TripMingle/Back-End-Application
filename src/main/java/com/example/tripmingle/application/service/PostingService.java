@@ -62,8 +62,8 @@ public class PostingService {
 			getAllPostingsReqDTO.getPostingType(), pageable);
 	}
 
-	public Page<Posting> getSearchPostings(String keyword, Pageable pageable) {
-		return postingPersistPort.getSearchPostings(keyword, pageable);
+	public Page<Posting> getSearchPostings(String keyword, String postingType, Pageable pageable) {
+		return postingPersistPort.getSearchPostings(keyword, postingType, pageable);
 	}
 
 	public Page<Posting> getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable) {

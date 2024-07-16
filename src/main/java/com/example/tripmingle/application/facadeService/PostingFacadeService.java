@@ -21,7 +21,6 @@ import com.example.tripmingle.dto.req.posting.PostPostingReqDTO;
 import com.example.tripmingle.dto.res.posting.DeletePostingCommentResDTO;
 import com.example.tripmingle.dto.res.posting.DeletePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetAllLikedPostingResDTO;
-import com.example.tripmingle.dto.res.posting.GetLikedPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingCoCommentResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingCommentsResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
@@ -127,13 +126,14 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.build();
 	}
 
-	// TODO 유저 사진 url 넣기
 	private List<GetOnePostingCommentsResDTO> getCommentsInPosting(List<PostingComment> postingComments) {
 		return postingComments.stream().filter(filter -> filter.isParentComment())
 			.map(comments -> GetOnePostingCommentsResDTO.builder()
 				.commentId(comments.getId())
+				.userImageUrl(comments.getUser().getUserImageUrl() == null ? "" : comments.getUser().getUserImageUrl())
 				.userNickName(comments.getUser().getNickName())
 				.comment(comments.getComment())
+				.createdAt(comments.getCreatedAt())
 				.postingCoComment(postingComments.stream()
 					.filter(filter -> !filter.isParentComment() && filter.getPostingComment()
 						.getId()
@@ -141,8 +141,11 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 					.map(cocomments -> GetOnePostingCoCommentResDTO.builder()
 						.coCommentId(cocomments.getId())
 						.parentCommentId(comments.getId())
+						.userImageUrl(cocomments.getUser().getUserImageUrl() == null ? "" :
+							cocomments.getUser().getUserImageUrl())
 						.userNickName(cocomments.getUser().getNickName())
 						.coComment(cocomments.getComment())
+						.createdAt(cocomments.getCreatedAt())
 						.build()).collect(Collectors.toList()))
 				.build()).toList();
 	}
@@ -165,8 +168,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	}
 
 	@Override
-	public List<GetThumbNailPostingResDTO> getSearchPostings(String keyword, Pageable pageable) {
-		Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, pageable);
+	public List<GetThumbNailPostingResDTO> getSearchPostings(String keyword, String postingType, Pageable pageable) {
+		Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, postingType, pageable);
 		return getSearchPostings.stream()
 			.filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
 			.map(posting -> GetThumbNailPostingResDTO.builder()
@@ -230,6 +233,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 		Page<PostingLikes> getAllPostingLikes = postingLikesService.getAllPostingLikes(pageable);
 		User user = userService.getCurrentUser();
 		return GetAllLikedPostingResDTO.builder()
+			.userImageUrl(user.getUserImageUrl() == null ? "" : user.getUserImageUrl())
 			.userNickName(user.getNickName())
 			.userAgeRange(user.getAgeRange())
 			.userGender(user.getGender())
@@ -238,16 +242,17 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.build();
 	}
 
-	private List<GetLikedPostingResDTO> getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
+	private List<GetThumbNailPostingResDTO> getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
 		return likedPostings.stream()
-			.map(postingLikes -> GetLikedPostingResDTO.builder()
+			.map(postingLikes -> GetThumbNailPostingResDTO.builder()
 				.postingId(postingLikes.getPosting().getId())
 				.title(postingLikes.getPosting().getTitle())
 				.content(postingLikes.getPosting().getContent())
-				.myLikeState(postingLikes.isToggleState())
-				.commentCount(postingLikes.getPosting().getCommentCount())
-				.likeCount(postingLikesService.getPostingTotalLikeCount(postingLikes.getPosting().getId()))
-				.country(postingLikes.getPosting().getCountry())
+				.userImageUrl(postingLikes.getPosting().getUser().getUserImageUrl() == null ? "" :
+					postingLikes.getPosting().getUser().getUserImageUrl())
+				.userNickName(postingLikes.getPosting().getUser().getNickName())
+				.userAgeRange(postingLikes.getPosting().getUser().getAgeRange())
+				.userGender(postingLikes.getPosting().getUser().getGender())
 				.build())
 			.collect(Collectors.toList());
 	}
