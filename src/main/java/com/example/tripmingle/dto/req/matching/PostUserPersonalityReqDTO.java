@@ -1,10 +1,12 @@
 package com.example.tripmingle.dto.req.matching;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class PostUserPersonalityReqDTO {
 	private double vegan; // 비건 여부
 	private double islam; // 이슬람 신앙

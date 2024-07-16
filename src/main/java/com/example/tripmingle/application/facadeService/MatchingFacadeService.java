@@ -207,4 +207,62 @@ public class MatchingFacadeService implements MatchingUseCase {
 		return AddUserResDTO.builder().resultMessage(response).build();
 	}
 
+	@Transactional
+	public void getMyMatchingUsersWithCache(User user) {
+		UserPersonality currentUserPersonality = userPersonalityService.getUserPersonalityByUserId(user.getId());
+		String messageId = UUID.randomUUID().toString();
+		String response = "";
+		try {
+			CompletableFuture<String> future = matchingService.prepareData(currentUserPersonality, messageId);
+			response = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (response.equals(RedisMessageSubscriber.FAIL_TO_RE_CALCULATE_USER_PERSONALITY)) {
+			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
+		}
+
+		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId());
+	}
+
+	@Transactional
+	public void getMyMatchingUsersWithoutCache(User user) {
+		UserPersonality currentUserPersonality = userPersonalityService.getUserPersonalityByUserId(user.getId());
+		String messageId = UUID.randomUUID().toString();
+		String response = "";
+		try {
+			CompletableFuture<String> future = matchingService.calculate(currentUserPersonality, messageId);
+			response = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (response.equals(RedisMessageSubscriber.FAIL_TO_RE_CALCULATE_USER_PERSONALITY)) {
+			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
+		}
+
+		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId());
+	}
+
+	@Transactional
+	public void deleteUserPersonalityForTest(User user) {
+		UserPersonality userPersonality = userPersonalityService.getUserPersonalityByUserId(user.getId());
+		userPersonalityService.delete(user, userPersonality);
+		String messageId = UUID.randomUUID().toString();
+		String response = "";
+		try {
+			CompletableFuture<String> future = matchingService.deleteUserPersonality(userPersonality.getId(),
+				messageId);
+			response = future.get();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (response.equals(RedisMessageSubscriber.FAIL_TO_DELETE_USER_PERSONALITY)) {
+			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
+		}
+	}
+
+	@Transactional
+	public UserPersonality saveUserPersonalityForTest(User user, PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+		return userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, user);
+	}
 }

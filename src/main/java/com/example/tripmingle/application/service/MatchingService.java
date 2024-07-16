@@ -65,4 +65,11 @@ public class MatchingService {
 			.endDate(matchingBoardReqDTO.getEndDate())
 			.build());
 	}
+
+	public CompletableFuture<String> calculate(UserPersonality userPersonality, String messageId) {
+		return publishPort.reCalculateUserPersonality(UserPersonalityReCalculatePublishDTO.builder()
+			.userPersonalityId(userPersonality.getId())
+			.messageId(messageId).build());
+
+	}
 }
