@@ -1,6 +1,7 @@
 package com.example.tripmingle.dto.res.board;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ public class GetBoardsResDTO {
 	private String countryName;
 	private Long boardId;
 	private String title;
+	private LocalDateTime createdAt;
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private int currentCount;

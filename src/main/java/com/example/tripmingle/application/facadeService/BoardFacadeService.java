@@ -76,6 +76,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 				.countryName(board.getCountryName())
 				.boardId(board.getId())
 				.title(board.getTitle())
+				.createdAt(board.getCreatedAt())
 				.startDate(board.getStartDate())
 				.endDate(board.getEndDate())
 				.currentCount(board.getCurrentCount())
@@ -108,6 +109,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.countryName(board.getCountryName())
 			.boardId(board.getId())
 			.title(board.getTitle())
+			.createdAt(board.getCreatedAt())
 			.startDate(board.getStartDate())
 			.endDate(board.getEndDate())
 			.currentCount(board.getCurrentCount())
@@ -272,6 +274,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.countryName(board.getCountryName())
 			.boardId(board.getId())
 			.title(board.getTitle())
+			.createdAt(board.getCreatedAt())
 			.startDate(board.getStartDate())
 			.endDate(board.getEndDate())
 			.currentCount(board.getCurrentCount())
@@ -302,7 +305,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			currentUser);
 		Long parentBoardCommentId =
 			boardComment.isParentBoardCommentNull() ? -1 : boardComment.getParentBoardComment().getId();
-		
+
 		if (!parentBoardCommentId.equals(-1L)) {
 			Board board1 = boardCommentService.getBoardByCommentId(parentBoardCommentId);
 			if (!createBoardCommentReqDTO.getBoardId().equals(board1.getId())) {
@@ -366,6 +369,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.countryName(boardBookmark.getBoard().getCountryName())
 			.boardId(boardBookmark.getBoard().getId())
 			.title(boardBookmark.getBoard().getTitle())
+			.createdAt(boardBookmark.getBoard().getCreatedAt())
 			.startDate(boardBookmark.getBoard().getStartDate())
 			.endDate(boardBookmark.getBoard().getEndDate())
 			.currentCount(boardBookmark.getBoard().getCurrentCount())
@@ -408,6 +412,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.countryName(boardLike.getBoard().getCountryName())
 			.boardId(boardLike.getBoard().getId())
 			.title(boardLike.getBoard().getTitle())
+			.createdAt(boardLike.getBoard().getCreatedAt())
 			.startDate(boardLike.getBoard().getStartDate())
 			.endDate(boardLike.getBoard().getEndDate())
 			.currentCount(boardLike.getBoard().getCurrentCount())
@@ -438,6 +443,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.countryName(board.getCountryName())
 			.boardId(board.getId())
 			.title(board.getTitle())
+			.createdAt(board.getCreatedAt())
 			.startDate(board.getStartDate())
 			.endDate(board.getEndDate())
 			.currentCount(board.getCurrentCount())
@@ -501,6 +507,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.countryName(companion.getBoard().getCountryName())
 			.boardId(companion.getBoard().getId())
 			.title(companion.getBoard().getTitle())
+			.createdAt(companion.getBoard().getCreatedAt())
 			.startDate(companion.getBoard().getStartDate())
 			.endDate(companion.getBoard().getEndDate())
 			.currentCount(companion.getBoard().getCurrentCount())
