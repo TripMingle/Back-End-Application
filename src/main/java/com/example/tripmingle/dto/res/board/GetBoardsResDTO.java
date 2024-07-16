@@ -30,6 +30,7 @@ public class GetBoardsResDTO {
 	private String ageRange;
 	private String gender;
 	private String nationality;
+	private String userImageUrl = "";
 
 	private boolean isMine;
 	private boolean isLiked;
