@@ -18,4 +18,10 @@ public class HealthController {
 		return "health sucess " + email;
 	}
 
+	@Operation(summary = "cicd를 위한 헬스체크")
+	@GetMapping("/health/cicd")
+	public String healthCheckForCICD() {
+		return "이게 되네";
+	}
+
 }
