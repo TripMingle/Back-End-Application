@@ -47,19 +47,12 @@ jobs:
           path: build/libs/
 
       - name: Deploy to EC2
-        env:
-          EC2_HOST: ${{ secrets.EC2_HOST }}
-          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: |
-          echo "${EC2_SSH_KEY}" > private_key.pem
-          chmod 600 private_key.pem
-          scp -i private_key.pem build/libs/TripMingle-0.0.1-SNAPSHOT.jar ${EC2_USERNAME}@${EC2_HOST}:/home/${EC2_USERNAME}/TripMingle.jar
-          ssh -i private_key.pem ${EC2_USERNAME}@${EC2_HOST} << 'EOF'
-            pgrep java && pgrep java | xargs kill -9
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            pgrep java && pgrep java | xargs -r kill -9
             export $(grep -v '^#' /home/${EC2_USERNAME}/tripmingle/.env | xargs)
-            nohup java -jar /home/${EC2_USERNAME}/TripMingle.jar &
-          EOF
-          rm -f private_key.pem
+            nohup java -jar /home/${EC2_USERNAME}/TripMingle.jar > /home/${EC2_USERNAME}/log/app.out 2>&1 &
