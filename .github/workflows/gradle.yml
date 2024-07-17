@@ -46,6 +46,10 @@ jobs:
           name: TripMingle
           path: build/libs/
 
+      - name: Add EC2 host key
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
