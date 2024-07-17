@@ -71,3 +71,6 @@ jobs:
             pgrep java && pgrep java | xargs -r kill -9
             export $(grep -v '^#' /home/${{ secrets.EC2_USERNAME }}/tripmingle/.env | xargs)
             nohup java -jar /home/${{ secrets.EC2_USERNAME }}/TripMingle.jar > /home/${{ secrets.EC2_USERNAME }}/log/app_log.out 2>&1 &
+
+      - name: Remove private key file
+        run: rm -f private_key.pem
