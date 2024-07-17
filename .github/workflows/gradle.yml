@@ -54,7 +54,7 @@ jobs:
 
       - name: Upload JAR to EC2
         run: |
-          scp -i private_key.pem build/libs/TripMingle-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/TripMingle.jar
+          scp -i ${{ secrets.EC2_SSH_KEY }} build/libs/TripMingle-0.0.1-SNAPSHOT.jar ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/TripMingle.jar
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
