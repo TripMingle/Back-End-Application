@@ -60,6 +60,6 @@ jobs:
           ssh -i private_key.pem -o StrictHostKeyChecking=no ${EC2_USERNAME}@${EC2_HOST} << 'EOF'
             pgrep java | xargs kill -9
             export $(grep -v '^#' /home/${EC2_USERNAME}/tripmingle/.env | xargs)
-            nohup java -jar /home/${EC2_USERNAME}/trelloServer.jar > /home/${EC2_USERNAME}/app.log 2>&1 &
+            nohup java -jar /home/${EC2_USERNAME}/TripMingle.jar > /home/${EC2_USERNAME}/app.log 2>&1 &
           EOF
           rm -f private_key.pem
