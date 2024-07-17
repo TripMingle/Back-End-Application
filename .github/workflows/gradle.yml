@@ -46,6 +46,11 @@ jobs:
           name: TripMingle
           path: build/libs/
 
+      - name: Add EC2 host key
+        id: add_ssh_key
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -54,5 +59,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             pgrep java && pgrep java | xargs -r kill -9
-            export $(grep -v '^#' /home/${EC2_USERNAME}/tripmingle/.env | xargs)
-            nohup java -jar /home/${EC2_USERNAME}/TripMingle.jar > /home/${EC2_USERNAME}/log/app.out 2>&1 &
+            export $(grep -v '^#' /home/${{ secrets.EC2_USERNAME }}/tripmingle/.env | xargs)
+            nohup java -jar /home/${{ secrets.EC2_USERNAME }}/TripMingle.jar > /home/${{ secrets.EC2_USERNAME }}/log/app_log.out 2>&1 &
