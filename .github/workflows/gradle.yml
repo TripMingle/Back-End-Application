@@ -20,7 +20,7 @@ jobs:
       - name: Build With Gradle
         run: ./gradlew build -x test
       - name: Upload build artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: tripmingleApplicationServer
           path: build/libs/tripmingleApplicationServer-0.0.1-SNAPSHOT.jar
@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: tripmingleApplicationServer
           path: build/libs/
