@@ -14,5 +14,6 @@ public class GetThumbNailPostingResDTO {
 	private String userNickName;
 	private String userAgeRange;
 	private String userGender;
+	private String userNationality;
 
 }

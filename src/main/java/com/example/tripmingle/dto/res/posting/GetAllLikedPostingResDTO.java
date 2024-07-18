@@ -1,7 +1,5 @@
 package com.example.tripmingle.dto.res.posting;
 
-import java.util.List;
-
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,6 +12,6 @@ public class GetAllLikedPostingResDTO {
 	private String userAgeRange;
 	private String userGender;
 	private String userNationality;
-	private List<GetThumbNailPostingResDTO> likedPostings;
+	private GetThumbNailPostingsResDTO likedPostings;
 
 }
