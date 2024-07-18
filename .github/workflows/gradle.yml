@@ -88,6 +88,8 @@ jobs:
         # ssh 연결 시 호스트 키 확인 절차를 자동화하고 보안을 강화한다.
         run: |
           mkdir -p ~/.ssh
+          touch ~/.ssh/known_hosts
+          touch ~/.ssh/known_hosts_backup
           if ! ssh-keygen -F ${{ secrets.EC2_HOST }} > /dev/null; then
             HOST_KEY=$(ssh-keyscan -H ${{ secrets.EC2_HOST }} | awk '{print $2}')
             EXPECTED_KEY="${{ secrets.EC2_HOST_KEY }}"
