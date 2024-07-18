@@ -32,6 +32,7 @@ import com.example.tripmingle.dto.res.posting.DeletePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetAllLikedPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
+import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
 import com.example.tripmingle.dto.res.posting.PatchPostingCommentResDTO;
 import com.example.tripmingle.dto.res.posting.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.posting.PostPostingCommentResDTO;
@@ -113,7 +114,7 @@ public class PostingController {
 			.country(country)
 			.postingType(PostingType.valueOf(postingType))
 			.build();
-		List<GetThumbNailPostingResDTO> getAllPostingsResDTOList = postingUseCase.getAllPostings(getAllPostingsReqDTO,
+		GetThumbNailPostingsResDTO getAllPostingsResDTOList = postingUseCase.getAllPostings(getAllPostingsReqDTO,
 			pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_ALL_POSTINGS_SUCCESS, getAllPostingsResDTOList));
 	}
@@ -125,7 +126,7 @@ public class PostingController {
 		@Parameter(description = "게시물 타입", example = "RESTAURANT, RENTAL_HOME, SCHEDULE") @RequestParam("postingType") String postingType,
 		@RequestParam(value = "page", defaultValue = "0") int page) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
-		List<GetThumbNailPostingResDTO> getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword,
+		GetThumbNailPostingsResDTO getSearchPostingsResDTOList = postingUseCase.getSearchPostings(keyword,
 			postingType,
 			pageable);
 		return ResponseEntity.ok(ResultResponse.of(GET_SEARCH_POSTINGS_SUCCESS, getSearchPostingsResDTOList));
@@ -181,7 +182,7 @@ public class PostingController {
 			.country(country)
 			.postingType(PostingType.valueOf(postingType))
 			.build();
-		List<GetThumbNailPostingResDTO> getAllPopularityPostingsResDTOList = postingUseCase.getAllPopularityPostings(
+		GetThumbNailPostingsResDTO getAllPopularityPostingsResDTOList = postingUseCase.getAllPopularityPostings(
 			getAllPostingsReqDTO,
 			pageable);
 		return ResponseEntity.ok(

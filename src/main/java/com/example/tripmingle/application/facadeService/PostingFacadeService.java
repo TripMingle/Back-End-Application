@@ -29,6 +29,7 @@ import com.example.tripmingle.dto.res.posting.GetOnePostingCoCommentResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingCommentsResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
+import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
 import com.example.tripmingle.dto.res.posting.PatchPostingCommentResDTO;
 import com.example.tripmingle.dto.res.posting.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.posting.PostPostingCommentResDTO;
@@ -165,10 +166,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	}
 
 	@Override
-	public List<GetThumbNailPostingResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
+	public GetThumbNailPostingsResDTO getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
 		Pageable pageable) {
 		Page<Posting> getAllPostings = postingService.getAllPostings(getAllPostingsReqDTO, pageable);
-		return getAllPostings.stream()
+		List<GetThumbNailPostingResDTO> resultPostings = getAllPostings.stream()
 			.map(posting -> GetThumbNailPostingResDTO.builder()
 				.postingId(posting.getId())
 				.title(posting.getTitle())
@@ -179,13 +180,17 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.userNationality(posting.getUser().getNationality())
 				.build())
-			.collect(Collectors.toList());
+			.toList();
+		return GetThumbNailPostingsResDTO.builder()
+			.totalPageCount(getAllPostings.getTotalPages())
+			.postings(resultPostings)
+			.build();
 	}
 
 	@Override
-	public List<GetThumbNailPostingResDTO> getSearchPostings(String keyword, String postingType, Pageable pageable) {
+	public GetThumbNailPostingsResDTO getSearchPostings(String keyword, String postingType, Pageable pageable) {
 		Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, postingType, pageable);
-		return getSearchPostings.stream()
+		List<GetThumbNailPostingResDTO> resultPostings = getSearchPostings.stream()
 			.filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
 			.map(posting -> GetThumbNailPostingResDTO.builder()
 				.postingId(posting.getId())
@@ -197,7 +202,11 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.userNationality(posting.getUser().getNationality())
 				.build())
-			.collect(Collectors.toList());
+			.toList();
+		return GetThumbNailPostingsResDTO.builder()
+			.totalPageCount(getSearchPostings.getTotalPages())
+			.postings(resultPostings)
+			.build();
 	}
 
 	@Transactional
@@ -278,8 +287,8 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.build();
 	}
 
-	private List<GetThumbNailPostingResDTO> getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
-		return likedPostings.stream()
+	private GetThumbNailPostingsResDTO getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
+		List<GetThumbNailPostingResDTO> resultLikedPostings = likedPostings.stream()
 			.map(postingLikes -> GetThumbNailPostingResDTO.builder()
 				.postingId(postingLikes.getPosting().getId())
 				.title(postingLikes.getPosting().getTitle())
@@ -291,14 +300,18 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userGender(postingLikes.getPosting().getUser().getGender())
 				.userNationality(postingLikes.getPosting().getUser().getNationality())
 				.build())
-			.collect(Collectors.toList());
+			.toList();
+		return GetThumbNailPostingsResDTO.builder()
+			.totalPageCount(likedPostings.getTotalPages())
+			.postings(resultLikedPostings)
+			.build();
 	}
 
 	@Override
-	public List<GetThumbNailPostingResDTO> getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
+	public GetThumbNailPostingsResDTO getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
 		Pageable pageable) {
 		Page<Posting> postings = postingService.getAllPopularityPostings(getAllPostingsReqDTO, pageable);
-		return postings.stream()
+		List<GetThumbNailPostingResDTO> resultPostings = postings.stream()
 			.map(posting -> GetThumbNailPostingResDTO.builder()
 				.postingId(posting.getId())
 				.title(posting.getTitle())
@@ -309,6 +322,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userGender(posting.getUser().getGender())
 				.userNationality(posting.getUser().getNationality())
 				.build())
-			.collect(Collectors.toList());
+			.toList();
+		return GetThumbNailPostingsResDTO.builder()
+			.totalPageCount(postings.getTotalPages())
+			.postings(resultPostings)
+			.build();
 	}
 }

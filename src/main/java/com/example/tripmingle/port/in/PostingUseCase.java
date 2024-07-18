@@ -12,6 +12,7 @@ import com.example.tripmingle.dto.res.posting.DeletePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetAllLikedPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
+import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
 import com.example.tripmingle.dto.res.posting.PatchPostingResDTO;
 import com.example.tripmingle.dto.res.posting.PostPostingResDTO;
 import com.example.tripmingle.dto.res.posting.PostingLikeToggleStateResDTO;
@@ -28,14 +29,14 @@ public interface PostingUseCase {
 
 	GetOnePostingResDTO getOnePosting(Long postingId);
 
-	List<GetThumbNailPostingResDTO> getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
+	GetThumbNailPostingsResDTO getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO, Pageable pageable);
 
-	List<GetThumbNailPostingResDTO> getSearchPostings(String keyword, String postingType, Pageable pageable);
+	GetThumbNailPostingsResDTO getSearchPostings(String keyword, String postingType, Pageable pageable);
 
 	PostingLikeToggleStateResDTO togglePostingLikes(Long postingId);
 
 	GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable);
 
-	List<GetThumbNailPostingResDTO> getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
+	GetThumbNailPostingsResDTO getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
 		Pageable pageable);
 }
