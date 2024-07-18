@@ -103,6 +103,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
+				.userNationality(posting.getUser().getNationality())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -176,6 +177,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
 				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
+				.userNationality(posting.getUser().getNationality())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -193,6 +195,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
 				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
+				.userNationality(posting.getUser().getNationality())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -286,6 +289,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userNickName(postingLikes.getPosting().getUser().getNickName())
 				.userAgeRange(postingLikes.getPosting().getUser().getAgeRange())
 				.userGender(postingLikes.getPosting().getUser().getGender())
+				.userNationality(postingLikes.getPosting().getUser().getNationality())
 				.build())
 			.collect(Collectors.toList());
 	}
@@ -303,6 +307,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
 				.userGender(posting.getUser().getGender())
+				.userNationality(posting.getUser().getNationality())
 				.build())
 			.collect(Collectors.toList());
 	}
