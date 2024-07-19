@@ -46,6 +46,10 @@ logging:
       springframework:
         security: DEBUG
         web: DEBUG
+    feign:
+      client:
+        config:
+          matchingClient: DEBUG
 
 server:
   servlet:
