@@ -1,6 +1,7 @@
 package com.example.tripmingle.entity;
 
 import com.example.tripmingle.common.entity.BaseEntity;
+import com.example.tripmingle.dto.req.user.AdditionalUserDetailReqDTO;
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
 
 import jakarta.persistence.Column;
@@ -99,5 +100,10 @@ public class User extends BaseEntity {
 
 	public void uploadUserImage(String userImageUrl) {
 		this.userImageUrl = userImageUrl;
+	}
+
+	public void updateUserAdditionalInfo(AdditionalUserDetailReqDTO additionalUserDetailReqDTO) {
+		this.nickName = additionalUserDetailReqDTO.getNickName();
+		this.nationality = additionalUserDetailReqDTO.getNationality();
 	}
 }

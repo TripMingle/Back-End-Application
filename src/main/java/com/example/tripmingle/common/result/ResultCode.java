@@ -102,6 +102,7 @@ public enum ResultCode {
 	// user
 	UPDATE_USER_MY_PAGE_SUCCESS(200, "UMP001", "유저 마이페이지 수정 성공"),
 	UPLOAD_USER_IMAGE_SUCCESS(200, "UMP002", "유저 이미지 업로드 성공"),
+	UPDATE_USER_ADDITIONAL_INFO_SUCCESS(200, "UMP003", "유저 회원가입 시 추가정보 입력 성공"),
 	;
 	private final int status;
 	private final String code;

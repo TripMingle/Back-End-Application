@@ -6,7 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tripmingle.application.service.S3Service;
 import com.example.tripmingle.application.service.UserService;
+import com.example.tripmingle.dto.req.user.AdditionalUserDetailReqDTO;
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
+import com.example.tripmingle.dto.res.user.AdditionalUserDetailResDTO;
 import com.example.tripmingle.dto.res.user.PatchUserMyPageResDTO;
 import com.example.tripmingle.dto.res.user.UploadUserImageResDTO;
 import com.example.tripmingle.entity.User;
@@ -40,6 +42,16 @@ public class UserFacadeService implements UserUseCase {
 		currentUser.uploadUserImage(userImageUrl);
 		return UploadUserImageResDTO.builder()
 			.userImageUrl(userImageUrl)
+			.build();
+	}
+
+	@Transactional
+	@Override
+	public AdditionalUserDetailResDTO updateUserAdditionalInfo(AdditionalUserDetailReqDTO additionalUserDetailReqDTO) {
+		User user = userService.getCurrentUser();
+		user.updateUserAdditionalInfo(additionalUserDetailReqDTO);
+		return AdditionalUserDetailResDTO.builder()
+			.userId(user.getId())
 			.build();
 	}
 }
