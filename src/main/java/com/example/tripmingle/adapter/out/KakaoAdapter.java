@@ -2,10 +2,10 @@ package com.example.tripmingle.adapter.out;
 
 import org.springframework.stereotype.Component;
 
+import com.example.tripmingle.client.KakaoLoginFeignClientForAccessTokenPort;
+import com.example.tripmingle.client.KakaoLoginFeignClientPort;
 import com.example.tripmingle.dto.res.oauth.GetKakaoUserDataResDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
-import com.example.tripmingle.feign.KakaoLoginFeignClientForAccessTokenPort;
-import com.example.tripmingle.feign.KakaoLoginFeignClientPort;
 import com.example.tripmingle.port.out.KakaoOutPort;
 
 import lombok.RequiredArgsConstructor;
