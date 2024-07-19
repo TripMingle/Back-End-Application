@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.etc.KakaoLoginDTO;
+import com.example.tripmingle.dto.req.user.AdditionalUserDetailReqDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import com.example.tripmingle.port.in.KakaoAuthUseCase;
 
@@ -28,17 +30,35 @@ public class KakaoAuthController {
 
 	private final KakaoAuthUseCase kakaoAuthUseCase;
 
-	@Operation(summary = "카카오 로그인")
+	@Operation(summary = "카카오 소셜 로그인 - 로그인")
 	@PostMapping("/login")
 	public ResponseEntity<ResultResponse> loginKakaoAccount(
 		@RequestHeader("Kakao-Authorization") String kakaoAccessToken) {
 		KakaoLoginDTO kakaoLoginDTO = kakaoAuthUseCase.loginKakaoAccount(kakaoAccessToken);
+		HttpHeaders tokenHeaders = generateTokenHeaders(kakaoLoginDTO);
+		return ResponseEntity.ok()
+			.headers(tokenHeaders)
+			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS));
+	}
+
+	private HttpHeaders generateTokenHeaders(KakaoLoginDTO kakaoLoginDTO) {
 		HttpHeaders tokenHeaders = new HttpHeaders();
 		tokenHeaders.add("access-token", kakaoLoginDTO.getAccessToken());
 		tokenHeaders.add("refresh-token", kakaoLoginDTO.getRefreshToken());
+		return tokenHeaders;
+	}
+
+	@Operation(summary = "카카오 소셜 로그인 - 회원가입")
+	@PostMapping("/join")
+	public ResponseEntity<ResultResponse> joinKakaoAccount(
+		@RequestHeader("Kakao-Authorization") String kakaoAccessToken,
+		@RequestBody AdditionalUserDetailReqDTO additionalUserDetailReqDTO) {
+		additionalUserDetailReqDTO.insertKakaoAccessToken(kakaoAccessToken);
+		KakaoLoginDTO kakaoLoginDTO = kakaoAuthUseCase.joinKakaoAccount(additionalUserDetailReqDTO);
+		HttpHeaders tokenHeaders = generateTokenHeaders(kakaoLoginDTO);
 		return ResponseEntity.ok()
 			.headers(tokenHeaders)
-			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS, kakaoLoginDTO.isJoinedUserState()));
+			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS));
 	}
 
 	@Operation(summary = "카카오 엑세스 토큰 발급")

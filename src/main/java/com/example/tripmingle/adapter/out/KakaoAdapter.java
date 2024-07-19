@@ -2,7 +2,7 @@ package com.example.tripmingle.adapter.out;
 
 import org.springframework.stereotype.Component;
 
-import com.example.tripmingle.dto.res.oauth.KakaoLoginResDTO;
+import com.example.tripmingle.dto.res.oauth.GetKakaoUserDataResDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import com.example.tripmingle.feign.KakaoLoginFeignClientForAccessTokenPort;
 import com.example.tripmingle.feign.KakaoLoginFeignClientPort;
@@ -18,7 +18,7 @@ public class KakaoAdapter implements KakaoOutPort {
 	private final KakaoLoginFeignClientForAccessTokenPort kakaoLoginFeignClientForAccessTokenPort;
 
 	@Override
-	public KakaoLoginResDTO getKakaoUserInfo(String redefineAccessToken) {
+	public GetKakaoUserDataResDTO getKakaoUserInfo(String redefineAccessToken) {
 		return kakaoLoginFeignClientPort.getKakaoUserInfo(redefineAccessToken);
 	}
 

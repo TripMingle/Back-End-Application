@@ -12,7 +12,9 @@ import com.example.tripmingle.common.exception.UserNotFoundException;
 import com.example.tripmingle.common.utils.JwtUtils;
 import com.example.tripmingle.common.utils.KakaoProperties;
 import com.example.tripmingle.dto.etc.KakaoLoginDTO;
-import com.example.tripmingle.dto.res.oauth.KakaoLoginResDTO;
+import com.example.tripmingle.dto.etc.KakaoUserInfo;
+import com.example.tripmingle.dto.req.user.AdditionalUserDetailReqDTO;
+import com.example.tripmingle.dto.res.oauth.GetKakaoUserDataResDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import com.example.tripmingle.entity.Refresh;
 import com.example.tripmingle.entity.User;
@@ -37,49 +39,30 @@ public class KakaoService {
 
 	public KakaoLoginDTO loginKakaoAccount(String kakaoAccessToken) {
 		String redefineAccessToken = "Bearer " + kakaoAccessToken;
-		KakaoLoginResDTO kakaoLoginResDTO = kakaoOutPort.getKakaoUserInfo(redefineAccessToken);
-		System.out.println(kakaoLoginResDTO.getKakaoUserInfo());
-		User user = null;
-		boolean joinState = false;
-		if (isExistingKakaoUser(kakaoLoginResDTO.getKakaoUserInfo().getEmail())) {
-			user = userPersistPort.findByEmail(kakaoLoginResDTO.getKakaoUserInfo().getEmail());
-			joinState = true;
-		} else {
-			user = userPersistPort.save(User.builder()
-				.email(kakaoLoginResDTO.getKakaoUserInfo().getEmail())
-				.password(
-					passwordEncoder.encode(
-						"TripMingle " + kakaoLoginResDTO.getKakaoUserInfo().getEmail() + kakaoLoginResDTO.getKakaoId()))
-				.role("ROLE_USER")
-				.loginType(KAKAO.getLoginType())
-				.oauthId(kakaoLoginResDTO.getKakaoId())
-				.ageRange(kakaoLoginResDTO.getKakaoUserInfo().getAgeRange())
-				.gender(kakaoLoginResDTO.getKakaoUserInfo().getGender())
-				.name(kakaoLoginResDTO.getKakaoUserInfo().getName())
-				.phoneNumber(kakaoLoginResDTO.getKakaoUserInfo().getPhoneNumber())
-				.build());
-		}
-		userNullCheck(user);
+		GetKakaoUserDataResDTO getKakaoUserDataResDTO = kakaoOutPort.getKakaoUserInfo(redefineAccessToken);
+		User user = userPersistPort.findByEmail(getKakaoUserDataResDTO.getKakaoUserInfo().getEmail());
+		KakaoLoginDTO kakaoLoginDTO = generateKakaoTokenDTO(user);
+		return kakaoLoginDTO;
+	}
 
+	public KakaoLoginDTO joinKakaoAccount(AdditionalUserDetailReqDTO additionalUserDetailReqDTO) {
+		String redefineAccessToken = "Bearer " + additionalUserDetailReqDTO.getKakaoAccessToken();
+		GetKakaoUserDataResDTO getKakaoUserDataResDTO = kakaoOutPort.getKakaoUserInfo(redefineAccessToken);
+		KakaoUserInfo kakaoUserInfo = getKakaoUserDataResDTO.getKakaoUserInfo();
+		validateAlreadyExistsUser(kakaoUserInfo.getEmail());
+		User newUser = generateUser(getKakaoUserDataResDTO, additionalUserDetailReqDTO);
+		KakaoLoginDTO kakaoLoginDTO = generateKakaoTokenDTO(newUser);
+		return kakaoLoginDTO;
+	}
+
+	private KakaoLoginDTO generateKakaoTokenDTO(User user) {
 		String accessToken = jwtUtils.createJwtAccessToken(user.getEmail(), user.getRole(), user.getLoginType());
 		String refreshToken = jwtUtils.createJwtRefreshToken(user.getEmail(), user.getRole(), user.getLoginType());
 		addRefreshEntity(user.getEmail(), refreshToken, jwtUtils.getRefreshTokenExpTimeByToken(refreshToken));
-
 		return KakaoLoginDTO.builder()
 			.accessToken(accessToken)
 			.refreshToken(refreshToken)
-			.joinedUserState(joinState)
 			.build();
-	}
-
-	private boolean isExistingKakaoUser(String email) {
-		return userPersistPort.existsByEmail(email);
-	}
-
-	private void userNullCheck(User user) {
-		if (user == null) {
-			throw new UserNotFoundException("User Not Found.", KAKAO_NO_EXISTS_USER);
-		}
 	}
 
 	private void addRefreshEntity(String email, String refresh, Long expiredMs) {
@@ -92,8 +75,34 @@ public class KakaoService {
 		refreshPort.save(refreshEntity);
 	}
 
+	private void validateAlreadyExistsUser(String email) {
+		if (userPersistPort.existsByEmail(email)) {
+			throw new UserNotFoundException("User Already Exists.", KAKAO_ALREADY_EXISTS_USER);
+		}
+	}
+
+	private User generateUser(GetKakaoUserDataResDTO getKakaoUserDataResDTO,
+		AdditionalUserDetailReqDTO additionalUserDetailReqDTO) {
+		KakaoUserInfo kakaoUserInfo = getKakaoUserDataResDTO.getKakaoUserInfo();
+		return userPersistPort.save(User.builder()
+			.email(kakaoUserInfo.getEmail())
+			.password(passwordEncoder.encode(
+				"TripMingle " + kakaoUserInfo.getEmail() + getKakaoUserDataResDTO.getKakaoId()))
+			.role("ROLE_USER")
+			.loginType(KAKAO.getLoginType())
+			.oauthId(getKakaoUserDataResDTO.getKakaoId())
+			.nickName(additionalUserDetailReqDTO.getNickName())
+			.ageRange(kakaoUserInfo.getAgeRange())
+			.gender(kakaoUserInfo.getGender())
+			.name(kakaoUserInfo.getName())
+			.nationality(additionalUserDetailReqDTO.getNationality())
+			.phoneNumber(kakaoUserInfo.getPhoneNumber())
+			.build());
+	}
+
 	public KakaoTokenResDTO getKakaoAccessToken(String code) {
 		return kakaoOutPort.getToken(kakaoProperties.getKakaoGrantType(),
 			kakaoProperties.getKakaoClientId(), kakaoProperties.getKakaoSecretKey(), code);
 	}
+
 }

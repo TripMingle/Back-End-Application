@@ -9,6 +9,5 @@ public class KakaoLoginDTO {
 
 	private String accessToken;
 	private String refreshToken;
-	private boolean joinedUserState;
 
 }

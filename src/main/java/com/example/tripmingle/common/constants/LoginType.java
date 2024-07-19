@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public enum LoginType {
 
-    KAKAO("kakao");
+	KAKAO("KAKAO");
 
-    private String loginType;
+	private String loginType;
 
-    LoginType(String loginType) {
-        this.loginType = loginType;
-    }
+	LoginType(String loginType) {
+		this.loginType = loginType;
+	}
 }
