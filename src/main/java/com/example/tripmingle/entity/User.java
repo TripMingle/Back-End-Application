@@ -100,4 +100,5 @@ public class User extends BaseEntity {
 	public void uploadUserImage(String userImageUrl) {
 		this.userImageUrl = userImageUrl;
 	}
+
 }
