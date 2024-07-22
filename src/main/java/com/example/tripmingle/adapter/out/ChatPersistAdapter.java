@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
+import com.example.tripmingle.dto.req.chat.GetAllChatMessageReqDTO;
 import com.example.tripmingle.entity.ChatMessage;
 import com.example.tripmingle.port.out.ChatPersistPort;
 
@@ -13,10 +14,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatPersistAdapter implements ChatPersistPort {
 
-	//private final ChatRepository chatRepository;
+	// private final ChatRepository chatRepository;
 
 	@Override
-	public Slice<ChatMessage> getChatMessages(Long chatRoomId, Pageable pageable) {
+	public Slice<ChatMessage> getChatMessages(GetAllChatMessageReqDTO getAllChatMessageReqDTO, Pageable pageable) {
+		// return chatRepository.findByChatRoomIdAndChatRoomType(
+		// 	getAllChatMessageReqDTO.getChatRoomId(),
+		// 	ChatRoomType.valueOf(getAllChatMessageReqDTO.getChatRoomType()), pageable);
 		return null;
 	}
 
