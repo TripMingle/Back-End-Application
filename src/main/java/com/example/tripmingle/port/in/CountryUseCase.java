@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tripmingle.dto.res.country.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.country.GetCountryInfoDTO;
 import com.example.tripmingle.dto.res.country.UploadCountryImageResDTO;
 
 public interface CountryUseCase {
@@ -16,4 +17,5 @@ public interface CountryUseCase {
 
 	void deleteCountryImage(String imageUrl);
 
+	GetCountryInfoDTO getCountryInfo(String countryName);
 }

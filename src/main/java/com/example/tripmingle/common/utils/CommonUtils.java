@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommonUtils {
 
+	private double epsilon = 0.000000000001;
+
 	public String convertListToString(List<String> list) {
 		StringJoiner joiner = new StringJoiner(",");
 		for (String s : list) {
@@ -34,6 +36,15 @@ public class CommonUtils {
 		LocalDate currentDate = LocalDate.now();
 
 		return !currentDate.isBefore(endDate);
+	}
+
+	public double convertIntToDouble(int input) {
+		return (double)input;
+	}
+
+	public int convertDoubleToInt(double input) {
+		input += epsilon;
+		return (int)input;
 	}
 
 }

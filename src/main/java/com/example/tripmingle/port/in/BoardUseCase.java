@@ -12,9 +12,7 @@ import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
 import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
 import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
 import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
-import com.example.tripmingle.dto.res.board.PostBoardResDTO;
 import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
-import com.example.tripmingle.dto.res.board.UpdateBoardResDTO;
 
 public interface BoardUseCase {
 	List<GetBoardsResDTO> getRecentBoards(String countryName);
@@ -25,9 +23,9 @@ public interface BoardUseCase {
 
 	GetBoardInfoResDTO getBoard(Long boardId);
 
-	PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO);
+	GetBoardInfoResDTO createBoard(CreateBoardReqDTO createBoardReqDTO);
 
-	UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO);
+	GetBoardInfoResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO);
 
 	void deleteBoard(Long boardId);
 
