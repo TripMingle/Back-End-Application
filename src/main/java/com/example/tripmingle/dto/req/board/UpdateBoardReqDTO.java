@@ -14,11 +14,11 @@ public class UpdateBoardReqDTO {
 	private String language;
 	private int maxCount;
 	private List<String> tripType;
-	private double preferGender; // 선호 성별
-	private double preferSmoking; // 선호 흡연타입
-	private double preferShopping; // 선호 활동 - 쇼핑
-	private double preferInstagramPicture; // 선호 활동 - 인스타사진
-	private double preferDrink; // 선호 활동 - 음주
+	private int preferGender; // 선호 성별
+	private int preferSmoking; // 선호 흡연타입
+	private int preferShopping; // 선호 활동 - 쇼핑
+	private int preferInstagramPicture; // 선호 활동 - 인스타사진
+	private int preferDrink; // 선호 활동 - 음주
 
 	private String title;
 	private String content;

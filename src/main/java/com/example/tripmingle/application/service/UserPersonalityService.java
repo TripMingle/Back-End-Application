@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.common.utils.UserUtils;
 import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import com.example.tripmingle.entity.User;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class UserPersonalityService {
 	private final UserPersonalityPersistPort userPersonalityPersistPort;
 	private final UserUtils userUtils;
+	private final CommonUtils commonUtils;
 
 	public UserPersonality getUserPersonalityById(Long userPersonalityId) {
 		return userPersonalityPersistPort.getUserPersonalityById(userPersonalityId);
@@ -50,23 +52,25 @@ public class UserPersonalityService {
 		UserPersonality userPersonality = UserPersonality.builder()
 			.user(currentUser)
 			.gender(genderRate)
-			.vegan(postUserPersonalityReqDTO.getVegan())
-			.islam(postUserPersonalityReqDTO.getIslam())
-			.hindu(postUserPersonalityReqDTO.getHindu())
-			.smoking(postUserPersonalityReqDTO.getSmoking())
-			.budget(postUserPersonalityReqDTO.getBudget())
-			.accommodationFlexibility(postUserPersonalityReqDTO.getAccommodationFlexibility())
-			.foodFlexibility(postUserPersonalityReqDTO.getFoodFlexibility())
-			.activity(postUserPersonalityReqDTO.getActivity())
-			.instagramPicture(postUserPersonalityReqDTO.getInstagramPicture())
-			.foodExploration(postUserPersonalityReqDTO.getFoodExploration())
-			.adventure(postUserPersonalityReqDTO.getAdventure())
-			.personality(postUserPersonalityReqDTO.getPersonality())
-			.schedule(postUserPersonalityReqDTO.getSchedule())
-			.shopping(postUserPersonalityReqDTO.getShopping())
-			.drink(postUserPersonalityReqDTO.getDrink())
+			.vegan(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getVegan()))
+			.islam(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getIslam()))
+			.hindu(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getHindu()))
+			.smoking(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getSmoking()))
+			.budget(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getBudget()))
+			.accommodationFlexibility(
+				commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getAccommodationFlexibility()))
+			.foodFlexibility(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getFoodFlexibility()))
+			.activity(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getActivity()))
+			.instagramPicture(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getInstagramPicture()))
+			.foodExploration(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getFoodExploration()))
+			.adventure(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getAdventure()))
+			.personality(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getPersonality()))
+			.schedule(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getSchedule()))
+			.shopping(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getShopping()))
+			.drink(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getDrink()))
 			.ageRange(ageRange)
 			.build();
+
 		return userPersonalityPersistPort.saveUserPersonality(userPersonality);
 	}
 
