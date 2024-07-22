@@ -12,6 +12,7 @@ import com.example.tripmingle.application.service.CountryImageService;
 import com.example.tripmingle.application.service.CountryService;
 import com.example.tripmingle.application.service.S3Service;
 import com.example.tripmingle.dto.res.country.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.country.GetCountryInfoDTO;
 import com.example.tripmingle.dto.res.country.UploadCountryImageResDTO;
 import com.example.tripmingle.entity.Country;
 import com.example.tripmingle.entity.CountryImage;
@@ -121,6 +122,24 @@ public class CountryFacadeService implements CountryUseCase {
 	public void deleteCountryImage(String imageUrl) {
 		countryImageService.deleteImageByImageUrl(imageUrl);
 		s3Service.deleteCountryImage(imageUrl);
+	}
+
+	@Override
+	public GetCountryInfoDTO getCountryInfo(String countryName) {
+		Country country = countryService.getCountryByCountryName(countryName);
+		Optional<CountryImage> countryImageOptional = countryImageService.getPrimaryImageByCountryId(
+			country.getId());
+		String url = countryImageOptional.isPresent() ?
+			countryImageOptional.get().getImageUrl() :
+			continentService.getContinentImage(country.getContinent());
+
+		return GetCountryInfoDTO.builder()
+			.countryImageUrl(url)
+			.continentName(country.getContinent())
+			.countryName(country.getCountry())
+			.continentEnglishName(country.getContinentEnglish())
+			.countryEnglishName(country.getCountryEnglish())
+			.build();
 	}
 
 }

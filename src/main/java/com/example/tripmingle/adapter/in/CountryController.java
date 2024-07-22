@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.res.country.GetCountriesResDTO;
+import com.example.tripmingle.dto.res.country.GetCountryInfoDTO;
 import com.example.tripmingle.dto.res.country.UploadCountryImageResDTO;
 import com.example.tripmingle.port.in.CountryUseCase;
 
@@ -26,14 +26,13 @@ import lombok.RequiredArgsConstructor;
 
 @Tag(name = "나라")
 @RestController
-@RequestMapping("/country")
 @RequiredArgsConstructor
 public class CountryController {
 	private final CountryUseCase countryUseCase;
 
 	@Operation(summary = "자동완성")
 	//검색할때 확인하는 로직
-	@GetMapping("/search/{keyword}")
+	@GetMapping("/country/search/{keyword}")
 	public ResponseEntity<ResultResponse> getAutoComplete(@PathVariable(value = "keyword") String keyword) {
 		List<GetCountriesResDTO> getCountriesDTO = countryUseCase.getCountriesByKeyword(keyword);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COUNTRIES_BY_KEYWORD_SUCCESS, getCountriesDTO));
@@ -41,14 +40,14 @@ public class CountryController {
 
 	@Operation(summary = "대륙별 나라조회")
 	//대륙에 포함되는 나라 전부 조회
-	@GetMapping("/{continent}")
+	@GetMapping("/continent/{continent}")
 	public ResponseEntity<ResultResponse> getCountries(@PathVariable(value = "continent") String continent) {
 		List<GetCountriesResDTO> getCountriesResDTO = countryUseCase.getCountries(continent);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COUNTRIES_BY_CONTINENT_SUCCESS, getCountriesResDTO));
 	}
 
 	@Operation(summary = "국가 사진 업로드")
-	@PostMapping(value = "/image/{country-name}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/country/image/{country-name}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResultResponse> uploadCountryImage(
 		@PathVariable(value = "country-name") String countryName,
 		@RequestPart("image") MultipartFile image) {
@@ -58,7 +57,7 @@ public class CountryController {
 	}
 
 	@Operation(summary = "국가 대표사진 업로드")
-	@PostMapping(value = "/image/primary/{country-name}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/country/image/primary/{country-name}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<ResultResponse> uploadPrimaryCountryImage(
 		@PathVariable(value = "country-name") String countryName,
 		@RequestPart("image") MultipartFile image) {
@@ -68,10 +67,17 @@ public class CountryController {
 	}
 
 	@Operation(summary = "국가 사진 삭제")
-	@DeleteMapping("/image/delete")
+	@DeleteMapping("/country/image/delete")
 	public ResponseEntity<ResultResponse> deleteCountryImage(@RequestBody String imageUrl) {
 		countryUseCase.deleteCountryImage(imageUrl);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.DELETE_COUNTRY_IMAGE_SUCCESS));
+	}
+
+	@Operation(summary = "국가별 사진,대륙,국가명 조회")
+	@GetMapping("/country/{country-name}")
+	public ResponseEntity<ResultResponse> getCountryInfo(@PathVariable(value = "country-name") String countryName) {
+		GetCountryInfoDTO getCountryInfoDTO = countryUseCase.getCountryInfo(countryName);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_COUNTRY_INFO_SUCCESS, getCountryInfoDTO));
 	}
 
 }
