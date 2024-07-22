@@ -42,4 +42,5 @@ public class UserFacadeService implements UserUseCase {
 			.userImageUrl(userImageUrl)
 			.build();
 	}
+
 }

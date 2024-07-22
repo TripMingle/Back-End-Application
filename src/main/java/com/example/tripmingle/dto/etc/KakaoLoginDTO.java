@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TokenDTO {
+public class KakaoLoginDTO {
 
-    private String accessToken;
-    private String refreshToken;
+	private String accessToken;
+	private String refreshToken;
 
 }
