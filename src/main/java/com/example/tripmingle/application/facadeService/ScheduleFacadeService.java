@@ -34,9 +34,11 @@ import com.example.tripmingle.port.in.BoardScheduleUseCase;
 import com.example.tripmingle.port.in.UserScheduleUseCase;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class ScheduleFacadeService implements BoardScheduleUseCase, UserScheduleUseCase {
 	private final BoardScheduleService boardScheduleService;
@@ -144,12 +146,31 @@ public class ScheduleFacadeService implements BoardScheduleUseCase, UserSchedule
 
 	@Override
 	@Transactional(readOnly = false)
-	public void modifyUserSchedule(Long userTripId, List<UpdateUserScheduleReqDTO> updateUserScheduleReqDTOS,
+	public GetUserScheduleResDTO modifyUserSchedule(Long userTripId,
+		List<UpdateUserScheduleReqDTO> updateUserScheduleReqDTOS,
 		List<DeleteUserScheduleReqDTO> deleteUserScheduleReqDTOS) {
 		User currentUser = userService.getCurrentUser();
 		UserTrip userTrip = userTripService.getUserTripById(userTripId);
 		userScheduleService.updateUserSchedule(currentUser, userTrip, updateUserScheduleReqDTOS);
 		userScheduleService.deleteUserSchedule(currentUser, userTrip, deleteUserScheduleReqDTOS);
+		List<UserSchedule> userSchedules = userScheduleService.getUserScheduleByUserTripId(userTrip.getId());
+
+		List<UserScheduleDTO> userScheduleDTOList = userSchedules.stream()
+			.map(userSchedule -> UserScheduleDTO.builder()
+				.userTripId(userTrip.getId())
+				.userScheduleId(userSchedule.getId())
+				.date(userSchedule.getDate())
+				.placeName(userSchedule.getPlaceName())
+				.number(userSchedule.getNumber())
+				.pointX(userSchedule.getPointX())
+				.pointY(userSchedule.getPointY())
+				.googlePlaceId(userSchedule.getGooglePlaceId())
+				.build()).collect(Collectors.toList());
+
+		return GetUserScheduleResDTO.builder()
+			.userTripId(userTrip.getId())
+			.userSchedules(userScheduleDTOList)
+			.build();
 	}
 
 	@Override
@@ -186,7 +207,7 @@ public class ScheduleFacadeService implements BoardScheduleUseCase, UserSchedule
 
 		return GetUserScheduleResDTO.builder()
 			.userTripId(userTrip.getId())
-			.userScheduleDTOList(userScheduleDTOList)
+			.userSchedules(userScheduleDTOList)
 			.build();
 	}
 }

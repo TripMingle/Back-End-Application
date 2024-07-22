@@ -50,6 +50,6 @@ public class GetBoardInfoResDTO {
 	private String imageUrl;
 
 	//댓글
-	private List<ParentBoardCommentResDTO> boardCommentResDTOS;
+	private List<ParentBoardCommentResDTO> boardComments;
 
 }

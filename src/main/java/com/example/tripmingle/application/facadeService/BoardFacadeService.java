@@ -34,10 +34,8 @@ import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
 import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
 import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
 import com.example.tripmingle.dto.res.board.ParentBoardCommentResDTO;
-import com.example.tripmingle.dto.res.board.PostBoardResDTO;
 import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
 import com.example.tripmingle.dto.res.board.UpdateBoardCommentResDTO;
-import com.example.tripmingle.dto.res.board.UpdateBoardResDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardBookMark;
 import com.example.tripmingle.entity.BoardComment;
@@ -148,11 +146,11 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.content(board.getContent())
 			.language(board.getLanguage())
 			.tripType(commonUtils.convertStringToArray(board.getTripType()))
-			.preferGender(board.getPreferGender())
-			.preferSmoking(board.getPreferSmoking())
-			.preferShopping(board.getPreferShopping())
-			.preferInstagramPicture(board.getPreferInstagramPicture())
-			.preferDrink(board.getPreferDrink())
+			.preferGender(commonUtils.convertDoubleToInt(board.getPreferGender()))
+			.preferSmoking(commonUtils.convertDoubleToInt(board.getPreferSmoking()))
+			.preferShopping(commonUtils.convertDoubleToInt(board.getPreferShopping()))
+			.preferInstagramPicture(commonUtils.convertDoubleToInt(board.getPreferInstagramPicture()))
+			.preferDrink(commonUtils.convertDoubleToInt(board.getPreferDrink()))
 			.startDate(board.getStartDate())
 			.endDate(board.getEndDate())
 			.currentCount(board.getCurrentCount())
@@ -166,7 +164,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
 			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
 			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-			.boardCommentResDTOS(boardComments)
+			.boardComments(boardComments)
 			.userId(board.getUser().getId())
 			.nickName(board.getUser().getNickName())
 			.ageRange(board.getUser().getAgeRange())
@@ -216,6 +214,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.registeredDate(boardComment.getCreatedAt())
 			.userId(boardComment.getUser().getId())
 			.userNickname(boardComment.getUser().getNickName())
+			.userImageUrl("")
 			.isMine(currentUser.getId().equals(boardComment.getUser().getId()))
 			.build();
 	}
@@ -230,13 +229,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.registeredDate(boardComment.getCreatedAt())
 			.userId(boardComment.getUser().getId())
 			.userNickname(boardComment.getUser().getNickName())
+			.userImageUrl("")
 			.isMine(currentUser.getId().equals(boardComment.getUser().getId()))
 			.build();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public PostBoardResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
+	public GetBoardInfoResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		String randomImageUrl = countryImageService.getRandomCountryImage(createBoardReqDTO.getCountryName());
 		if (randomImageUrl.equals("")) {
@@ -244,16 +244,92 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		}
 		Board board = boardService.createBoard(createBoardReqDTO, currentUser, randomImageUrl);
 		companionService.registerLeader(board, currentUser);
-		boardScheduleService.createBoardSchedule(board, currentUser, createBoardReqDTO.getCreateBoardScheduleReqDTOS());
-		return PostBoardResDTO.builder().boardId(board.getId()).build();
+		boardScheduleService.createBoardSchedule(board, currentUser, createBoardReqDTO.getCreateBoardSchedule());
+
+		return GetBoardInfoResDTO.builder()
+			.continent(board.getContinent())
+			.countryName(board.getCountryName())
+			.boardId(board.getId())
+			.title(board.getTitle())
+			.content(board.getContent())
+			.language(board.getLanguage())
+			.tripType(commonUtils.convertStringToArray(board.getTripType()))
+			.preferGender(board.getPreferGender())
+			.preferSmoking(board.getPreferSmoking())
+			.preferShopping(board.getPreferShopping())
+			.preferInstagramPicture(board.getPreferInstagramPicture())
+			.preferDrink(board.getPreferDrink())
+			.startDate(board.getStartDate())
+			.endDate(board.getEndDate())
+			.currentCount(board.getCurrentCount())
+			.maxCount(board.getMaxCount())
+			.createdAt(board.getCreatedAt())
+			.commentCount(board.getCommentCount())
+			.likeCount(board.getLikeCount())
+			.bookMarkCount(board.getBookMarkCount())
+			.isMine(currentUser.getId().equals(board.getUser().getId()))
+			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
+			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
+			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+			.boardComments(new ArrayList<>())
+			.userId(board.getUser().getId())
+			.nickName(board.getUser().getNickName())
+			.ageRange(board.getUser().getAgeRange())
+			.gender(board.getUser().getGender())
+			.nationality(board.getUser().getNationality())
+			.selfIntroduction(board.getUser().getSelfIntroduction())
+			.userImageUrl("")
+			.userRating(0.0)
+			.imageUrl(board.getImageUrl())
+			.build();
+
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public UpdateBoardResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
+	public GetBoardInfoResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
-		return UpdateBoardResDTO.builder().boardId(board.getId())
+		List<ParentBoardCommentResDTO> boardComments
+			= structureBoardComment(boardCommentService.getBoardCommentsByBoardId(board.getId()), currentUser);
+
+		return GetBoardInfoResDTO.builder()
+			.continent(board.getContinent())
+			.countryName(board.getCountryName())
+			.boardId(board.getId())
+			.title(board.getTitle())
+			.content(board.getContent())
+			.language(board.getLanguage())
+			.tripType(commonUtils.convertStringToArray(board.getTripType()))
+			.preferGender(board.getPreferGender())
+			.preferSmoking(board.getPreferSmoking())
+			.preferShopping(board.getPreferShopping())
+			.preferInstagramPicture(board.getPreferInstagramPicture())
+			.preferDrink(board.getPreferDrink())
+			.startDate(board.getStartDate())
+			.endDate(board.getEndDate())
+			.currentCount(board.getCurrentCount())
+			.maxCount(board.getMaxCount())
+			.createdAt(board.getCreatedAt())
+			.commentCount(board.getCommentCount())
+			.likeCount(board.getLikeCount())
+			.bookMarkCount(board.getBookMarkCount())
+			.isMine(currentUser.getId().equals(board.getUser().getId()))
+			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
+			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
+			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+			.boardComments(boardComments)
+			.userId(board.getUser().getId())
+			.nickName(board.getUser().getNickName())
+			.ageRange(board.getUser().getAgeRange())
+			.gender(board.getUser().getGender())
+			.nationality(board.getUser().getNationality())
+			.selfIntroduction(board.getUser().getSelfIntroduction())
+			.userImageUrl("")
+			.userRating(0.0)
+			.imageUrl(board.getImageUrl())
 			.build();
 	}
 
