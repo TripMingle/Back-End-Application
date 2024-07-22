@@ -1,6 +1,5 @@
 package com.example.tripmingle.application.facadeService;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +21,6 @@ import com.example.tripmingle.application.service.MatchingService;
 import com.example.tripmingle.application.service.UserPersonalityService;
 import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.common.error.ErrorCode;
-import com.example.tripmingle.common.exception.JsonParsingException;
 import com.example.tripmingle.common.exception.MatchingServerException;
 import com.example.tripmingle.common.utils.CommonUtils;
 import com.example.tripmingle.dto.req.matching.MatchingBoardReqDTO;
@@ -34,7 +32,6 @@ import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.User;
 import com.example.tripmingle.entity.UserPersonality;
 import com.example.tripmingle.port.in.MatchingUseCase;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -120,6 +117,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 	public List<MatchingBoardResDTO> matchingBoard(MatchingBoardReqDTO matchingBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		String messageId = UUID.randomUUID().toString();
+		/*
 		String response = "";
 		try {
 			CompletableFuture<String> future = matchingService.matchingBoard(messageId, currentUser.getId(),
@@ -139,6 +137,11 @@ public class MatchingFacadeService implements MatchingUseCase {
 			e.printStackTrace();
 			throw new JsonParsingException("json parse error", ErrorCode.JSON_PARSE_EXCEPTION);
 		}
+
+		 */
+
+		List<Long> boardIds = matchingService.matchingBoard2(messageId, currentUser.getId(),
+			matchingBoardReqDTO);
 
 		return boardIds.stream().map(boardId -> {
 			Board board = boardService.getBoardById(boardId);
