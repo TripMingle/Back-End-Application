@@ -26,6 +26,6 @@ public class CreateBoardReqDTO {
 	private String title;
 	private String content;
 
-	List<CreateBoardScheduleReqDTO> createBoardScheduleReqDTOS;
+	List<CreateBoardScheduleReqDTO> createBoardSchedule;
 
 }

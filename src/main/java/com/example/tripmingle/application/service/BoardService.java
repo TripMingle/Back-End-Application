@@ -75,8 +75,6 @@ public class BoardService {
 		Board board = boardPersistPort.getBoardById(boardId);
 		userUtils.validateMasterUser(board.getUser().getId(), currentUser.getId());
 		UpdateBoardDTO updateBoardDTO = UpdateBoardDTO.builder()
-			.continent(updateBoardReqDTO.getContinent())
-			.countryName(updateBoardReqDTO.getCountryName())
 			.startDate(updateBoardReqDTO.getStartDate())
 			.endDate(updateBoardReqDTO.getEndDate())
 			.language(updateBoardReqDTO.getLanguage())

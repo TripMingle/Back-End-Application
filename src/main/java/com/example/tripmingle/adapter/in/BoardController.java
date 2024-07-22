@@ -31,10 +31,8 @@ import com.example.tripmingle.dto.res.board.CreateBoardCommentResDTO;
 import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
 import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
 import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
-import com.example.tripmingle.dto.res.board.PostBoardResDTO;
 import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
 import com.example.tripmingle.dto.res.board.UpdateBoardCommentResDTO;
-import com.example.tripmingle.dto.res.board.UpdateBoardResDTO;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
 
@@ -88,8 +86,8 @@ public class BoardController {
 	@PostMapping()
 	//게시글 작성
 	public ResponseEntity<ResultResponse> createBoard(@RequestBody CreateBoardReqDTO createBoardReqDTO) {
-		PostBoardResDTO postBoardResDTO = boardUseCase.createBoard(createBoardReqDTO);
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SUCCESS, postBoardResDTO));
+		GetBoardInfoResDTO getBoardInfoResDTO = boardUseCase.createBoard(createBoardReqDTO);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_SUCCESS, getBoardInfoResDTO));
 	}
 
 	@Operation(summary = "게시글 수정")
@@ -97,8 +95,8 @@ public class BoardController {
 	//게시글 수정
 	public ResponseEntity<ResultResponse> updateBoard(@PathVariable(value = "board-id") Long boardId,
 		@RequestBody UpdateBoardReqDTO updateBoardReqDTO) {
-		UpdateBoardResDTO updateBoardResDTO = boardUseCase.updateBoard(boardId, updateBoardReqDTO);
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_SUCCESS, updateBoardResDTO));
+		GetBoardInfoResDTO getBoardInfoResDTO = boardUseCase.updateBoard(boardId, updateBoardReqDTO);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_SUCCESS, getBoardInfoResDTO));
 	}
 
 	@Operation(summary = "게시글 삭제")

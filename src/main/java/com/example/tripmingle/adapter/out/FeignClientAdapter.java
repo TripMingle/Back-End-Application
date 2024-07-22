@@ -20,7 +20,4 @@ public class FeignClientAdapter implements FeignClientPort {
 		return matchingClient.addUser(userPersonalityIdPublishDTO);
 	}
 
-	public String test() {
-		return matchingClient.test();
-	}
 }

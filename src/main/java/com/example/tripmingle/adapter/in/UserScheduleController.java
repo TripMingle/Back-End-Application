@@ -64,9 +64,10 @@ public class UserScheduleController {
 	//유저 세부일정 삭제&수정
 	public ResponseEntity<ResultResponse> modifyUserSchedule(@PathVariable(value = "user-trip-id") Long userTripId,
 		@RequestBody ModifyUserScheduleReqDTO modifyUserScheduleReqDTO) {
-		userScheduleUseCase.modifyUserSchedule(userTripId, modifyUserScheduleReqDTO.getUpdateUserScheduleReqDTOS(),
+		GetUserScheduleResDTO getUserScheduleResDTO = userScheduleUseCase.modifyUserSchedule(userTripId,
+			modifyUserScheduleReqDTO.getUpdateUserScheduleReqDTOS(),
 			modifyUserScheduleReqDTO.getDeleteUserScheduleReqDTOS());
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_BOARD_SCHEDULE_SUCCESS));
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_BOARD_SCHEDULE_SUCCESS, getUserScheduleResDTO));
 	}
 
 	@Operation(summary = "유저 여행일정 조회")

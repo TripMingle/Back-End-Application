@@ -9,8 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateBoardReqDTO {
-	private String continent;
-	private String countryName;
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private String language;

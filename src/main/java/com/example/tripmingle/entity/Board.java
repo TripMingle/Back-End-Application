@@ -95,12 +95,6 @@ public class Board extends BaseEntity {
 		if (updateBoardDTO.getContent() != null) {
 			this.content = updateBoardDTO.getContent();
 		}
-		if (updateBoardDTO.getContinent() != null) {
-			this.continent = updateBoardDTO.getContinent();
-		}
-		if (updateBoardDTO.getCountryName() != null) {
-			this.countryName = updateBoardDTO.getCountryName();
-		}
 		if (updateBoardDTO.getTripType() != null) {
 			this.tripType = updateBoardDTO.getTripType();
 		}
