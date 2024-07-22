@@ -116,32 +116,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 	@Override
 	public List<MatchingBoardResDTO> matchingBoard(MatchingBoardReqDTO matchingBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
-		String messageId = UUID.randomUUID().toString();
-		/*
-		String response = "";
-		try {
-			CompletableFuture<String> future = matchingService.matchingBoard(messageId, currentUser.getId(),
-				matchingBoardReqDTO);
-			response = future.get();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (response.equals(RedisMessageSubscriber.FAIL_TO_ADD_USER_PERSONALITY)) {
-			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
-		}
-		List<Long> boardIds = new ArrayList<>();
-		try {
-			boardIds = objectMapper.readValue(response, new TypeReference<List<Long>>() {
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new JsonParsingException("json parse error", ErrorCode.JSON_PARSE_EXCEPTION);
-		}
-
-		 */
-
-		List<Long> boardIds = matchingService.matchingBoard2(messageId, currentUser.getId(),
-			matchingBoardReqDTO);
+		List<Long> boardIds = matchingService.matchingBoard(currentUser.getId(), matchingBoardReqDTO);
 
 		return boardIds.stream().map(boardId -> {
 			Board board = boardService.getBoardById(boardId);

@@ -101,20 +101,7 @@ public class MessagePublisher implements PublishPort {
 
 	@Override
 	public CompletableFuture<String> matchingBoard(MatchingBoardPublishDTO matchingBoardPublishDTO) {
-		CompletableFuture<String> future = new CompletableFuture<>();
-		responseFutures.put(matchingBoardPublishDTO.getMessageId(), future);
-		try {
-			String jsonMessage = objectMapper.writeValueAsString(matchingBoardPublishDTO);
-
-			redisTemplate.convertAndSend(MATCHING_USER, jsonMessage);
-			log.info("Published message: " + jsonMessage + " to topic: " + MATCHING_USER);
-		} catch (Exception e) {
-			future.completeExceptionally(e);
-			e.printStackTrace();
-		}
-
-		return future;
-
+		return null;
 	}
 
 	public static void completeResponse(String messageId, String response) {

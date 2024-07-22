@@ -3,20 +3,20 @@ package com.example.tripmingle.application.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.tripmingle.port.out.S3StoragePort;
+import com.example.tripmingle.port.out.ImageStoragePort;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-	private final S3StoragePort s3StoragePort;
+	private final ImageStoragePort imageStoragePort;
 
 	public String uploadImage(MultipartFile image) {
-		return s3StoragePort.upload(image);
+		return imageStoragePort.upload(image);
 	}
 
 	public void deleteCountryImage(String imageUrl) {
-		s3StoragePort.deleteImageFromS3(imageUrl);
+		imageStoragePort.deleteImage(imageUrl);
 	}
 }

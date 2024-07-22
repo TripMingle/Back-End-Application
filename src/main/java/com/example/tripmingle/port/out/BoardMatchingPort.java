@@ -4,6 +4,6 @@ import java.util.List;
 
 import com.example.tripmingle.dto.etc.MatchingBoardPublishDTO;
 
-public interface MatchingPort {
+public interface BoardMatchingPort {
 	List<Long> matchingBoard(MatchingBoardPublishDTO build);
 }

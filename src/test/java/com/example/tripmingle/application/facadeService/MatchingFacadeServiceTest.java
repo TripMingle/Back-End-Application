@@ -72,8 +72,7 @@ class MatchingFacadeServiceTest {
 			if (i % 5 == 0) {
 				matchingFacadeService.deleteUserPersonalityForTest(user);
 				PostUserPersonalityReqDTO postUserPersonalityReqDTO
-					= new PostUserPersonalityReqDTO(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-					1.0, 1.0);
+					= new PostUserPersonalityReqDTO(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 				UserPersonality userPersonality = matchingFacadeService.saveUserPersonalityForTest(user,
 					postUserPersonalityReqDTO);
 				matchingFacadeService.addUserPersonality(userPersonality.getId());
@@ -96,8 +95,7 @@ class MatchingFacadeServiceTest {
 			User user = userService.getUserById((long)i + 1);
 			if (true) {
 				PostUserPersonalityReqDTO postUserPersonalityReqDTO
-					= new PostUserPersonalityReqDTO(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-					1.0, 1.0);
+					= new PostUserPersonalityReqDTO(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 				matchingFacadeService.saveUserPersonalityForTest(user, postUserPersonalityReqDTO);
 			} else {
 				matchingFacadeService.getMyMatchingUsersWithoutCache(user);

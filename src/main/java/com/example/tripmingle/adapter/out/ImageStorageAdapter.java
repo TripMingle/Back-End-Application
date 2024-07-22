@@ -15,7 +15,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.S3Exception;
-import com.example.tripmingle.port.out.S3StoragePort;
+import com.example.tripmingle.port.out.ImageStoragePort;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class S3StorageAdapter implements S3StoragePort {
+public class ImageStorageAdapter implements ImageStoragePort {
 
 	private final AmazonS3 amazonS3;
 	private final AmazonS3Client amazonS3Client;
@@ -60,7 +60,7 @@ public class S3StorageAdapter implements S3StoragePort {
 		return fileName + "_" + random + fileExtension;
 	}
 
-	public void deleteImageFromS3(String fileUrl) {
+	public void deleteImage(String fileUrl) {
 		String[] deleteUrl = fileUrl.split("/", 4);
 		amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, deleteUrl[3]));
 	}
