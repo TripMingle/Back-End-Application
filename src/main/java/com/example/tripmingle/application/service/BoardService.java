@@ -2,6 +2,7 @@ package com.example.tripmingle.application.service;
 
 import java.util.List;
 
+import com.example.tripmingle.port.out.BoardSearchPort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class BoardService {
 	private final BoardPersistPort boardPersistPort;
+	private final BoardSearchPort boardSearchPort;
 	private final UserUtils userUtils;
 	private final CommonUtils commonUtils;
 
@@ -68,7 +70,7 @@ public class BoardService {
 			.commentCount(0)
 			.build();
 
-		return boardPersistPort.saveBoard(board);
+		return boardSearchPort.saveBoard(boardPersistPort.saveBoard(board));
 	}
 
 	public Board updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {

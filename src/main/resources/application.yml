@@ -33,6 +33,14 @@ spring:
       max-file-size: 5MB
       max-request-size: 10MB
       resolve-lazily: true
+  elasticsearch:
+    #uris: ${elasticsearch-url}
+    uris: search-tripminglees-5dzcdqyztuwnjjmdxqngjhtpi4.ap-southeast-1.es.amazonaws.com
+    #username: ${elasticsearch-username}
+    username: soma929
+    #password: ${elasticsearch-password}
+    password: Soma929!
+
 oauth2:
   kakao:
     infoUrl: https://kapi.kakao.com
@@ -46,10 +54,13 @@ logging:
       springframework:
         security: DEBUG
         web: DEBUG
+        elasticsearch.client: DEBUG
     feign:
       client:
         config:
           matchingClient: DEBUG
+    apache:
+      http: DEBUG
 
 server:
   servlet:
@@ -80,3 +91,4 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+

@@ -2,6 +2,8 @@ package com.example.tripmingle.repository;
 
 import com.example.tripmingle.entity.esentity.BoardEntity;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+import org.springframework.stereotype.Repository;
 
-public interface ESRepository extends ElasticsearchRepository<BoardEntity, String> {
+@Repository
+public interface ElasticsearchBoardRepository extends ElasticsearchRepository<BoardEntity, String> {
 }

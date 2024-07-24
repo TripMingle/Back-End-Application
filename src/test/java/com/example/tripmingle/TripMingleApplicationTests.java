@@ -1,5 +1,7 @@
 package com.example.tripmingle;
 
+import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,16 +17,17 @@ import com.example.tripmingle.repository.UserScheduleRepository;
 @ExtendWith(SpringExtension.class)
 class TripMingleApplicationTests {
 	@Autowired
-	private UserScheduleRepository userScheduleRepository;
+	private BoardRepository boardRepository;
 
 	@Test
 	@DisplayName("테스트")
 	@Transactional
 	void test() {
-		UserSchedule userSchedule = userScheduleRepository.findById(5L).get();
-		userSchedule.updateNumber(22);
-		userScheduleRepository.flush();
-		UserSchedule userSchedule1 = userScheduleRepository.findByNumber(23145);
+		Board board = Board.builder().build();
+		System.out.println("before save : " + board.getId());
+		boardRepository.save(board);
+		System.out.println("after save : " + board.getId());
+
 	}
 
 }

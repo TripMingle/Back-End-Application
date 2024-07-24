@@ -79,6 +79,13 @@ dependencies {
     //parser
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
 
+    //elasticsearch
+    //implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:6.8.17'
+    //implementation 'org.opensearch.client:opensearch-java:2.13.0'
+
+
 }
 
 dependencyManagement {
