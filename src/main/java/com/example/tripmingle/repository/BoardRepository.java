@@ -49,4 +49,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	@Query("SELECT b FROM Board b WHERE b.id = :id")
 	Board findByIdWithPessimisticLock(@Param("id") Long id);
 
+	@Query("SELECT b FROM Board b WHERE b.id IN :boardIds")
+	Page<Board> findAllByIdIn(@Param("boardIds") List<Long> boardIds, Pageable pageable);
 }

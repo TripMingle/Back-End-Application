@@ -101,7 +101,9 @@ public class BoardService {
 	}
 
 	public Page<Board> searchBoard(String countryName, String keyword, Pageable pageable) {
-		return boardPersistPort.searchBoard(countryName, keyword, pageable);
+		List<Long> boardIds = boardSearchPort.searchBoard(countryName, keyword);
+		return boardPersistPort.getAllBoardsByIdsAndPage(boardIds, pageable);
+		//return boardPersistPort.searchBoard(countryName, keyword, pageable);
 	}
 
 	public void getBoardsWithinRange() {

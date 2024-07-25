@@ -69,4 +69,9 @@ public class BoardPersistAdapter implements BoardPersistPort {
 		return boardRepository.findBoardsByUser(user, pageable);
 	}
 
+	@Override
+	public Page<Board> getAllBoardsByIdsAndPage(List<Long> boardIds, Pageable pageable) {
+		return boardRepository.findAllByIdIn(boardIds,pageable);
+	}
+
 }

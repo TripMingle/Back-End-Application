@@ -26,4 +26,6 @@ public interface BoardPersistPort {
 	void getBoardsWithinRange();
 
 	Page<Board> getBoardByUser(User user, Pageable pageable);
+
+    Page<Board> getAllBoardsByIdsAndPage(List<Long> boardIds, Pageable pageable);
 }

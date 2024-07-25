@@ -26,10 +26,10 @@ public class ElasticsearchResponse {
             @Getter
             @Setter
             public static class Source {
-                private String id;
+                private String board_id;
                 private String title;
                 private String content;
-                private String countryName;
+                private String country_name;
                 private String gender;
                 private String language;
             }
