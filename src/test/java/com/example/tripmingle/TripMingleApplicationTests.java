@@ -1,6 +1,7 @@
 package com.example.tripmingle;
 
 import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.entity.User;
 import com.example.tripmingle.repository.BoardRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

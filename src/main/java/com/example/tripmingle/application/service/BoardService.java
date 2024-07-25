@@ -69,8 +69,8 @@ public class BoardService {
 			.language(createBoardReqDTO.getLanguage())
 			.commentCount(0)
 			.build();
-
-		return boardSearchPort.saveBoard(boardPersistPort.saveBoard(board));
+		boardSearchPort.saveBoard(boardPersistPort.saveBoard(board));
+		return board;
 	}
 
 	public Board updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {

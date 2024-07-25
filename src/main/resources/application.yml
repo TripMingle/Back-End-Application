@@ -34,12 +34,10 @@ spring:
       max-request-size: 10MB
       resolve-lazily: true
   elasticsearch:
-    #uris: ${elasticsearch-url}
-    uris: search-tripminglees-5dzcdqyztuwnjjmdxqngjhtpi4.ap-southeast-1.es.amazonaws.com
-    #username: ${elasticsearch-username}
-    username: soma929
-    #password: ${elasticsearch-password}
-    password: Soma929!
+    uris: ${elasticsearch-url}
+    username: ${elasticsearch-username}
+    password: ${elasticsearch-password}
+    board-url: ${elasticsearch-board-url}
 
 oauth2:
   kakao:
