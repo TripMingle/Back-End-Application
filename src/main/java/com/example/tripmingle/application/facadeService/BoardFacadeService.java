@@ -170,7 +170,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.ageRange(board.getUser().getAgeRange())
 			.gender(board.getUser().getGender())
 			.nationality(board.getUser().getNationality())
-			.selfIntroduction(board.getUser().getSelfIntroduction())
+			.selfIntroduction("")
 			.userImageUrl("")
 			.userRating(0.0)
 			.imageUrl(board.getImageUrl())
