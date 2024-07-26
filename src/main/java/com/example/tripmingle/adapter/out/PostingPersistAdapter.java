@@ -22,8 +22,8 @@ public class PostingPersistAdapter implements PostingPersistPort {
 	private final PostingRepository postingRepository;
 
 	@Override
-	public Long createPosting(Posting posting) {
-		return postingRepository.save(posting).getId();
+	public Posting createPosting(Posting posting) {
+		return postingRepository.save(posting);
 	}
 
 	@Override

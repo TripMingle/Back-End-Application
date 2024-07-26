@@ -10,7 +10,7 @@ import com.example.tripmingle.entity.PostingType;
 
 public interface PostingPersistPort {
 
-	Long createPosting(Posting posting);
+	Posting createPosting(Posting posting);
 
 	Posting getPostingById(Long postingId);
 

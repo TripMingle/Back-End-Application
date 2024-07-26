@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,6 @@ import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.posting.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PostPostingReqDTO;
-import com.example.tripmingle.dto.res.posting.DeletePostingCommentResDTO;
 import com.example.tripmingle.dto.res.posting.DeletePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetAllLikedPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingCoCommentResDTO;
@@ -30,11 +30,6 @@ import com.example.tripmingle.dto.res.posting.GetOnePostingCommentsResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
-import com.example.tripmingle.dto.res.posting.PatchPostingCommentResDTO;
-import com.example.tripmingle.dto.res.posting.PatchPostingResDTO;
-import com.example.tripmingle.dto.res.posting.PostPostingCommentResDTO;
-import com.example.tripmingle.dto.res.posting.PostPostingResDTO;
-import com.example.tripmingle.dto.res.posting.PostingLikeToggleStateResDTO;
 import com.example.tripmingle.entity.Posting;
 import com.example.tripmingle.entity.PostingComment;
 import com.example.tripmingle.entity.PostingLikes;
@@ -56,57 +51,18 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
 	@Transactional
 	@Override
-	public PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO) {
+	public GetOnePostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO) {
 		User currentUser = userService.getCurrentUser();
-		Long postingId = postingService.createPosting(postPostingReqDTO, currentUser);
-		return PostPostingResDTO.builder()
-			.postingId(postingId)
-			.build();
+		Posting newPosting = postingService.createPosting(postPostingReqDTO, currentUser);
+		return generateGetOnePostingResDTO(newPosting, currentUser);
 	}
 
 	@Transactional
 	@Override
-	public PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
+	public GetOnePostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO) {
 		User currentUser = userService.getCurrentUser();
-		Long postingId = postingService.updatePosting(patchPostingReqDTO, currentUser);
-		return PatchPostingResDTO.builder()
-			.postingId(postingId)
-			.build();
-	}
-
-	@Transactional
-	@Override
-	public DeletePostingResDTO deletePosting(Long postingId) {
-		User currentUser = userService.getCurrentUser();
-		Posting posting = postingService.getOnePosting(postingId);
-		if (!posting.getUser().getId().equals(currentUser.getId())) {
-			throw new InvalidUserAccessException("Invalid User Access.", ErrorCode.INVALID_USER_ACCESS);
-		}
-		postingCommentService.deletePostingCommentsWithPosting(postingId);
-		posting.deletePostingComments();
-		postingLikesService.deletePostingLikesWithPosting(postingId);
-		posting.deletePostingLikes();
-		postingService.deletePosting(posting, currentUser);
-		return DeletePostingResDTO.builder()
-			.postingId(postingId)
-			.build();
-	}
-
-	@Override
-	public List<GetThumbNailPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
-		List<Posting> postings = postingService.getPreviewPostings(getPreviewPostingReqDTO);
-		return postings.stream()
-			.map(posting -> GetThumbNailPostingResDTO.builder()
-				.postingId(posting.getId())
-				.title(posting.getTitle())
-				.content(posting.getContent())
-				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
-				.userNickName(posting.getUser().getNickName())
-				.userAgeRange(posting.getUser().getAgeRange())
-				.userGender(posting.getUser().getGender())
-				.userNationality(posting.getUser().getNationality())
-				.build())
-			.collect(Collectors.toList());
+		Posting posting = postingService.updatePosting(patchPostingReqDTO, currentUser);
+		return generateGetOnePostingResDTO(posting, currentUser);
 	}
 
 	@Transactional(readOnly = true)
@@ -114,10 +70,45 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	public GetOnePostingResDTO getOnePosting(Long postingId) {
 		User currentUser = userService.getCurrentUser();
 		Posting posting = postingService.getOnePosting(postingId);
-		boolean postingLikesState = postingLikesService.getPostingLikesState(posting);
-		List<PostingComment> postingComments = postingCommentService.getPostingComments(postingId);
-		List<GetOnePostingCommentsResDTO> commentsInOnePosting = getCommentsInPosting(postingComments, currentUser);
+		return generateGetOnePostingResDTO(posting, currentUser);
+	}
+
+	@Transactional
+	@Override
+	public GetOnePostingResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO) {
+		User currentUser = userService.getCurrentUser();
+		Posting posting = postingService.getOnePostingWithPessimisticLock(postPostingCommentReqDTO.getPostingId());
+		validatePostingCommentBelongsToPosting(posting, postPostingCommentReqDTO);
+		postingCommentService.createPostingComment(postPostingCommentReqDTO, posting, currentUser);
+		return generateGetOnePostingResDTO(posting, currentUser);
+	}
+
+	@Transactional
+	@Override
+	public GetOnePostingResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+		User currentUser = userService.getCurrentUser();
+		postingCommentService.updatePostingComment(patchPostingCommentReqDTO, currentUser);
+		Posting posting = postingService.getOnePosting(patchPostingCommentReqDTO.getPostingId());
+		return generateGetOnePostingResDTO(posting, currentUser);
+	}
+
+	@Transactional
+	@Override
+	public GetOnePostingResDTO deletePostingComment(DeletePostingCommentReqDTO deletePostingCommentReqDTO) {
+		User currentUser = userService.getCurrentUser();
+		Posting posting = postingService.getOnePostingWithPessimisticLock(deletePostingCommentReqDTO.getPostingId());
+		int deletePostingCommentCount = postingCommentService.deletePostingComment(
+			deletePostingCommentReqDTO.getPostingCommentId(), currentUser);
+		posting.decreasePostingCommentCount(deletePostingCommentCount);
+		return generateGetOnePostingResDTO(posting, currentUser);
+	}
+
+	private GetOnePostingResDTO generateGetOnePostingResDTO(Posting posting, User user) {
+		boolean postingLikesState = postingLikesService.getPostingLikesState(posting, user);
+		List<PostingComment> postingComments = postingCommentService.getPostingComments(posting.getId());
+		List<GetOnePostingCommentsResDTO> commentsInOnePosting = getCommentsInPosting(postingComments, user);
 		return GetOnePostingResDTO.builder()
+			.postingId(posting.getId())
 			.title(posting.getTitle())
 			.content(posting.getContent())
 			.country(posting.getCountry())
@@ -130,7 +121,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.userNationality(posting.getUser().getNationality())
 			.selfIntroduce(
 				posting.getUser().getSelfIntroduction() == null ? "" : posting.getUser().getSelfIntroduction())
-			.isMine(posting.getUser().getId().equals(currentUser.getId()))
+			.isMine(posting.getUser().getId().equals(user.getId()))
 			.userTemperature(posting.getUser().getUserScore())
 			.myLikeState(postingLikesState)
 			.commentCount(posting.getCommentCount())
@@ -165,63 +156,6 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.build()).toList();
 	}
 
-	@Override
-	public GetThumbNailPostingsResDTO getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
-		Pageable pageable) {
-		Page<Posting> getAllPostings = postingService.getAllPostings(getAllPostingsReqDTO, pageable);
-		List<GetThumbNailPostingResDTO> resultPostings = getAllPostings.stream()
-			.map(posting -> GetThumbNailPostingResDTO.builder()
-				.postingId(posting.getId())
-				.title(posting.getTitle())
-				.content(posting.getContent())
-				.userNickName(posting.getUser().getNickName())
-				.userAgeRange(posting.getUser().getAgeRange())
-				.userGender(posting.getUser().getGender())
-				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
-				.userNationality(posting.getUser().getNationality())
-				.build())
-			.toList();
-		return GetThumbNailPostingsResDTO.builder()
-			.totalPageCount(getAllPostings.getTotalPages())
-			.postings(resultPostings)
-			.build();
-	}
-
-	@Override
-	public GetThumbNailPostingsResDTO getSearchPostings(String keyword, String postingType, Pageable pageable) {
-		Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, postingType, pageable);
-		List<GetThumbNailPostingResDTO> resultPostings = getSearchPostings.stream()
-			.filter(posting -> posting.getTitle().contains(keyword) || posting.getContent().contains(keyword))
-			.map(posting -> GetThumbNailPostingResDTO.builder()
-				.postingId(posting.getId())
-				.title(posting.getTitle())
-				.content(posting.getContent())
-				.userNickName(posting.getUser().getNickName())
-				.userAgeRange(posting.getUser().getAgeRange())
-				.userGender(posting.getUser().getGender())
-				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
-				.userNationality(posting.getUser().getNationality())
-				.build())
-			.toList();
-		return GetThumbNailPostingsResDTO.builder()
-			.totalPageCount(getSearchPostings.getTotalPages())
-			.postings(resultPostings)
-			.build();
-	}
-
-	@Transactional
-	@Override
-	public PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO) {
-		User currentUser = userService.getCurrentUser();
-		Posting posting = postingService.getOnePostingWithPessimisticLock(postPostingCommentReqDTO.getPostingId());
-		validatePostingCommentBelongsToPosting(posting, postPostingCommentReqDTO);
-		Long newPostingCommentId = postingCommentService.createPostingComment(postPostingCommentReqDTO, posting,
-			currentUser);
-		return PostPostingCommentResDTO.builder()
-			.postingCommentId(newPostingCommentId)
-			.build();
-	}
-
 	private void validatePostingCommentBelongsToPosting(Posting posting,
 		PostPostingCommentReqDTO postPostingCommentReqDTO) {
 		if (!postPostingCommentReqDTO.getParentCommentId().equals(-1L)) {
@@ -240,77 +174,78 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
 	@Transactional
 	@Override
-	public PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+	public DeletePostingResDTO deletePosting(Long postingId) {
 		User currentUser = userService.getCurrentUser();
-		Long postingComment = postingCommentService.updatePostingComment(patchPostingCommentReqDTO, currentUser);
-		return PatchPostingCommentResDTO.builder()
-			.postingCommentId(postingComment)
-			.build();
-	}
-
-	@Transactional
-	@Override
-	public DeletePostingCommentResDTO deletePostingComment(DeletePostingCommentReqDTO deletePostingCommentReqDTO) {
-		User currentUser = userService.getCurrentUser();
-		Posting posting = postingService.getOnePostingWithPessimisticLock(deletePostingCommentReqDTO.getPostingId());
-		int deletePostingCommentCount = postingCommentService.deletePostingComment(
-			deletePostingCommentReqDTO.getPostingCommentId(), currentUser);
-		posting.decreasePostingCommentCount(deletePostingCommentCount);
-		return DeletePostingCommentResDTO.builder()
-			.postingCommentId(deletePostingCommentReqDTO.getPostingCommentId())
-			.build();
-	}
-
-	@Transactional
-	@Override
-	public PostingLikeToggleStateResDTO togglePostingLikes(Long postingId) {
-		Posting posting = postingService.getOnePostingWithPessimisticLock(postingId);
-		boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting);
-		posting.updatePostingLikeCount(postingToggleState);
-		return PostingLikeToggleStateResDTO.builder()
+		Posting posting = postingService.getOnePosting(postingId);
+		if (!posting.getUser().getId().equals(currentUser.getId())) {
+			throw new InvalidUserAccessException("Invalid User Access.", ErrorCode.INVALID_USER_ACCESS);
+		}
+		postingCommentService.deletePostingCommentsWithPosting(postingId);
+		posting.deletePostingWithPostingCommentsCount();
+		postingLikesService.deletePostingLikesWithPosting(postingId);
+		posting.deletePostingWithPostingLikesCount();
+		postingService.deletePosting(posting, currentUser);
+		return DeletePostingResDTO.builder()
 			.postingId(postingId)
-			.postingToggleState(postingToggleState)
 			.build();
 	}
 
 	@Override
-	public GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable) {
-		Page<PostingLikes> getAllPostingLikes = postingLikesService.getAllPostingLikes(pageable);
-		User user = userService.getCurrentUser();
-		return GetAllLikedPostingResDTO.builder()
-			.userImageUrl(user.getUserImageUrl() == null ? "" : user.getUserImageUrl())
-			.userNickName(user.getNickName())
-			.userAgeRange(user.getAgeRange())
-			.userGender(user.getGender())
-			.userNationality(user.getNationality())
-			.likedPostings(getLikedPostingsByCurrentUser(getAllPostingLikes))
-			.build();
+	public List<GetThumbNailPostingResDTO> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {
+		List<Posting> postings = postingService.getPreviewPostings(getPreviewPostingReqDTO);
+		return postings.stream()
+			.map(posting -> GetThumbNailPostingResDTO.builder()
+				.postingId(posting.getId())
+				.title(posting.getTitle())
+				.content(posting.getContent())
+				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
+				.userNickName(posting.getUser().getNickName())
+				.userAgeRange(posting.getUser().getAgeRange())
+				.userGender(posting.getUser().getGender())
+				.userNationality(posting.getUser().getNationality())
+				.build())
+			.collect(Collectors.toList());
 	}
 
-	private GetThumbNailPostingsResDTO getLikedPostingsByCurrentUser(Page<PostingLikes> likedPostings) {
-		List<GetThumbNailPostingResDTO> resultLikedPostings = likedPostings.stream()
-			.map(postingLikes -> GetThumbNailPostingResDTO.builder()
-				.postingId(postingLikes.getPosting().getId())
-				.title(postingLikes.getPosting().getTitle())
-				.content(postingLikes.getPosting().getContent())
-				.userImageUrl(postingLikes.getPosting().getUser().getUserImageUrl() == null ? "" :
-					postingLikes.getPosting().getUser().getUserImageUrl())
-				.userNickName(postingLikes.getPosting().getUser().getNickName())
-				.userAgeRange(postingLikes.getPosting().getUser().getAgeRange())
-				.userGender(postingLikes.getPosting().getUser().getGender())
-				.userNationality(postingLikes.getPosting().getUser().getNationality())
-				.build())
-			.toList();
-		return GetThumbNailPostingsResDTO.builder()
-			.totalPageCount(likedPostings.getTotalPages())
-			.postings(resultLikedPostings)
-			.build();
+	@Override
+	public GetThumbNailPostingsResDTO getAllPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
+		Pageable pageable) {
+		Page<Posting> getAllPostings = postingService.getAllPostings(getAllPostingsReqDTO, pageable);
+		return generateGetThumbNailPostingsResDTO(getAllPostings);
+	}
+
+	@Override
+	public GetThumbNailPostingsResDTO getSearchPostings(String keyword, String postingType, Pageable pageable) {
+		Page<Posting> getSearchPostings = postingService.getSearchPostings(keyword, postingType, pageable);
+		return generateGetThumbNailPostingsResDTO(getSearchPostings);
 	}
 
 	@Override
 	public GetThumbNailPostingsResDTO getAllPopularityPostings(GetAllPostingsReqDTO getAllPostingsReqDTO,
 		Pageable pageable) {
 		Page<Posting> postings = postingService.getAllPopularityPostings(getAllPostingsReqDTO, pageable);
+		return generateGetThumbNailPostingsResDTO(postings);
+	}
+
+	@Override
+	public GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable) {
+		User currentUser = userService.getCurrentUser();
+		Page<PostingLikes> getAllPostingLikes = postingLikesService.getAllPostingLikes(currentUser, pageable);
+		List<Posting> rawPostings = getAllPostingLikes.stream()
+			.map(PostingLikes::getPosting)
+			.toList();
+		Page<Posting> postings = new PageImpl<>(rawPostings, pageable, getAllPostingLikes.getTotalElements());
+		return GetAllLikedPostingResDTO.builder()
+			.userImageUrl(currentUser.getUserImageUrl() == null ? "" : currentUser.getUserImageUrl())
+			.userNickName(currentUser.getNickName())
+			.userAgeRange(currentUser.getAgeRange())
+			.userGender(currentUser.getGender())
+			.userNationality(currentUser.getNationality())
+			.likedPostings(generateGetThumbNailPostingsResDTO(postings))
+			.build();
+	}
+
+	private GetThumbNailPostingsResDTO generateGetThumbNailPostingsResDTO(Page<Posting> postings) {
 		List<GetThumbNailPostingResDTO> resultPostings = postings.stream()
 			.map(posting -> GetThumbNailPostingResDTO.builder()
 				.postingId(posting.getId())
@@ -327,5 +262,15 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.totalPageCount(postings.getTotalPages())
 			.postings(resultPostings)
 			.build();
+	}
+
+	@Transactional
+	@Override
+	public GetOnePostingResDTO togglePostingLikes(Long postingId) {
+		Posting posting = postingService.getOnePostingWithPessimisticLock(postingId);
+		User currentUser = userService.getCurrentUser();
+		boolean postingToggleState = postingLikesService.updatePostingLikesToggleState(posting, currentUser);
+		posting.updatePostingLikeCount(postingToggleState);
+		return generateGetOnePostingResDTO(posting, userService.getCurrentUser());
 	}
 }

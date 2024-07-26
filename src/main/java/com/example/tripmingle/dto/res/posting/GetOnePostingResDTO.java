@@ -10,6 +10,7 @@ import lombok.Getter;
 @Builder
 public class GetOnePostingResDTO {
 
+	private Long postingId;
 	private String title;
 	private String content;
 	private String country;

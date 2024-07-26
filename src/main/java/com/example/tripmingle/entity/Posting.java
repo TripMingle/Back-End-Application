@@ -93,11 +93,11 @@ public class Posting extends BaseEntity {
 		}
 	}
 
-	public void deletePostingComments() {
+	public void deletePostingWithPostingCommentsCount() {
 		this.commentCount = 0;
 	}
 
-	public void deletePostingLikes() {
+	public void deletePostingWithPostingLikesCount() {
 		this.commentCount = 0;
 	}
 
