@@ -27,17 +27,11 @@ import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingReqDTO;
 import com.example.tripmingle.dto.req.posting.PostPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PostPostingReqDTO;
-import com.example.tripmingle.dto.res.posting.DeletePostingCommentResDTO;
 import com.example.tripmingle.dto.res.posting.DeletePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetAllLikedPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
-import com.example.tripmingle.dto.res.posting.PatchPostingCommentResDTO;
-import com.example.tripmingle.dto.res.posting.PatchPostingResDTO;
-import com.example.tripmingle.dto.res.posting.PostPostingCommentResDTO;
-import com.example.tripmingle.dto.res.posting.PostPostingResDTO;
-import com.example.tripmingle.dto.res.posting.PostingLikeToggleStateResDTO;
 import com.example.tripmingle.entity.PostingType;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
@@ -61,7 +55,7 @@ public class PostingController {
 	@Operation(summary = "포스트 작성")
 	@PostMapping
 	public ResponseEntity<ResultResponse> createPosting(@RequestBody PostPostingReqDTO postPostingReqDTO) {
-		PostPostingResDTO postPostingResDTO = postingUseCase.createPosting(postPostingReqDTO);
+		GetOnePostingResDTO postPostingResDTO = postingUseCase.createPosting(postPostingReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(CREATED_POSTING, postPostingResDTO));
 	}
 
@@ -69,7 +63,7 @@ public class PostingController {
 	@Operation(summary = "포스트 수정")
 	@PatchMapping
 	public ResponseEntity<ResultResponse> updatePosting(@RequestBody PatchPostingReqDTO patchPostingReqDTO) {
-		PatchPostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
+		GetOnePostingResDTO patchPostingResDTO = postingUseCase.updatePosting(patchPostingReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING, patchPostingResDTO));
 	}
 
@@ -97,7 +91,7 @@ public class PostingController {
 
 	// 포스트 상세조회
 	@Operation(summary = "포스트 상세 조회")
-	@GetMapping("/details/{postingId}")
+	@GetMapping("/{postingId}/details")
 	public ResponseEntity<ResultResponse> getOnePosting(@PathVariable("postingId") Long postingId) {
 		GetOnePostingResDTO getOnePostingResDTO = postingUseCase.getOnePosting(postingId);
 		return ResponseEntity.ok(ResultResponse.of(GET_ONE_POSTING_SUCCESS, getOnePostingResDTO));
@@ -134,40 +128,46 @@ public class PostingController {
 
 	// 포스트 댓글 달기
 	@Operation(summary = "포스트 댓글 달기")
-	@PostMapping("/comments")
-	public ResponseEntity<ResultResponse> createPostingComment(
+	@PostMapping("{postingId}/comments")
+	public ResponseEntity<ResultResponse> createPostingComment(@PathVariable("postingId") Long postingId,
 		@RequestBody PostPostingCommentReqDTO postPostingCommentReqDTO) {
-		PostPostingCommentResDTO postPostingCommentResDTO = postingCommentUseCase.createPostingComment(
+		postPostingCommentReqDTO.setPostingId(postingId);
+		GetOnePostingResDTO postPostingCommentResDTO = postingCommentUseCase.createPostingComment(
 			postPostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
 	}
 
 	// 포스트 댓글 수정
 	@Operation(summary = "포스트 댓글 수정")
-	@PatchMapping("/comments/{commentId}")
-	public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("commentId") Long postCommentId,
+	@PatchMapping("{postingId}/comments/{commentId}")
+	public ResponseEntity<ResultResponse> updatePostingComment(@PathVariable("postingId") Long postingId,
+		@PathVariable("commentId") Long postCommentId,
 		@RequestBody PatchPostingCommentReqDTO patchPostingCommentReqDTO) {
+		patchPostingCommentReqDTO.setPostingId(postingId);
 		patchPostingCommentReqDTO.setPostingCommentId(postCommentId);
-		PatchPostingCommentResDTO patchPostingCommentResDTO = postingCommentUseCase.updatePostingComment(
+		GetOnePostingResDTO patchPostingCommentResDTO = postingCommentUseCase.updatePostingComment(
 			patchPostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(UPDATE_POSTING_COMMENT_SUCCESS, patchPostingCommentResDTO));
 	}
 
 	// 포스트 댓글 삭제
 	@Operation(summary = "포스트 댓글 삭제")
-	@DeleteMapping("/comments")
-	public ResponseEntity<ResultResponse> deletePostingComment(
+	@DeleteMapping("{postingId}/comments/{commentId}")
+	public ResponseEntity<ResultResponse> deletePostingComment(@PathVariable("postingId") Long postingId,
+		@PathVariable("commentId") Long commentId,
 		@RequestBody DeletePostingCommentReqDTO deletePostingCommentReqDTO) {
-		DeletePostingCommentResDTO deletePostingCommentResDTO = postingCommentUseCase.deletePostingComment(
+		deletePostingCommentReqDTO.setPostingId(postingId);
+		deletePostingCommentReqDTO.setPostingCommentId(commentId);
+		GetOnePostingResDTO deletePostingCommentResDTO = postingCommentUseCase.deletePostingComment(
 			deletePostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(DELETE_POSTING_COMMENT_SUCCESS, deletePostingCommentResDTO));
 	}
 
 	// 포스트 좋아요
 	@Operation(summary = "포스트 좋아요 버튼 누르기")
-	@PostMapping("/likes/{postingId}")
+	@PostMapping("/{postingId}/likes")
 	public ResponseEntity<ResultResponse> togglePostingLikes(@PathVariable("postingId") Long postingId) {
-		PostingLikeToggleStateResDTO postingLikeToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
+		GetOnePostingResDTO postingLikeToggleStateResDTO = postingUseCase.togglePostingLikes(postingId);
 		return ResponseEntity.ok(ResultResponse.of(TOGGLE_POSTING_LIKES_SUCCESS, postingLikeToggleStateResDTO));
 	}
 

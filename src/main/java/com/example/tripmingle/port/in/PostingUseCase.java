@@ -13,15 +13,12 @@ import com.example.tripmingle.dto.res.posting.GetAllLikedPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
-import com.example.tripmingle.dto.res.posting.PatchPostingResDTO;
-import com.example.tripmingle.dto.res.posting.PostPostingResDTO;
-import com.example.tripmingle.dto.res.posting.PostingLikeToggleStateResDTO;
 
 public interface PostingUseCase {
 
-	PostPostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO);
+	GetOnePostingResDTO createPosting(PostPostingReqDTO postPostingReqDTO);
 
-	PatchPostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO);
+	GetOnePostingResDTO updatePosting(PatchPostingReqDTO patchPostingReqDTO);
 
 	DeletePostingResDTO deletePosting(Long postingId);
 
@@ -33,7 +30,7 @@ public interface PostingUseCase {
 
 	GetThumbNailPostingsResDTO getSearchPostings(String keyword, String postingType, Pageable pageable);
 
-	PostingLikeToggleStateResDTO togglePostingLikes(Long postingId);
+	GetOnePostingResDTO togglePostingLikes(Long postingId);
 
 	GetAllLikedPostingResDTO getMyLikedPostings(Pageable pageable);
 

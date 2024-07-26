@@ -24,7 +24,7 @@ public class PostingCommentService {
 		return postingCommentPersistPort.getPostingCommentsByPostingId(postingId);
 	}
 
-	public Long createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO, Posting posting,
+	public void createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO, Posting posting,
 		User currentUser) {
 		PostingComment parentPostingComment = null;
 		if (postPostingCommentReqDTO.getParentCommentId() != -1) {
@@ -39,16 +39,13 @@ public class PostingCommentService {
 			.build();
 		Long postingCommentId = postingCommentPersistPort.save(postingComment).getId();
 		posting.increasePostingCommentCount();
-		return postingCommentId;
 	}
 
-	public Long updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO, User currentUser) {
+	public void updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO, User currentUser) {
 		PostingComment postingComment = postingCommentPersistPort.getPostingCommentById(
 			patchPostingCommentReqDTO.getPostingCommentId());
 		userUtils.validateMasterUser(postingComment.getUser().getId(), currentUser.getId());
 		postingComment.updateComment(patchPostingCommentReqDTO.getComment());
-
-		return postingComment.getId();
 	}
 
 	public int deletePostingComment(Long commentId, User currentUser) {

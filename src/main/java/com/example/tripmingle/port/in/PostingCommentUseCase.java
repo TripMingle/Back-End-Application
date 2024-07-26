@@ -3,14 +3,12 @@ package com.example.tripmingle.port.in;
 import com.example.tripmingle.dto.req.posting.DeletePostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PatchPostingCommentReqDTO;
 import com.example.tripmingle.dto.req.posting.PostPostingCommentReqDTO;
-import com.example.tripmingle.dto.res.posting.DeletePostingCommentResDTO;
-import com.example.tripmingle.dto.res.posting.PatchPostingCommentResDTO;
-import com.example.tripmingle.dto.res.posting.PostPostingCommentResDTO;
+import com.example.tripmingle.dto.res.posting.GetOnePostingResDTO;
 
 public interface PostingCommentUseCase {
-	PostPostingCommentResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO);
+	GetOnePostingResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO);
 
-	PatchPostingCommentResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO);
+	GetOnePostingResDTO updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO);
 
-	DeletePostingCommentResDTO deletePostingComment(DeletePostingCommentReqDTO deletePostingCommentReqDTO);
+	GetOnePostingResDTO deletePostingComment(DeletePostingCommentReqDTO deletePostingCommentReqDTO);
 }

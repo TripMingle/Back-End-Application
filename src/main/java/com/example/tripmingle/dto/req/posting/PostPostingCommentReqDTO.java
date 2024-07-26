@@ -1,5 +1,7 @@
 package com.example.tripmingle.dto.req.posting;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +9,9 @@ import lombok.Setter;
 @Setter
 public class PostPostingCommentReqDTO {
 
-    private Long postingId;
-    private Long parentCommentId;
-    private String comment;
+	@JsonIgnore
+	private Long postingId;
+	private Long parentCommentId;
+	private String comment;
 
 }

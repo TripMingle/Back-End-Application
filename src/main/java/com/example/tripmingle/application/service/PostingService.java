@@ -23,7 +23,7 @@ public class PostingService {
 	private final PostingPersistPort postingPersistPort;
 	private final UserUtils userUtils;
 
-	public Long createPosting(PostPostingReqDTO postPostingReqDTO, User currentUser) {
+	public Posting createPosting(PostPostingReqDTO postPostingReqDTO, User currentUser) {
 		Posting posting = Posting.builder()
 			.title(postPostingReqDTO.getTitle())
 			.content(postPostingReqDTO.getContent())
@@ -34,18 +34,16 @@ public class PostingService {
 		return postingPersistPort.createPosting(posting);
 	}
 
-	public Long updatePosting(PatchPostingReqDTO patchPostingReqDTO, User currentUser) {
+	public Posting updatePosting(PatchPostingReqDTO patchPostingReqDTO, User currentUser) {
 		Posting posting = postingPersistPort.getPostingById(patchPostingReqDTO.getPostingId());
 		userUtils.validateMasterUser(posting.getUser().getId(), currentUser.getId());
 		posting.updatePosting(patchPostingReqDTO);
-
-		return posting.getId();
+		return posting;
 	}
 
 	public void deletePosting(Posting posting, User currentUser) {
 		userUtils.validateMasterUser(posting.getUser().getId(), currentUser.getId());
 		posting.deletePosting();
-
 	}
 
 	public List<Posting> getPreviewPostings(GetPreviewPostingReqDTO getPreviewPostingReqDTO) {

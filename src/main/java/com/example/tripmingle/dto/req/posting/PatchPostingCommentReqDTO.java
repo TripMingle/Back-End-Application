@@ -10,6 +10,8 @@ import lombok.Setter;
 public class PatchPostingCommentReqDTO {
 
 	@JsonIgnore
+	private Long postingId;
+	@JsonIgnore
 	private Long postingCommentId;
 	private String comment;
 
