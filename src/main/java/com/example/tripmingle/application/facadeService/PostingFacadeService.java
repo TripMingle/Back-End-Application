@@ -181,9 +181,9 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			throw new InvalidUserAccessException("Invalid User Access.", ErrorCode.INVALID_USER_ACCESS);
 		}
 		postingCommentService.deletePostingCommentsWithPosting(postingId);
-		posting.deletePostingComments();
+		posting.deletePostingWithPostingCommentsCount();
 		postingLikesService.deletePostingLikesWithPosting(postingId);
-		posting.deletePostingLikes();
+		posting.deletePostingWithPostingLikesCount();
 		postingService.deletePosting(posting, currentUser);
 		return DeletePostingResDTO.builder()
 			.postingId(postingId)
