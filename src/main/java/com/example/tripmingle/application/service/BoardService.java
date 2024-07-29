@@ -135,10 +135,6 @@ public class BoardService {
 		boardPersistPort.getBoardsWithinRange();
 	}
 
-	public void saveBoard(Board board) {
-		boardPersistPort.saveBoard(board);
-	}
-
 	public void updateCommentCount(Board board, int commentCount) {
 		board.decreaseCommentCount(commentCount);
 	}
