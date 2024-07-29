@@ -2,6 +2,7 @@ package com.example.tripmingle.port.in;
 
 import java.util.List;
 
+import com.example.tripmingle.dto.res.board.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,10 +10,6 @@ import com.example.tripmingle.dto.req.board.ConfirmUsersReqDTO;
 import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
-import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
-import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
-import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
 
 public interface BoardUseCase {
 	List<GetBoardsResDTO> getRecentBoards(String countryName);
@@ -29,7 +26,7 @@ public interface BoardUseCase {
 
 	void deleteBoard(Long boardId);
 
-	Page<GetBoardsResDTO> searchBoard(String countryName, String keyword, Pageable pageable);
+	Page<SearchBoardResDTO>  searchBoard(String countryName, String keyword, Pageable pageable);
 
 	void getBoardsWithinRange();
 

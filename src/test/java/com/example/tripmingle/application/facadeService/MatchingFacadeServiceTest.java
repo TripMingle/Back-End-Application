@@ -3,6 +3,7 @@ package com.example.tripmingle.application.facadeService;
 import java.time.Duration;
 import java.time.Instant;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.example.tripmingle.port.out.UserPersonalityPersistPort;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
+@Slf4j
 class MatchingFacadeServiceTest {
 
 	@Autowired
@@ -43,7 +45,7 @@ class MatchingFacadeServiceTest {
 		}
 		Instant end = Instant.now();
 		Duration duration = Duration.between(start, end);
-		System.out.println(
+		log.info(
 			"[" + testCount + "times] With Cache Execution time: " + duration.toMillis() + " milliseconds");
 	}
 
@@ -58,7 +60,7 @@ class MatchingFacadeServiceTest {
 		}
 		Instant end = Instant.now();
 		Duration duration = Duration.between(start, end);
-		System.out.println(
+		log.info(
 			"[" + testCount + "times] Without Cache Execution time: " + duration.toMillis() + " milliseconds");
 	}
 

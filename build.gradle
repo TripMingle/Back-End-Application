@@ -80,8 +80,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
 
     //elasticsearch
-    implementation group: 'org.opensearch.client', name: 'opensearch-rest-high-level-client', version: '1.2.4'
-    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    //implementation group: 'org.opensearch.client', name: 'opensearch-rest-high-level-client', version: '1.2.4'
+    //implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
 

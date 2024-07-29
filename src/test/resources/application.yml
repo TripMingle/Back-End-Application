@@ -13,7 +13,7 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     properties:
       hibernate:
-        show_sql: true
+        #show_sql: true
         format_sql: true
   jwt:
     secret: ${jwt.secret-key}
@@ -34,12 +34,10 @@ spring:
       max-request-size: 10MB
       resolve-lazily: true
   elasticsearch:
-    #uris: ${elasticsearch-url}
-    uris: https://search-tripminglees-5dzcdqyztuwnjjmdxqngjhtpi4.ap-southeast-1.es.amazonaws.com
-    #username: ${elasticsearch-username}
-    username: soma929
-    #password: ${elasticsearch-password}
-    password: Soma929!
+    uris: ${elasticsearch-url}
+    username: ${elasticsearch-username}
+    password: ${elasticsearch-password}
+    board-url: ${elasticsearch-board-url}
 
 oauth2:
   kakao:
@@ -54,10 +52,13 @@ logging:
       springframework:
         security: DEBUG
         web: DEBUG
+        elasticsearch.client: DEBUG
     feign:
       client:
         config:
           matchingClient: DEBUG
+    apache:
+      http: DEBUG
 
 server:
   servlet:
@@ -88,3 +89,4 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+

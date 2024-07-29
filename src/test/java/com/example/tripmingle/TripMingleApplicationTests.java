@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.tripmingle.entity.UserSchedule;
 import com.example.tripmingle.repository.UserScheduleRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 class TripMingleApplicationTests {
@@ -24,11 +27,6 @@ class TripMingleApplicationTests {
 	@DisplayName("테스트")
 	@Transactional
 	void test() {
-		Board board = Board.builder().build();
-		System.out.println("before save : " + board.getId());
-		boardRepository.save(board);
-		System.out.println("after save : " + board.getId());
-
 	}
 
 }

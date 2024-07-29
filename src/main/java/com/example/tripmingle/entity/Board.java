@@ -2,17 +2,12 @@ package com.example.tripmingle.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
 import com.example.tripmingle.common.entity.BaseEntity;
 import com.example.tripmingle.dto.etc.UpdateBoardDTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +30,8 @@ public class Board extends BaseEntity {
 	private User user;
 
 	private String title;
+
+	@Column(columnDefinition="TEXT")
 	private String content;
 
 	private String continent;

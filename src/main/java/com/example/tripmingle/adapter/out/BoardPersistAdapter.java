@@ -40,8 +40,8 @@ public class BoardPersistAdapter implements BoardPersistPort {
 	}
 
 	@Override
-	public void getAllBoardsByIds() {
-
+	public List<Board> getAllBoardsByIds(List<Long> boardIds) {
+		return boardRepository.findAllById(boardIds);
 	}
 
 	@Override

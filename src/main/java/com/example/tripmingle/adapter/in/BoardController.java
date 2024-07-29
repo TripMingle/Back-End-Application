@@ -4,6 +4,7 @@ import static com.example.tripmingle.common.constants.Constants.*;
 
 import java.util.List;
 
+import com.example.tripmingle.dto.res.board.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,12 +28,6 @@ import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.res.board.CreateBoardCommentResDTO;
-import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
-import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
-import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
-import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
-import com.example.tripmingle.dto.res.board.UpdateBoardCommentResDTO;
 import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
 
@@ -114,8 +109,8 @@ public class BoardController {
 		, @RequestParam String keyword
 		, @RequestParam(value = "page", defaultValue = "0") int page) {
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
-		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.searchBoard(countryName, keyword, pageable);
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, getBoardsResDTOS));
+		Page<SearchBoardResDTO> searchBoardResDTOS = boardUseCase.searchBoard(countryName, keyword, pageable);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.SEARCH_BOARD_SUCCESS, searchBoardResDTOS));
 	}
 
 	@Operation(summary = "댓글 작성")

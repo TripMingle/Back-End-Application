@@ -15,7 +15,7 @@ public interface BoardPersistPort {
 
 	void deleteBoardById(Long boardId);
 
-	void getAllBoardsByIds();
+	List<Board> getAllBoardsByIds(List<Long> boardIds);
 
 	List<Board> getRecentBoardsByCountryName(String countryName);
 
