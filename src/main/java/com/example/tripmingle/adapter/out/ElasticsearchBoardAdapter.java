@@ -34,6 +34,11 @@ public class ElasticsearchBoardAdapter implements BoardSearchPort {
     }
 
     @Override
+    public void deleteBoard(Board board) {
+        elasticSearchBoardClient.deleteBoardDocument(board.getId().toString());
+    }
+
+    @Override
     public List<Long> searchBoard(String countryName, String keyword, Pageable pageable) {
 
         Map<String, Object> query = new HashMap<>();

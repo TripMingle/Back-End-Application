@@ -13,6 +13,9 @@ public interface ElasticsearchBoardClient {
     @PostMapping(value = "${spring.elasticsearch.board-url}" + "/_doc/{id}", consumes = "application/json")
     Map<String, Object> createOrUpdateBoardDocument(@PathVariable("id") String id, @RequestBody Map<String, Object> document);
 
+    @DeleteMapping(value = "${spring.elasticsearch.board-url}" + "/_doc/{id}")
+    void deleteBoardDocument(@PathVariable("id") String id);
+
     @PostMapping(value = "${spring.elasticsearch.board-url}" + "/_search", consumes = "application/json")
     ElasticsearchResponse searchBoardDocument(@RequestBody Map<String, Object> query);
 

@@ -9,4 +9,6 @@ public interface BoardSearchPort {
     void saveBoard(Board board);
 
     List<Long> searchBoard(String countryName, String keyword, Pageable pageable);
+
+    void deleteBoard(Board board);
 }

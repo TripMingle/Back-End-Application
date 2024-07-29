@@ -97,12 +97,14 @@ public class BoardService {
 			.content(updateBoardReqDTO.getContent())
 			.build();
 		board.update(updateBoardDTO);
+		boardSearchPort.saveBoard(board);
 		return boardPersistPort.saveBoard(board);
 	}
 
 	public void deleteBoard(Long boardId, User currentUser) {
 		Board board = boardPersistPort.getBoardById(boardId);
 		userUtils.validateMasterUser(board.getUser().getId(), currentUser.getId());
+		boardSearchPort.deleteBoard(board);
 		boardPersistPort.deleteBoardById(board.getId());
 	}
 
