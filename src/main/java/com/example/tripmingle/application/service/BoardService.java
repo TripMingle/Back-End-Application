@@ -99,7 +99,7 @@ public class BoardService {
 			.content(updateBoardReqDTO.getContent())
 			.build();
 		board.update(updateBoardDTO);
-		boardSearchPort.updateBoard(board);
+		boardSearchPort.saveBoard(board);
 		return boardPersistPort.saveBoard(board);
 	}
 
