@@ -8,6 +8,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.example.tripmingle.port.out.BoardSearchPort;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService {
 	private final BoardPersistPort boardPersistPort;
 	private final BoardSearchPort boardSearchPort;
@@ -97,7 +99,7 @@ public class BoardService {
 			.content(updateBoardReqDTO.getContent())
 			.build();
 		board.update(updateBoardDTO);
-		boardSearchPort.saveBoard(board);
+		boardSearchPort.updateBoard(board);
 		return boardPersistPort.saveBoard(board);
 	}
 

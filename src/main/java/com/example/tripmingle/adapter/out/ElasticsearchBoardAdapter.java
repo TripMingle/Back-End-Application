@@ -4,9 +4,11 @@ import com.example.tripmingle.client.ElasticsearchBoardClient;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.pojo.ElasticsearchResponse;
 import com.example.tripmingle.port.out.BoardSearchPort;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,6 +35,28 @@ public class ElasticsearchBoardAdapter implements BoardSearchPort {
         elasticSearchBoardClient.createOrUpdateBoardDocument(board.getId().toString(), document);
     }
 
+    @Async
+    @Override
+    public void updateBoard(Board board) {
+        log.info("Starting Elasticsearch update for board ID: {}", board.getId());
+
+        try {
+            Map<String, Object> document = new HashMap<>();
+            document.put("board_id", board.getId());
+            document.put("title", board.getTitle());
+            document.put("content", board.getContent());
+            document.put("country_name", board.getCountryName());
+            document.put("gender", board.getUser().getGender());
+            document.put("language", board.getLanguage());
+            elasticSearchBoardClient.createOrUpdateBoardDocument(board.getId().toString(), document);
+
+            log.info("Completed Elasticsearch update for board ID: {}", board.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update Elasticsearch document for board ID: " + board.getId(), e);
+        }
+    }
+
+    @Async
     @Override
     public void deleteBoard(Board board) {
         elasticSearchBoardClient.deleteBoardDocument(board.getId().toString());

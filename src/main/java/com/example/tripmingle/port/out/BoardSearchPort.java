@@ -11,4 +11,6 @@ public interface BoardSearchPort {
     List<Long> searchBoard(String countryName, String keyword, Pageable pageable);
 
     void deleteBoard(Board board);
+
+    void updateBoard(Board board);
 }
