@@ -40,8 +40,8 @@ public class BoardPersistAdapter implements BoardPersistPort {
 	}
 
 	@Override
-	public void getAllBoardsByIds() {
-
+	public List<Board> getAllBoardsByIds(List<Long> boardIds) {
+		return boardRepository.findAllById(boardIds);
 	}
 
 	@Override
@@ -67,6 +67,11 @@ public class BoardPersistAdapter implements BoardPersistPort {
 	@Override
 	public Page<Board> getBoardByUser(User user, Pageable pageable) {
 		return boardRepository.findBoardsByUser(user, pageable);
+	}
+
+	@Override
+	public Page<Board> getAllBoardsByIdsAndPage(List<Long> boardIds, Pageable pageable) {
+		return boardRepository.findAllByIdIn(boardIds,pageable);
 	}
 
 }

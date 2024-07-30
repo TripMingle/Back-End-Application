@@ -57,11 +57,12 @@ dependencies {
 
     //JSON parser
     implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
 
     //redisson
     implementation 'org.redisson:redisson:3.16.4'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.springframework.boot:spring-boot-devtools'
 
@@ -75,9 +76,6 @@ dependencies {
 
     // mongodb
     //implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
-    //parser
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
 
 }
 

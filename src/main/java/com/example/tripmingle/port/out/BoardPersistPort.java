@@ -15,7 +15,7 @@ public interface BoardPersistPort {
 
 	void deleteBoardById(Long boardId);
 
-	void getAllBoardsByIds();
+	List<Board> getAllBoardsByIds(List<Long> boardIds);
 
 	List<Board> getRecentBoardsByCountryName(String countryName);
 
@@ -26,4 +26,6 @@ public interface BoardPersistPort {
 	void getBoardsWithinRange();
 
 	Page<Board> getBoardByUser(User user, Pageable pageable);
+
+    Page<Board> getAllBoardsByIdsAndPage(List<Long> boardIds, Pageable pageable);
 }

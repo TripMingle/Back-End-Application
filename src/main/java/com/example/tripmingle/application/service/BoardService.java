@@ -1,8 +1,16 @@
 package com.example.tripmingle.application.service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import com.example.tripmingle.port.out.BoardSearchPort;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +28,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService {
 	private final BoardPersistPort boardPersistPort;
+	private final BoardSearchPort boardSearchPort;
 	private final UserUtils userUtils;
 	private final CommonUtils commonUtils;
 
@@ -30,7 +40,7 @@ public class BoardService {
 	}
 
 	public void getBoardsByIdList() {
-		boardPersistPort.getAllBoardsByIds();
+
 	}
 
 	public Page<Board> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
@@ -67,8 +77,8 @@ public class BoardService {
 			.language(createBoardReqDTO.getLanguage())
 			.commentCount(0)
 			.build();
-
-		return boardPersistPort.saveBoard(board);
+		boardSearchPort.saveBoard(boardPersistPort.saveBoard(board));
+		return board;
 	}
 
 	public Board updateBoard(Long boardId, UpdateBoardReqDTO updateBoardReqDTO, User currentUser) {
@@ -89,25 +99,42 @@ public class BoardService {
 			.content(updateBoardReqDTO.getContent())
 			.build();
 		board.update(updateBoardDTO);
+		boardSearchPort.updateBoard(board);
 		return boardPersistPort.saveBoard(board);
 	}
 
 	public void deleteBoard(Long boardId, User currentUser) {
 		Board board = boardPersistPort.getBoardById(boardId);
 		userUtils.validateMasterUser(board.getUser().getId(), currentUser.getId());
+		boardSearchPort.deleteBoard(board);
 		boardPersistPort.deleteBoardById(board.getId());
 	}
 
 	public Page<Board> searchBoard(String countryName, String keyword, Pageable pageable) {
+		List<Long> boardIds = boardSearchPort.searchBoard(countryName, keyword, pageable);
+		List<Board> boards = boardPersistPort.getAllBoardsByIds(boardIds);
+
+		Map<Long, Board> boardMap = boards.stream()
+				.collect(Collectors.toMap(Board::getId, Function.identity()));
+
+		List<Board> sortedBoards = boardIds.stream()
+				.map(boardMap::get)
+				.collect(Collectors.toList());
+
+		int startIdx = (int) pageable.getOffset();
+		int endIdx = Math.min((startIdx + pageable.getPageSize()), sortedBoards.size());
+
+		return new PageImpl<>(sortedBoards.subList(startIdx, endIdx), pageable, sortedBoards.size());
+
+
+	}
+
+	public Page<Board> searchBoardByDB(String countryName, String keyword, Pageable pageable) {
 		return boardPersistPort.searchBoard(countryName, keyword, pageable);
 	}
 
 	public void getBoardsWithinRange() {
 		boardPersistPort.getBoardsWithinRange();
-	}
-
-	public void saveBoard(Board board) {
-		boardPersistPort.saveBoard(board);
 	}
 
 	public void updateCommentCount(Board board, int commentCount) {

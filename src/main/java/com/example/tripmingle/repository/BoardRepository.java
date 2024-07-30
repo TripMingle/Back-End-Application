@@ -37,7 +37,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	Optional<Board> findById(Long Id);
 
-	@Query("SELECT b FROM Board b WHERE (LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND LOWER(b.countryName) = LOWER(:countryName)")
+	@Query("SELECT b FROM Board b WHERE (LOWER(b.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+			"OR LOWER(b.content) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND LOWER(b.countryName) = LOWER(:countryName)")
 	Page<Board> searchByTitleOrContent(String keyword, Pageable pageable, String countryName);
 
 	Page<Board> findBoardsByUser(User user, Pageable pageable);
@@ -48,4 +49,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	@Query("SELECT b FROM Board b WHERE b.id = :id")
 	Board findByIdWithPessimisticLock(@Param("id") Long id);
 
+	@Query("SELECT b FROM Board b WHERE b.id IN :boardIds")
+	Page<Board> findAllByIdIn(@Param("boardIds") List<Long> boardIds, Pageable pageable);
 }

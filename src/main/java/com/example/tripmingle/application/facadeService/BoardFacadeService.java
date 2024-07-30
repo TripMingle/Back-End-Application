@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.tripmingle.dto.res.board.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,6 @@ import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
-import com.example.tripmingle.dto.res.board.CreateBoardCommentResDTO;
-import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
-import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
-import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
-import com.example.tripmingle.dto.res.board.ParentBoardCommentResDTO;
-import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
-import com.example.tripmingle.dto.res.board.UpdateBoardCommentResDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardBookMark;
 import com.example.tripmingle.entity.BoardComment;
@@ -346,10 +340,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	public Page<GetBoardsResDTO> searchBoard(String countryName, String keyword, Pageable pageable) {
+	public Page<SearchBoardResDTO>  searchBoard(String countryName, String keyword, Pageable pageable) {
 		Page<Board> boardPage = boardService.searchBoard(countryName, keyword, pageable);
-		User currentUser = userService.getCurrentUser();
-		return boardPage.map(board -> GetBoardsResDTO.builder()
+
+		return boardPage.map(board -> SearchBoardResDTO.builder()
 			.continent(board.getContinent())
 			.countryName(board.getCountryName())
 			.boardId(board.getId())
@@ -363,18 +357,16 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.commentCount(board.getCommentCount())
 			.likeCount(board.getLikeCount())
 			.bookMarkCount(board.getBookMarkCount())
+			.content(board.getContent())
 			.imageUrl(board.getImageUrl())
 			.nickName(board.getUser().getNickName())
 			.ageRange(board.getUser().getAgeRange())
 			.gender(board.getUser().getGender())
 			.nationality(board.getUser().getNationality())
 			.userImageUrl("")
-			.isMine(currentUser.getId().equals(board.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
 			.build());
+
+
 	}
 
 	@Override
