@@ -23,21 +23,9 @@ import java.util.stream.Collectors;
 public class ElasticsearchBoardAdapter implements BoardSearchPort {
     private final ElasticsearchBoardClient elasticSearchBoardClient;
 
-    @Override
-    public void saveBoard(Board board) {
-        Map<String, Object> document = new HashMap<>();
-        document.put("board_id", board.getId());
-        document.put("title", board.getTitle());
-        document.put("content", board.getContent());
-        document.put("country_name", board.getCountryName());
-        document.put("gender", board.getUser().getGender());
-        document.put("language", board.getLanguage());
-        elasticSearchBoardClient.createOrUpdateBoardDocument(board.getId().toString(), document);
-    }
-
     @Async
     @Override
-    public void updateBoard(Board board) {
+    public void saveBoard(Board board) {
         log.info("Starting Elasticsearch update for board ID: {}", board.getId());
 
         try {
