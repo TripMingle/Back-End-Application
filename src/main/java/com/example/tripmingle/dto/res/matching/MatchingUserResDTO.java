@@ -24,7 +24,7 @@ public class MatchingUserResDTO {
 	private int accommodationFlexibility; // 숙소 선택 성향
 	private int foodFlexibility; // 음식 선택 성향
 	private int activity; // 선호 활동 - 액티비티
-	private int instagramPicture; // 선호 활동 - 인스타사진
+	private int photo; // 선호 활동 - 인스타사진
 	private int foodExploration; // 선호 활동 - 맛집탐방
 	private int adventure; // 선호 활동 - 탐험
 	private int personality; // 성격
