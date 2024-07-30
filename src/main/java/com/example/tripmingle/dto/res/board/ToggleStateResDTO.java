@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class ToggleStateResDTO {
+    private Long boardId;
     private boolean state;
 }

@@ -61,12 +61,11 @@ public class UserPersonalityService {
 				commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getAccommodationFlexibility()))
 			.foodFlexibility(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getFoodFlexibility()))
 			.activity(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getActivity()))
-			.instagramPicture(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getInstagramPicture()))
+			.photo(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getPhoto()))
 			.foodExploration(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getFoodExploration()))
 			.adventure(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getAdventure()))
 			.personality(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getPersonality()))
 			.schedule(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getSchedule()))
-			.shopping(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getShopping()))
 			.drink(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getDrink()))
 			.ageRange(ageRange)
 			.build();

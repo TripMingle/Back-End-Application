@@ -94,7 +94,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 				.accommodationFlexibility(commonUtils.convertDoubleToInt(userPersonality.getAccommodationFlexibility()))
 				.foodFlexibility(commonUtils.convertDoubleToInt(userPersonality.getFoodFlexibility()))
 				.activity(commonUtils.convertDoubleToInt(userPersonality.getActivity()))
-				.instagramPicture(commonUtils.convertDoubleToInt(userPersonality.getInstagramPicture()))
+				.photo(commonUtils.convertDoubleToInt(userPersonality.getPhoto()))
 				.foodExploration(commonUtils.convertDoubleToInt(userPersonality.getFoodExploration()))
 				.adventure(commonUtils.convertDoubleToInt(userPersonality.getAdventure()))
 				.personality(commonUtils.convertDoubleToInt(userPersonality.getPersonality()))

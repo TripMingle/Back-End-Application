@@ -61,34 +61,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public List<GetBoardsResDTO> getRecentBoards(String countryName) {
 		List<Board> boardList = boardService.getRecentBoardsByCountryName(countryName);
 		User currentUser = userService.getCurrentUser();
-
-		return boardList
-			.stream().map(board -> GetBoardsResDTO.builder()
-				.continent(board.getContinent())
-				.countryName(board.getCountryName())
-				.boardId(board.getId())
-				.title(board.getTitle())
-				.createdAt(board.getCreatedAt())
-				.startDate(board.getStartDate())
-				.endDate(board.getEndDate())
-				.currentCount(board.getCurrentCount())
-				.maxCount(board.getMaxCount())
-				.language(board.getLanguage())
-				.commentCount(board.getCommentCount())
-				.likeCount(board.getLikeCount())
-				.bookMarkCount(board.getBookMarkCount())
-				.imageUrl(board.getImageUrl())
-				.nickName(board.getUser().getNickName())
-				.ageRange(board.getUser().getAgeRange())
-				.gender(board.getUser().getGender())
-				.nationality(board.getUser().getNationality())
-				.userImageUrl("")
-				.isMine(currentUser.getId().equals(board.getUser().getId()))
-				.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-				.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-				.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-				.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-				.build())
+		return boardList.stream().map(board -> makeBoardDTO(board, currentUser))
 			.collect(Collectors.toList());
 	}
 
@@ -96,33 +69,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
 		Page<Board> boardPage = boardService.getAllBoards(getAllBoardReqDTO, pageable);
 		User currentUser = userService.getCurrentUser();
-
-		return boardPage.map(board -> GetBoardsResDTO.builder()
-			.continent(board.getContinent())
-			.countryName(board.getCountryName())
-			.boardId(board.getId())
-			.title(board.getTitle())
-			.createdAt(board.getCreatedAt())
-			.startDate(board.getStartDate())
-			.endDate(board.getEndDate())
-			.currentCount(board.getCurrentCount())
-			.maxCount(board.getMaxCount())
-			.language(board.getLanguage())
-			.commentCount(board.getCommentCount())
-			.likeCount(board.getLikeCount())
-			.bookMarkCount(board.getBookMarkCount())
-			.imageUrl(board.getImageUrl())
-			.nickName(board.getUser().getNickName())
-			.ageRange(board.getUser().getAgeRange())
-			.gender(board.getUser().getGender())
-			.nationality(board.getUser().getNationality())
-			.userImageUrl("")
-			.isMine(currentUser.getId().equals(board.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-			.build());
+		return boardPage.map(board -> makeBoardDTO(board,currentUser));
 	}
 
 	@Override
@@ -131,44 +78,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		User currentUser = userService.getCurrentUser();
 		List<ParentBoardCommentResDTO> boardComments
 			= structureBoardComment(boardCommentService.getBoardCommentsByBoardId(board.getId()), currentUser);
-
-		return GetBoardInfoResDTO.builder()
-			.continent(board.getContinent())
-			.countryName(board.getCountryName())
-			.boardId(board.getId())
-			.title(board.getTitle())
-			.content(board.getContent())
-			.language(board.getLanguage())
-			.tripType(commonUtils.convertStringToArray(board.getTripType()))
-			.preferGender(commonUtils.convertDoubleToInt(board.getPreferGender()))
-			.preferSmoking(commonUtils.convertDoubleToInt(board.getPreferSmoking()))
-			.preferShopping(commonUtils.convertDoubleToInt(board.getPreferShopping()))
-			.preferInstagramPicture(commonUtils.convertDoubleToInt(board.getPreferInstagramPicture()))
-			.preferDrink(commonUtils.convertDoubleToInt(board.getPreferDrink()))
-			.startDate(board.getStartDate())
-			.endDate(board.getEndDate())
-			.currentCount(board.getCurrentCount())
-			.maxCount(board.getMaxCount())
-			.createdAt(board.getCreatedAt())
-			.commentCount(board.getCommentCount())
-			.likeCount(board.getLikeCount())
-			.bookMarkCount(board.getBookMarkCount())
-			.isMine(currentUser.getId().equals(board.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-			.boardComments(boardComments)
-			.userId(board.getUser().getId())
-			.nickName(board.getUser().getNickName())
-			.ageRange(board.getUser().getAgeRange())
-			.gender(board.getUser().getGender())
-			.nationality(board.getUser().getNationality())
-			.selfIntroduction("")
-			.userImageUrl("")
-			.userRating(0.0)
-			.imageUrl(board.getImageUrl())
-			.build();
+		return makeBoardInfoDTO(board,currentUser,boardComments);
 	}
 
 	private List<ParentBoardCommentResDTO> structureBoardComment(List<BoardComment> boardComments, User currentUser) {
@@ -229,106 +139,33 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public GetBoardInfoResDTO createBoard(CreateBoardReqDTO createBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		String randomImageUrl = countryImageService.getRandomCountryImage(createBoardReqDTO.getCountryName());
-		if (randomImageUrl.equals("")) {
+		if (randomImageUrl.isEmpty()) {
 			randomImageUrl = continentService.getContinentImage(createBoardReqDTO.getContinent());
 		}
 		Board board = boardService.createBoard(createBoardReqDTO, currentUser, randomImageUrl);
 		companionService.registerLeader(board, currentUser);
 		boardScheduleService.createBoardSchedule(board, currentUser, createBoardReqDTO.getCreateBoardSchedule());
 
-		return GetBoardInfoResDTO.builder()
-			.continent(board.getContinent())
-			.countryName(board.getCountryName())
-			.boardId(board.getId())
-			.title(board.getTitle())
-			.content(board.getContent())
-			.language(board.getLanguage())
-			.tripType(commonUtils.convertStringToArray(board.getTripType()))
-			.preferGender(board.getPreferGender())
-			.preferSmoking(board.getPreferSmoking())
-			.preferShopping(board.getPreferShopping())
-			.preferInstagramPicture(board.getPreferInstagramPicture())
-			.preferDrink(board.getPreferDrink())
-			.startDate(board.getStartDate())
-			.endDate(board.getEndDate())
-			.currentCount(board.getCurrentCount())
-			.maxCount(board.getMaxCount())
-			.createdAt(board.getCreatedAt())
-			.commentCount(board.getCommentCount())
-			.likeCount(board.getLikeCount())
-			.bookMarkCount(board.getBookMarkCount())
-			.isMine(currentUser.getId().equals(board.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-			.boardComments(new ArrayList<>())
-			.userId(board.getUser().getId())
-			.nickName(board.getUser().getNickName())
-			.ageRange(board.getUser().getAgeRange())
-			.gender(board.getUser().getGender())
-			.nationality(board.getUser().getNationality())
-			.selfIntroduction(board.getUser().getSelfIntroduction())
-			.userImageUrl("")
-			.userRating(0.0)
-			.imageUrl(board.getImageUrl())
-			.build();
+		return makeBoardInfoDTO(board,currentUser,new ArrayList<>());
 
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public GetBoardInfoResDTO updateBoard(Long boardId, UpdateBoardReqDTO patchBoardReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
 		List<ParentBoardCommentResDTO> boardComments
 			= structureBoardComment(boardCommentService.getBoardCommentsByBoardId(board.getId()), currentUser);
-
-		return GetBoardInfoResDTO.builder()
-			.continent(board.getContinent())
-			.countryName(board.getCountryName())
-			.boardId(board.getId())
-			.title(board.getTitle())
-			.content(board.getContent())
-			.language(board.getLanguage())
-			.tripType(commonUtils.convertStringToArray(board.getTripType()))
-			.preferGender(board.getPreferGender())
-			.preferSmoking(board.getPreferSmoking())
-			.preferShopping(board.getPreferShopping())
-			.preferInstagramPicture(board.getPreferInstagramPicture())
-			.preferDrink(board.getPreferDrink())
-			.startDate(board.getStartDate())
-			.endDate(board.getEndDate())
-			.currentCount(board.getCurrentCount())
-			.maxCount(board.getMaxCount())
-			.createdAt(board.getCreatedAt())
-			.commentCount(board.getCommentCount())
-			.likeCount(board.getLikeCount())
-			.bookMarkCount(board.getBookMarkCount())
-			.isMine(currentUser.getId().equals(board.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-			.boardComments(boardComments)
-			.userId(board.getUser().getId())
-			.nickName(board.getUser().getNickName())
-			.ageRange(board.getUser().getAgeRange())
-			.gender(board.getUser().getGender())
-			.nationality(board.getUser().getNationality())
-			.selfIntroduction(board.getUser().getSelfIntroduction())
-			.userImageUrl("")
-			.userRating(0.0)
-			.imageUrl(board.getImageUrl())
-			.build();
+		return makeBoardInfoDTO(board,currentUser,boardComments);
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public void deleteBoard(Long boardId) {
 		User currentUser = userService.getCurrentUser();
 		companionService.deleteCompanionByBoardId(boardId);
@@ -365,12 +202,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.nationality(board.getUser().getNationality())
 			.userImageUrl("")
 			.build());
-
-
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardService.getBoardById(createBoardCommentReqDTO.getBoardId());
@@ -397,7 +232,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public void deleteBoardComment(Long commentId) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardCommentService.getBoardByCommentId(commentId);
@@ -407,7 +242,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO,
 		Long commentId) {
 		User currentUser = userService.getCurrentUser();
@@ -422,13 +257,13 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public ToggleStateResDTO toggleBoardBookMark(Long boardId) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardService.getBoardById(boardId);
-		boolean state = boardBookMarkService.toggleBoardBookMark(board, currentUser);
 		return ToggleStateResDTO.builder()
-			.state(state)
+			.boardId(board.getId())
+			.state(boardBookMarkService.toggleBoardBookMark(board, currentUser))
 			.build();
 	}
 
@@ -436,43 +271,17 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getMyBookMarkedBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<BoardBookMark> boardBookMarks = boardBookMarkService.getMyBookMarkedBoards(currentUser, pageable);
-
-		return boardBookMarks.map(boardBookmark -> GetBoardsResDTO.builder()
-			.continent(boardBookmark.getBoard().getContinent())
-			.countryName(boardBookmark.getBoard().getCountryName())
-			.boardId(boardBookmark.getBoard().getId())
-			.title(boardBookmark.getBoard().getTitle())
-			.createdAt(boardBookmark.getBoard().getCreatedAt())
-			.startDate(boardBookmark.getBoard().getStartDate())
-			.endDate(boardBookmark.getBoard().getEndDate())
-			.currentCount(boardBookmark.getBoard().getCurrentCount())
-			.maxCount(boardBookmark.getBoard().getMaxCount())
-			.language(boardBookmark.getBoard().getLanguage())
-			.commentCount(boardBookmark.getBoard().getCommentCount())
-			.likeCount(boardBookmark.getBoard().getLikeCount())
-			.bookMarkCount(boardBookmark.getBoard().getBookMarkCount())
-			.imageUrl(boardBookmark.getBoard().getImageUrl())
-			.nickName(boardBookmark.getBoard().getUser().getNickName())
-			.ageRange(boardBookmark.getBoard().getUser().getAgeRange())
-			.gender(boardBookmark.getBoard().getUser().getGender())
-			.nationality(boardBookmark.getBoard().getUser().getNationality())
-			.userImageUrl("")
-			.isMine(currentUser.getId().equals(boardBookmark.getBoard().getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, boardBookmark.getBoard()))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardBookmark.getBoard()))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, boardBookmark.getBoard()))
-			.isExpired(commonUtils.isEndDatePassed(boardBookmark.getBoard().getEndDate()))
-			.build());
+		return boardBookMarks.map(boardBookmark -> makeBoardDTO(boardBookmark.getBoard(), currentUser));
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public ToggleStateResDTO toggleBoardLikes(Long boardId) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardService.getBoardById(boardId);
-		boolean state = boardLikesService.toggleBoardLikes(board, currentUser);
 		return ToggleStateResDTO.builder()
-			.state(state)
+			.boardId(board.getId())
+			.state(boardLikesService.toggleBoardLikes(board, currentUser))
 			.build();
 	}
 
@@ -480,69 +289,18 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getMyLikedBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser, pageable);
-
-		return boardLikes.map(boardLike -> GetBoardsResDTO.builder()
-			.continent(boardLike.getBoard().getContinent())
-			.countryName(boardLike.getBoard().getCountryName())
-			.boardId(boardLike.getBoard().getId())
-			.title(boardLike.getBoard().getTitle())
-			.createdAt(boardLike.getBoard().getCreatedAt())
-			.startDate(boardLike.getBoard().getStartDate())
-			.endDate(boardLike.getBoard().getEndDate())
-			.currentCount(boardLike.getBoard().getCurrentCount())
-			.maxCount(boardLike.getBoard().getMaxCount())
-			.language(boardLike.getBoard().getLanguage())
-			.commentCount(boardLike.getBoard().getCommentCount())
-			.likeCount(boardLike.getBoard().getLikeCount())
-			.bookMarkCount(boardLike.getBoard().getBookMarkCount())
-			.imageUrl(boardLike.getBoard().getImageUrl())
-			.nickName(boardLike.getBoard().getUser().getNickName())
-			.ageRange(boardLike.getBoard().getUser().getAgeRange())
-			.gender(boardLike.getBoard().getUser().getGender())
-			.nationality(boardLike.getBoard().getUser().getNationality())
-			.userImageUrl("")
-			.isMine(currentUser.getId().equals(boardLike.getBoard().getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, boardLike.getBoard()))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, boardLike.getBoard()))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, boardLike.getBoard()))
-			.isExpired(commonUtils.isEndDatePassed(boardLike.getBoard().getEndDate()))
-			.build());
+		return boardLikes.map(boardLike -> makeBoardDTO(boardLike.getBoard(),currentUser));
 	}
 
 	@Override
 	public Page<GetBoardsResDTO> getMyBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<Board> boardList = boardService.getBoardsByUser(currentUser, pageable);
-		return boardList.map(board -> GetBoardsResDTO.builder()
-			.continent(board.getContinent())
-			.countryName(board.getCountryName())
-			.boardId(board.getId())
-			.title(board.getTitle())
-			.createdAt(board.getCreatedAt())
-			.startDate(board.getStartDate())
-			.endDate(board.getEndDate())
-			.currentCount(board.getCurrentCount())
-			.maxCount(board.getMaxCount())
-			.language(board.getLanguage())
-			.commentCount(board.getCommentCount())
-			.likeCount(board.getLikeCount())
-			.bookMarkCount(board.getBookMarkCount())
-			.imageUrl(board.getImageUrl())
-			.nickName(board.getUser().getNickName())
-			.ageRange(board.getUser().getAgeRange())
-			.gender(board.getUser().getGender())
-			.nationality(board.getUser().getNationality())
-			.userImageUrl("")
-			.isMine(currentUser.getId().equals(board.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-			.build());
+		return boardList.map(board -> makeBoardDTO(board,currentUser));
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public void confirmUsers(Long boardId, ConfirmUsersReqDTO confirmUsersReqDTO) {
 		Board board = boardService.getBoardById(boardId);
 		User currentUser = userService.getCurrentUser();
@@ -551,7 +309,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	@Transactional(readOnly = false)
+	@Transactional
 	public void leaveCompanion(Long boardId) {
 		Board board = boardService.getBoardById(boardId);
 		User currentUser = userService.getCurrentUser();
@@ -562,7 +320,6 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public List<GetCompanionsResDTO> getCompanions(Long boardId) {
 		Board board = boardService.getBoardById(boardId);
 		List<Companion> companions = companionService.getCompanionsByBoardId(board.getId());
-
 		return companions.stream().map(companion -> GetCompanionsResDTO.builder()
 			.userId(companion.getUser().getId())
 			.nickName(companion.getUser().getNickName())
@@ -578,36 +335,81 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getMyCompanionBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<Companion> companionList = companionService.getCompanionsByUser(currentUser, pageable);
-		return companionList.map(companion -> GetBoardsResDTO.builder()
-			.continent(companion.getBoard().getContinent())
-			.countryName(companion.getBoard().getCountryName())
-			.boardId(companion.getBoard().getId())
-			.title(companion.getBoard().getTitle())
-			.createdAt(companion.getBoard().getCreatedAt())
-			.startDate(companion.getBoard().getStartDate())
-			.endDate(companion.getBoard().getEndDate())
-			.currentCount(companion.getBoard().getCurrentCount())
-			.maxCount(companion.getBoard().getMaxCount())
-			.language(companion.getBoard().getLanguage())
-			.commentCount(companion.getBoard().getCommentCount())
-			.likeCount(companion.getBoard().getLikeCount())
-			.bookMarkCount(companion.getBoard().getBookMarkCount())
-			.imageUrl(companion.getBoard().getImageUrl())
-			.nickName(companion.getUser().getNickName())
-			.ageRange(companion.getUser().getAgeRange())
-			.gender(companion.getUser().getGender())
-			.nationality(companion.getUser().getNationality())
-			.userImageUrl("")
-			.isMine(currentUser.getId().equals(companion.getUser().getId()))
-			.isLiked(boardLikesService.isLikedBoard(currentUser, companion.getBoard()))
-			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, companion.getBoard()))
-			.isParticipating(companionService.isParticipatingBoard(currentUser, companion.getBoard()))
-			.isExpired(commonUtils.isEndDatePassed(companion.getBoard().getEndDate()))
-			.build());
+		return companionList.map(companion -> makeBoardDTO(companion.getBoard(),currentUser));
 	}
 
 	@Override
 	public void getClusteredBoards() {
 		boardService.getBoardsByIdList();
+	}
+
+	private GetBoardInfoResDTO makeBoardInfoDTO(Board board, User currentUser, List<ParentBoardCommentResDTO> boardComments){
+		return GetBoardInfoResDTO.builder()
+				.continent(board.getContinent())
+				.countryName(board.getCountryName())
+				.boardId(board.getId())
+				.title(board.getTitle())
+				.content(board.getContent())
+				.language(board.getLanguage())
+				.tripType(commonUtils.convertStringToArray(board.getTripType()))
+				.preferGender(commonUtils.convertDoubleToInt(board.getPreferGender()))
+				.preferSmoking(commonUtils.convertDoubleToInt(board.getPreferSmoking()))
+				.preferBudget(commonUtils.convertDoubleToInt(board.getPreferBudget()))
+				.preferPhoto(commonUtils.convertDoubleToInt(board.getPreferPhoto()))
+				.preferDrink(commonUtils.convertDoubleToInt(board.getPreferDrink()))
+				.startDate(board.getStartDate())
+				.endDate(board.getEndDate())
+				.currentCount(board.getCurrentCount())
+				.maxCount(board.getMaxCount())
+				.createdAt(board.getCreatedAt())
+				.commentCount(board.getCommentCount())
+				.likeCount(board.getLikeCount())
+				.bookMarkCount(board.getBookMarkCount())
+				.isMine(currentUser.getId().equals(board.getUser().getId()))
+				.isLiked(boardLikesService.isLikedBoard(currentUser, board))
+				.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+				.isParticipating(companionService.isParticipatingBoard(currentUser, board))
+				.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+				.boardComments(boardComments)
+				.userId(board.getUser().getId())
+				.nickName(board.getUser().getNickName())
+				.ageRange(board.getUser().getAgeRange())
+				.gender(board.getUser().getGender())
+				.nationality(board.getUser().getNationality())
+				.selfIntroduction("")
+				.userImageUrl("")
+				.userRating(0.0)
+				.imageUrl(board.getImageUrl())
+				.build();
+	}
+
+
+	private GetBoardsResDTO makeBoardDTO(Board board, User currentUser){
+		return GetBoardsResDTO.builder()
+				.continent(board.getContinent())
+				.countryName(board.getCountryName())
+				.boardId(board.getId())
+				.title(board.getTitle())
+				.createdAt(board.getCreatedAt())
+				.startDate(board.getStartDate())
+				.endDate(board.getEndDate())
+				.currentCount(board.getCurrentCount())
+				.maxCount(board.getMaxCount())
+				.language(board.getLanguage())
+				.commentCount(board.getCommentCount())
+				.likeCount(board.getLikeCount())
+				.bookMarkCount(board.getBookMarkCount())
+				.imageUrl(board.getImageUrl())
+				.nickName(board.getUser().getNickName())
+				.ageRange(board.getUser().getAgeRange())
+				.gender(board.getUser().getGender())
+				.nationality(board.getUser().getNationality())
+				.userImageUrl("")
+				.isMine(currentUser.getId().equals(board.getUser().getId()))
+				.isLiked(boardLikesService.isLikedBoard(currentUser, board))
+				.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+				.isParticipating(companionService.isParticipatingBoard(currentUser, board))
+				.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+				.build();
 	}
 }

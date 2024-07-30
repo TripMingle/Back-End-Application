@@ -44,8 +44,8 @@ public class Board extends BaseEntity {
 
 	private double preferGender; // 선호 성별
 	private double preferSmoking; // 선호 흡연타입
-	private double preferShopping; // 선호 활동 - 쇼핑
-	private double preferInstagramPicture; // 선호 활동 - 인스타사진
+	private double preferBudget; // 선호 활동 - 예산
+	private double preferPhoto; // 선호 활동 - 사진
 	private double preferDrink; // 선호 활동 - 음주
 
 	//인원수
@@ -97,8 +97,8 @@ public class Board extends BaseEntity {
 		}
 		this.preferGender = updateBoardDTO.getPreferGender();
 		this.preferSmoking = updateBoardDTO.getPreferSmoking();
-		this.preferShopping = updateBoardDTO.getPreferShopping();
-		this.preferInstagramPicture = updateBoardDTO.getPreferInstagramPicture();
+		this.preferBudget = updateBoardDTO.getPreferBudget();
+		this.preferPhoto = updateBoardDTO.getPreferPhoto();
 		this.preferDrink = updateBoardDTO.getPreferDrink();
 
 		if (updateBoardDTO.getMaxCount() > 0) {
