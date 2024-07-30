@@ -65,13 +65,13 @@ public class BoardController {
 			.gender(gender)
 			.countryName(countryName)
 			.build();
-		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getAllBoards(getAllBoardReqDTO, pageable);
+		Page<GetBoardsResDTO> getBoardsResDTOS = boardUseCase.getBoardList(getAllBoardReqDTO, pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_ALL_BOARD_SUCCESS, getBoardsResDTOS));
 	}
 
 	@Operation(summary = "단일게시물 조회")
 	@GetMapping("/show/{board-id}")
-	//단일게시물 조회 (상세내용 + 댓글까지 + 유저정보 + 태그)
+	//단일게시물 조회
 	public ResponseEntity<ResultResponse> getBoard(@PathVariable(value = "board-id") Long boardId) {
 		GetBoardInfoResDTO getBoardInfoResDTO = boardUseCase.getBoard(boardId);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_SINGLE_BOARD_SUCCESS, getBoardInfoResDTO));
@@ -118,9 +118,8 @@ public class BoardController {
 	//댓글달기 (대댓글달기도 같은 API 사용)
 	public ResponseEntity<ResultResponse> createComment(
 		@RequestBody CreateBoardCommentReqDTO createBoardCommentReqDTO) {
-		CreateBoardCommentResDTO createBoardCommentResDTO = boardCommentUseCase.createBoardComment(
-			createBoardCommentReqDTO);
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_COMMENT_SUCCESS, createBoardCommentResDTO));
+		boardCommentUseCase.createBoardComment(createBoardCommentReqDTO);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.CREATE_BOARD_COMMENT_SUCCESS));
 	}
 
 	@Operation(summary = "댓글 수정")
@@ -128,9 +127,8 @@ public class BoardController {
 	//댓글수정(대댓글도 같은 API 사용)
 	public ResponseEntity<ResultResponse> updateComment(@PathVariable(value = "comment-id") Long commentId,
 		@RequestBody UpdateBoardCommentReqDTO updateBoardCommentReqDTO) {
-		UpdateBoardCommentResDTO updateBoardCommentResDTO = boardCommentUseCase.updateBoardComment(
-			updateBoardCommentReqDTO, commentId);
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_COMMENT_SUCCESS, updateBoardCommentResDTO));
+		boardCommentUseCase.updateBoardComment(updateBoardCommentReqDTO, commentId);
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_BOARD_COMMENT_SUCCESS));
 	}
 
 	@Operation(summary = "댓글 삭제")

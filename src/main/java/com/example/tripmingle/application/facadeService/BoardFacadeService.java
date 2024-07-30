@@ -42,6 +42,8 @@ import com.example.tripmingle.port.in.BoardUseCase;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.example.tripmingle.common.constants.Constants.NO_PARENT_COMMENT_ID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -66,7 +68,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	public Page<GetBoardsResDTO> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
+	public Page<GetBoardsResDTO> getBoardList(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
 		Page<Board> boardPage = boardService.getAllBoards(getAllBoardReqDTO, pageable);
 		User currentUser = userService.getCurrentUser();
 		return boardPage.map(board -> makeBoardDTO(board,currentUser));
@@ -144,7 +146,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		User currentUser = userService.getCurrentUser();
 		String randomImageUrl = countryImageService.getRandomCountryImage(createBoardReqDTO.getCountryName());
 		if (randomImageUrl.isEmpty()) {
-			randomImageUrl = continentService.getContinentImage(createBoardReqDTO.getContinent());
+			randomImageUrl = continentService.getContinentByContinentName(createBoardReqDTO.getContinent()).getImageUrl();
 		}
 		Board board = boardService.createBoard(createBoardReqDTO, currentUser, randomImageUrl);
 		companionService.registerLeader(board, currentUser);
@@ -200,35 +202,24 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.ageRange(board.getUser().getAgeRange())
 			.gender(board.getUser().getGender())
 			.nationality(board.getUser().getNationality())
-			.userImageUrl("")
+			.userImageUrl(board.getImageUrl()==null || board.getImageUrl().isEmpty() ? "" : board.getImageUrl())
 			.build());
 	}
 
 	@Override
 	@Transactional
-	public CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
+	public void createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO) {
 		User currentUser = userService.getCurrentUser();
 		Board board = boardService.getBoardById(createBoardCommentReqDTO.getBoardId());
 		BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board,
 			currentUser);
 		Long parentBoardCommentId =
-			boardComment.isParentBoardCommentNull() ? -1 : boardComment.getParentBoardComment().getId();
+			boardComment.isParentBoardCommentNull() ? NO_PARENT_COMMENT_ID : boardComment.getParentBoardComment().getId();
 
-		if (!parentBoardCommentId.equals(-1L)) {
-			Board board1 = boardCommentService.getBoardByCommentId(parentBoardCommentId);
-			if (!createBoardCommentReqDTO.getBoardId().equals(board1.getId())) {
-				throw new IllegalArgumentException("board id not equal");
-			}
+		if (!parentBoardCommentId.equals(NO_PARENT_COMMENT_ID) &&
+			!createBoardCommentReqDTO.getBoardId().equals(boardCommentService.getBoardByCommentId(parentBoardCommentId).getId())) {
+			throw new IllegalArgumentException("board id not equal");
 		}
-
-		return CreateBoardCommentResDTO.builder()
-			.parentBoardCommentId(parentBoardCommentId)
-			.BoardCommentId(boardComment.getId())
-			.content(boardComment.getContent())
-			.userId(boardComment.getUser().getId())
-			.userNickname(boardComment.getUser().getNickName())
-			.createdAt(boardComment.getCreatedAt())
-			.build();
 	}
 
 	@Override
@@ -243,12 +234,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 
 	@Override
 	@Transactional
-	public UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO,
-		Long commentId) {
+	public void updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId) {
 		User currentUser = userService.getCurrentUser();
-		BoardComment boardComment = boardCommentService.updateBoardComment(updateBoardCommentReqDTO, commentId,
-			currentUser);
-		return UpdateBoardCommentResDTO.builder().boardCommentId(boardComment.getId()).build();
+		boardCommentService.updateBoardComment(updateBoardCommentReqDTO, commentId, currentUser);
 	}
 
 	@Override
@@ -376,9 +364,10 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 				.ageRange(board.getUser().getAgeRange())
 				.gender(board.getUser().getGender())
 				.nationality(board.getUser().getNationality())
-				.selfIntroduction("")
-				.userImageUrl("")
-				.userRating(0.0)
+				.selfIntroduction(board.getUser().getSelfIntroduction()==null || board.getUser().getSelfIntroduction().isEmpty()
+						? "" : board.getUser().getSelfIntroduction())
+				.userImageUrl(board.getImageUrl()==null || board.getImageUrl().isEmpty() ? "" : board.getImageUrl())
+				.userScore(board.getUser().getUserScore())
 				.imageUrl(board.getImageUrl())
 				.build();
 	}
@@ -404,7 +393,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 				.ageRange(board.getUser().getAgeRange())
 				.gender(board.getUser().getGender())
 				.nationality(board.getUser().getNationality())
-				.userImageUrl("")
+				.userImageUrl(board.getImageUrl()==null || board.getImageUrl().isEmpty() ? "" : board.getImageUrl())
 				.isMine(currentUser.getId().equals(board.getUser().getId()))
 				.isLiked(boardLikesService.isLikedBoard(currentUser, board))
 				.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))

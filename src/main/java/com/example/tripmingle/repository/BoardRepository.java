@@ -3,6 +3,7 @@ package com.example.tripmingle.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.tripmingle.common.constants.Constants;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +21,7 @@ import jakarta.persistence.LockModeType;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-	//컬렉션 포함해서 로직 재작성 필요
+
 	@Query("SELECT b FROM Board b WHERE b.countryName = :countryName AND " +
 		"(:gender IS NULL OR b.user.gender = :gender) AND " +
 		"(:language IS NULL OR b.language = :language)")
@@ -30,7 +31,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	Page<Board> findByCountryName(String countryName, Pageable pageable);
 
 	default List<Board> findRecentBoardsByCountryName(String countryName) {
-		Pageable pageable = PageRequest.of(0, 4, Sort.by("createdAt").descending());
+		Pageable pageable = PageRequest.of(0, Constants.RECENT_PAGE_SIZE, Sort.by("createdAt").descending());
 		Page<Board> page = findByCountryName(countryName, pageable);
 		return page.getContent();
 	}

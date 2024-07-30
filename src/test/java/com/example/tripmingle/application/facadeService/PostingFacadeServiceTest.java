@@ -1,5 +1,6 @@
 package com.example.tripmingle.application.facadeService;
 
+import static com.example.tripmingle.common.constants.Constants.NO_PARENT_COMMENT_ID;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.concurrent.CountDownLatch;
@@ -32,7 +33,7 @@ public class PostingFacadeServiceTest {
 		PostPostingCommentReqDTO reqDTO = new PostPostingCommentReqDTO();
 		reqDTO.setPostingId(18L);
 		reqDTO.setComment("Hello World Test");
-		reqDTO.setParentCommentId(-1L);
+		reqDTO.setParentCommentId(NO_PARENT_COMMENT_ID);
 
 		final int threadCount = 50;
 		final ExecutorService executorService = Executors.newFixedThreadPool(50);

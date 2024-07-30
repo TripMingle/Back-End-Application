@@ -46,7 +46,7 @@ public class GetBoardInfoResDTO {
 	private String nationality;
 	private String selfIntroduction;
 	private String userImageUrl;
-	private double userRating;
+	private double userScore;
 	private String imageUrl;
 
 	//댓글

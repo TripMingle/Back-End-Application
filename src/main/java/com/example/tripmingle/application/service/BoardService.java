@@ -112,7 +112,11 @@ public class BoardService {
 
 	public Page<Board> searchBoard(String countryName, String keyword, Pageable pageable) {
 		List<Long> boardIds = boardSearchPort.searchBoard(countryName, keyword, pageable);
-		List<Board> boards = boardPersistPort.getAllBoardsByIds(boardIds);
+
+		int startIdx = (int) pageable.getOffset();
+		int endIdx = Math.min((startIdx + pageable.getPageSize()), boardIds.size());
+
+		List<Board> boards = boardPersistPort.getAllBoardsByIds(boardIds.subList(startIdx, endIdx));
 
 		Map<Long, Board> boardMap = boards.stream()
 				.collect(Collectors.toMap(Board::getId, Function.identity()));
@@ -121,12 +125,7 @@ public class BoardService {
 				.map(boardMap::get)
 				.collect(Collectors.toList());
 
-		int startIdx = (int) pageable.getOffset();
-		int endIdx = Math.min((startIdx + pageable.getPageSize()), sortedBoards.size());
-
-		return new PageImpl<>(sortedBoards.subList(startIdx, endIdx), pageable, sortedBoards.size());
-
-
+		return new PageImpl<>(sortedBoards, pageable, sortedBoards.size());
 	}
 
 	public Page<Board> searchBoardByDB(String countryName, String keyword, Pageable pageable) {
