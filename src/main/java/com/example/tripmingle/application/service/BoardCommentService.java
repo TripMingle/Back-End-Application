@@ -31,13 +31,7 @@ public class BoardCommentService {
 
 
     public BoardComment createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
-        BoardComment parentBoardComment;
-        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
-            parentBoardComment = null;
-        } else {
-            parentBoardComment = boardCommentPersistPort
-                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
-        }
+        BoardComment parentBoardComment = getParentBoardComment(createBoardCommentReqDTO.getParentBoardCommentId());
 
         board.increaseCommentCount();
 
@@ -49,16 +43,10 @@ public class BoardCommentService {
                 .build());
     }
 
+    /*
     @Transactional
     public synchronized BoardComment createBoardCommentBySynchronized(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
-        BoardComment parentBoardComment;
-
-        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
-            parentBoardComment = null;
-        } else {
-            parentBoardComment = boardCommentPersistPort
-                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
-        }
+        BoardComment parentBoardComment = getParentBoardComment(createBoardCommentReqDTO.getParentBoardCommentId());
 
         board.increaseCommentCount();
 
@@ -72,13 +60,7 @@ public class BoardCommentService {
     }
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public BoardComment createBoardCommentBySerializable(CreateBoardCommentReqDTO createBoardCommentReqDTO, Board board, User currentUser) {
-        BoardComment parentBoardComment;
-        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
-            parentBoardComment = null;
-        } else {
-            parentBoardComment = boardCommentPersistPort
-                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
-        }
+        BoardComment parentBoardComment = getParentBoardComment(createBoardCommentReqDTO.getParentBoardCommentId());
 
         board.increaseCommentCount();
 
@@ -98,13 +80,7 @@ public class BoardCommentService {
         Board board = boardRepository.findByIdWithPessimisticLock(boardId);
 
         // 부모 댓글 설정
-        BoardComment parentBoardComment;
-        if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
-            parentBoardComment = null;
-        } else {
-            parentBoardComment = boardCommentPersistPort
-                    .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
-        }
+        BoardComment parentBoardComment = getParentBoardComment(createBoardCommentReqDTO.getParentBoardCommentId());
 
         // 댓글 수 증가
         board.increaseCommentCount();
@@ -130,13 +106,7 @@ public class BoardCommentService {
 
             if (isLockAcquired) {
                 try {
-                    BoardComment parentBoardComment;
-                    if (isParent(createBoardCommentReqDTO.getParentBoardCommentId())) {
-                        parentBoardComment = null;
-                    } else {
-                        parentBoardComment = boardCommentPersistPort
-                                .getBoardCommentById(createBoardCommentReqDTO.getParentBoardCommentId());
-                    }
+                    BoardComment parentBoardComment = getParentBoardComment(createBoardCommentReqDTO.getParentBoardCommentId());
 
                     board.increaseCommentCount();
 
@@ -157,12 +127,11 @@ public class BoardCommentService {
             throw new RuntimeException("Lock acquisition interrupted.", e);
         }
     }
-
+     */
 
 
     private boolean isParent(Long id) {
-        if (id == -1) return true;
-        else return false;
+        return id == -1;
     }
 
     public int deleteBoardComment(Long commentId, User currentUser) {
@@ -173,10 +142,7 @@ public class BoardCommentService {
         if (boardComment.isParentBoardCommentNull()) {
             List<BoardComment> childBoardComments = boardCommentPersistPort.getBoardCommentByParentBoardId(boardComment.getId());
             commentCount += childBoardComments.size();
-
-            childBoardComments.stream()
-                    .forEach(childComment -> boardCommentPersistPort.deleteBoardComment(childComment));
-
+            childBoardComments.forEach(boardCommentPersistPort::deleteBoardComment);
         }
         boardCommentPersistPort.deleteBoardComment(boardComment);
 
@@ -194,12 +160,18 @@ public class BoardCommentService {
 
     public void deleteBoardCommentByBoardId(Long boardId) {
         List<BoardComment> boardComments = boardCommentPersistPort.getBoardCommentsByBoardId(boardId);
-        boardComments.stream()
-                .forEach(comment -> boardCommentPersistPort.deleteBoardComment(comment));
+        boardComments.forEach(boardCommentPersistPort::deleteBoardComment);
     }
 
     public Board getBoardByCommentId(Long commentId) {
         BoardComment boardComment = boardCommentPersistPort.getBoardCommentById(commentId);
         return boardComment.getBoard();
     }
+
+
+
+    private BoardComment getParentBoardComment(Long parentBoardCommentId) {
+        return isParent(parentBoardCommentId) ? null : boardCommentPersistPort.getBoardCommentById(parentBoardCommentId);
+    }
+
 }

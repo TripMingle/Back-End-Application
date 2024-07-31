@@ -18,8 +18,8 @@ public class ContinentService {
 	private final ContinentPersistPort continentPersistPort;
 	private final CacheManagerPort cacheManagerPort;
 
-	public String getContinentImage(String continent) {
-		return continentPersistPort.getContinentByContinentName(continent).getImageUrl();
+	public Continent getContinentByContinentName(String continent) {
+		return continentPersistPort.getContinentByContinentName(continent);
 	}
 
 	public List<GetContinentsResDTO> getContinentsAtCache() {

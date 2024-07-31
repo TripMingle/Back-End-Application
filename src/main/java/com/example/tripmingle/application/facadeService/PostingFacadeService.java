@@ -39,6 +39,8 @@ import com.example.tripmingle.port.in.PostingUseCase;
 
 import lombok.RequiredArgsConstructor;
 
+import static com.example.tripmingle.common.constants.Constants.NO_PARENT_COMMENT_ID;
+
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
@@ -158,7 +160,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 
 	private void validatePostingCommentBelongsToPosting(Posting posting,
 		PostPostingCommentReqDTO postPostingCommentReqDTO) {
-		if (!postPostingCommentReqDTO.getParentCommentId().equals(-1L)) {
+		if (!postPostingCommentReqDTO.getParentCommentId().equals(NO_PARENT_COMMENT_ID)) {
 			PostingComment postingComment = postingCommentService.getPostingCommentsByPostingCommentId(
 				postPostingCommentReqDTO.getParentCommentId());
 			comparePostingWithPostingInPostingComment(posting, postingComment);

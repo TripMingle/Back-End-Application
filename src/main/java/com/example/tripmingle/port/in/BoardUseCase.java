@@ -16,7 +16,7 @@ public interface BoardUseCase {
 
 	void getClusteredBoards();
 
-	Page<GetBoardsResDTO> getAllBoards(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable);
+	Page<GetBoardsResDTO> getBoardList(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable);
 
 	GetBoardInfoResDTO getBoard(Long boardId);
 

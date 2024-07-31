@@ -7,5 +7,5 @@ public class Constants {
 	public static int USER_MATCHING_SIZE = 5;
 	public static String SORT_CREATING_CRITERIA = "createdAt";
 	public static String SORT_ID_CRITERIA = "id";
-
+	public static Long NO_PARENT_COMMENT_ID = -1L;
 }

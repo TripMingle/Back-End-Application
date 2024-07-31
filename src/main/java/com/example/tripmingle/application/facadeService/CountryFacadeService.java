@@ -42,7 +42,7 @@ public class CountryFacadeService implements CountryUseCase {
 					country.getId());
 				String url = countryImageOptional.isPresent() ?
 					countryImageOptional.get().getImageUrl() :
-					continentService.getContinentImage(country.getContinent());
+					continentService.getContinentByContinentName(country.getContinent()).getImageUrl();
 
 				return GetCountriesResDTO.builder()
 					.countryName(country.getCountry())
@@ -69,7 +69,7 @@ public class CountryFacadeService implements CountryUseCase {
 					country.getId());
 				String url = countryImageOptional.isPresent() ?
 					countryImageOptional.get().getImageUrl() :
-					continentService.getContinentImage(country.getContinent());
+					continentService.getContinentByContinentName(country.getContinent()).getImageUrl();
 
 				return GetCountriesResDTO.builder()
 					.countryName(country.getCountry())
@@ -96,7 +96,7 @@ public class CountryFacadeService implements CountryUseCase {
 					country.getId());
 				String url = countryImageOptional.isPresent() ?
 					countryImageOptional.get().getImageUrl() :
-					continentService.getContinentImage(country.getContinent());
+					continentService.getContinentByContinentName(country.getContinent()).getImageUrl();
 
 				return GetCountriesResDTO.builder()
 					.countryName(country.getCountry())
@@ -131,7 +131,7 @@ public class CountryFacadeService implements CountryUseCase {
 			country.getId());
 		String url = countryImageOptional.isPresent() ?
 			countryImageOptional.get().getImageUrl() :
-			continentService.getContinentImage(country.getContinent());
+			continentService.getContinentByContinentName(country.getContinent()).getImageUrl();
 
 		return GetCountryInfoDTO.builder()
 			.countryImageUrl(url)

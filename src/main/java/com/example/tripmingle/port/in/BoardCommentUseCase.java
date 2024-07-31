@@ -6,9 +6,9 @@ import com.example.tripmingle.dto.res.board.CreateBoardCommentResDTO;
 import com.example.tripmingle.dto.res.board.UpdateBoardCommentResDTO;
 
 public interface BoardCommentUseCase {
-    CreateBoardCommentResDTO createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO);
+    void createBoardComment(CreateBoardCommentReqDTO createBoardCommentReqDTO);
 
     void deleteBoardComment(Long commentId);
 
-    UpdateBoardCommentResDTO updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId);
+    void updateBoardComment(UpdateBoardCommentReqDTO updateBoardCommentReqDTO, Long commentId);
 }
