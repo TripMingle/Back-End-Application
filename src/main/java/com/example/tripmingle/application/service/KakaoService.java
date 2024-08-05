@@ -14,6 +14,7 @@ import com.example.tripmingle.common.utils.KakaoProperties;
 import com.example.tripmingle.dto.etc.KakaoLoginDTO;
 import com.example.tripmingle.dto.etc.KakaoUserInfo;
 import com.example.tripmingle.dto.req.user.AdditionalUserDetailReqDTO;
+import com.example.tripmingle.dto.res.auth.TokenDTO;
 import com.example.tripmingle.dto.res.oauth.GetKakaoUserDataResDTO;
 import com.example.tripmingle.dto.res.oauth.KakaoTokenResDTO;
 import com.example.tripmingle.entity.Refresh;
@@ -44,10 +45,11 @@ public class KakaoService {
 		KakaoLoginDTO result = null;
 		if (userPersistPort.existsByEmail(getKakaoUserDataResDTO.getKakaoUserInfo().getEmail())) {
 			user = userPersistPort.findByEmail(getKakaoUserDataResDTO.getKakaoUserInfo().getEmail());
-			String accessToken = generateKakaoTokenDTO(user);
+			TokenDTO tokens = generateKakaoTokenDTO(user);
 			result = KakaoLoginDTO.builder()
 				.isMemberState(true)
-				.accessToken(accessToken)
+				.accessToken(tokens.getAccessToken())
+				.refreshToken(tokens.getRefreshToken())
 				.nickName(user.getNickName())
 				.profileImage(user.getUserImageUrl() == null ? "" : user.getUserImageUrl())
 				.build();
@@ -56,6 +58,7 @@ public class KakaoService {
 			result = KakaoLoginDTO.builder()
 				.isMemberState(false)
 				.accessToken("")
+				.refreshToken("")
 				.nickName("")
 				.profileImage("")
 				.build();
@@ -69,19 +72,24 @@ public class KakaoService {
 		KakaoUserInfo kakaoUserInfo = getKakaoUserDataResDTO.getKakaoUserInfo();
 		validateAlreadyExistsUser(kakaoUserInfo.getEmail());
 		User newUser = generateUser(getKakaoUserDataResDTO, additionalUserDetailReqDTO);
+		TokenDTO tokens = generateKakaoTokenDTO(newUser);
 		return KakaoLoginDTO.builder()
-			.accessToken(generateKakaoTokenDTO(newUser))
+			.accessToken(tokens.getAccessToken())
+			.refreshToken(tokens.getRefreshToken())
 			.isMemberState(true)
 			.nickName(newUser.getNickName())
 			.profileImage(newUser.getUserImageUrl() == null ? "" : newUser.getUserImageUrl())
 			.build();
 	}
 
-	private String generateKakaoTokenDTO(User user) {
+	private TokenDTO generateKakaoTokenDTO(User user) {
 		String accessToken = jwtUtils.createJwtAccessToken(user.getEmail(), user.getRole(), user.getLoginType());
 		String refreshToken = jwtUtils.createJwtRefreshToken(user.getEmail(), user.getRole(), user.getLoginType());
 		addRefreshEntity(user.getEmail(), refreshToken, jwtUtils.getRefreshTokenExpTimeByToken(refreshToken));
-		return accessToken;
+		return TokenDTO.builder()
+			.accessToken(accessToken)
+			.refreshToken(refreshToken)
+			.build();
 	}
 
 	private void addRefreshEntity(String email, String refresh, Long expiredMs) {

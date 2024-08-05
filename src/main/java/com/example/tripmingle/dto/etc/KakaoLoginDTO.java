@@ -14,5 +14,7 @@ public class KakaoLoginDTO {
 	private String profileImage;
 	@JsonIgnore
 	private String accessToken;
+	@JsonIgnore
+	private String refreshToken;
 
 }

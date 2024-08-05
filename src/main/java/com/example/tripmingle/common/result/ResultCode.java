@@ -80,6 +80,7 @@ public enum ResultCode {
 	// auth
 	VALIDATE_COMPLETE(200, "A001", "검증 성공"),
 	LOGOUT_SUCCESS(200, "LO001", "로그아웃 성공"),
+	ACCESS_TOKEN_ISSUE_SUCCESS(200, "A002", "액세스 토큰 발급 성공"),
 
 	//country
 	GET_COUNTRIES_BY_CONTINENT_SUCCESS(200, "C001", "해당 대륙에 존재하는 나라 조회 성공"),

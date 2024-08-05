@@ -44,6 +44,7 @@ public class KakaoAuthController {
 	private HttpHeaders generateTokenHeaders(KakaoLoginDTO kakaoLoginDTO) {
 		HttpHeaders tokenHeaders = new HttpHeaders();
 		tokenHeaders.add("access-token", kakaoLoginDTO.getAccessToken());
+		tokenHeaders.add("refresh-token", kakaoLoginDTO.getRefreshToken());
 		return tokenHeaders;
 	}
 
