@@ -79,7 +79,7 @@ public class User extends BaseEntity {
 		this.nationality = nationality;
 		this.selfIntroduction = selfIntroduction;
 		this.phoneNumber = phoneNumber;
-		this.userScore = 36.5;
+		this.userScore = 3.0;
 	}
 
 	public void updateUserMyPage(PatchUserMyPageReqDTO patchUserMyPageReqDTO) {
