@@ -19,6 +19,7 @@ import com.example.tripmingle.common.exception.CompanionNotFound;
 import com.example.tripmingle.common.exception.ContinentNotFoundException;
 import com.example.tripmingle.common.exception.CountryImageNotFoundException;
 import com.example.tripmingle.common.exception.CountryNotFoundException;
+import com.example.tripmingle.common.exception.ExpiredRefreshTokenException;
 import com.example.tripmingle.common.exception.InvalidPostingCommentAccess;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.common.exception.JsonParsingException;
@@ -248,6 +249,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InvalidPostingCommentAccess.class)
 	public ResponseEntity<ErrorResponse> handleInvalidPostingCommentException(InvalidPostingCommentAccess ex) {
 		log.error("handleInvalidPostingCommentException", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(ExpiredRefreshTokenException.class)
+	public ResponseEntity<ErrorResponse> handleExpiredRefreshTokenException(ExpiredRefreshTokenException ex) {
+		log.error("handleExpiredRefreshTokenException", ex);
 		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
 	}

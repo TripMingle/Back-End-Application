@@ -85,7 +85,7 @@ public class SecurityConfig {
 			.httpBasic(auth -> auth.disable())
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(AUTH_WHITELIST).permitAll()
-				.requestMatchers("/kakao/**", "/auth/validate/duplication").permitAll()
+				.requestMatchers("/kakao/**", "/auth/**").permitAll()
 				.anyRequest().authenticated())
 			.addFilterBefore(new JwtFilter(jwtUtils, refreshRepository), UsernamePasswordAuthenticationFilter.class)
 			.addFilterBefore(new CustomLogoutFilter(jwtUtils, refreshRepository), JwtFilter.class)
