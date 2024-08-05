@@ -38,13 +38,12 @@ public class KakaoAuthController {
 		HttpHeaders tokenHeaders = generateTokenHeaders(kakaoLoginDTO);
 		return ResponseEntity.ok()
 			.headers(tokenHeaders)
-			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS));
+			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS, kakaoLoginDTO));
 	}
 
 	private HttpHeaders generateTokenHeaders(KakaoLoginDTO kakaoLoginDTO) {
 		HttpHeaders tokenHeaders = new HttpHeaders();
 		tokenHeaders.add("access-token", kakaoLoginDTO.getAccessToken());
-		tokenHeaders.add("refresh-token", kakaoLoginDTO.getRefreshToken());
 		return tokenHeaders;
 	}
 
@@ -58,7 +57,7 @@ public class KakaoAuthController {
 		HttpHeaders tokenHeaders = generateTokenHeaders(kakaoLoginDTO);
 		return ResponseEntity.ok()
 			.headers(tokenHeaders)
-			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS));
+			.body(ResultResponse.of(OAUTH_LOGIN_SUCCESS, kakaoLoginDTO));
 	}
 
 	@Operation(summary = "카카오 엑세스 토큰 발급")

@@ -40,9 +40,27 @@ public class KakaoService {
 	public KakaoLoginDTO loginKakaoAccount(String kakaoAccessToken) {
 		String redefineAccessToken = "Bearer " + kakaoAccessToken;
 		GetKakaoUserDataResDTO getKakaoUserDataResDTO = kakaoOutPort.getKakaoUserInfo(redefineAccessToken);
-		User user = userPersistPort.findByEmail(getKakaoUserDataResDTO.getKakaoUserInfo().getEmail());
-		KakaoLoginDTO kakaoLoginDTO = generateKakaoTokenDTO(user);
-		return kakaoLoginDTO;
+		User user = null;
+		KakaoLoginDTO result = null;
+		if (userPersistPort.existsByEmail(getKakaoUserDataResDTO.getKakaoUserInfo().getEmail())) {
+			user = userPersistPort.findByEmail(getKakaoUserDataResDTO.getKakaoUserInfo().getEmail());
+			String accessToken = generateKakaoTokenDTO(user);
+			result = KakaoLoginDTO.builder()
+				.isMemberState(true)
+				.accessToken(accessToken)
+				.nickName(user.getNickName())
+				.profileImage(user.getUserImageUrl() == null ? "" : user.getUserImageUrl())
+				.build();
+		}
+		if (user == null) {
+			result = KakaoLoginDTO.builder()
+				.isMemberState(false)
+				.accessToken("")
+				.nickName("")
+				.profileImage("")
+				.build();
+		}
+		return result;
 	}
 
 	public KakaoLoginDTO joinKakaoAccount(AdditionalUserDetailReqDTO additionalUserDetailReqDTO) {
@@ -51,18 +69,19 @@ public class KakaoService {
 		KakaoUserInfo kakaoUserInfo = getKakaoUserDataResDTO.getKakaoUserInfo();
 		validateAlreadyExistsUser(kakaoUserInfo.getEmail());
 		User newUser = generateUser(getKakaoUserDataResDTO, additionalUserDetailReqDTO);
-		KakaoLoginDTO kakaoLoginDTO = generateKakaoTokenDTO(newUser);
-		return kakaoLoginDTO;
+		return KakaoLoginDTO.builder()
+			.accessToken(generateKakaoTokenDTO(newUser))
+			.isMemberState(true)
+			.nickName(newUser.getNickName())
+			.profileImage(newUser.getUserImageUrl() == null ? "" : newUser.getUserImageUrl())
+			.build();
 	}
 
-	private KakaoLoginDTO generateKakaoTokenDTO(User user) {
+	private String generateKakaoTokenDTO(User user) {
 		String accessToken = jwtUtils.createJwtAccessToken(user.getEmail(), user.getRole(), user.getLoginType());
 		String refreshToken = jwtUtils.createJwtRefreshToken(user.getEmail(), user.getRole(), user.getLoginType());
 		addRefreshEntity(user.getEmail(), refreshToken, jwtUtils.getRefreshTokenExpTimeByToken(refreshToken));
-		return KakaoLoginDTO.builder()
-			.accessToken(accessToken)
-			.refreshToken(refreshToken)
-			.build();
+		return accessToken;
 	}
 
 	private void addRefreshEntity(String email, String refresh, Long expiredMs) {
