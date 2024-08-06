@@ -1,5 +1,7 @@
 package com.example.tripmingle.application.facadeService;
 
+import static com.example.tripmingle.common.constants.Constants.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.example.tripmingle.dto.res.board.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,12 @@ import com.example.tripmingle.dto.req.board.CreateBoardReqDTO;
 import com.example.tripmingle.dto.req.board.GetAllBoardReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardCommentReqDTO;
 import com.example.tripmingle.dto.req.board.UpdateBoardReqDTO;
+import com.example.tripmingle.dto.res.board.GetBoardInfoResDTO;
+import com.example.tripmingle.dto.res.board.GetBoardsResDTO;
+import com.example.tripmingle.dto.res.board.GetCompanionsResDTO;
+import com.example.tripmingle.dto.res.board.ParentBoardCommentResDTO;
+import com.example.tripmingle.dto.res.board.SearchBoardResDTO;
+import com.example.tripmingle.dto.res.board.ToggleStateResDTO;
 import com.example.tripmingle.entity.Board;
 import com.example.tripmingle.entity.BoardBookMark;
 import com.example.tripmingle.entity.BoardComment;
@@ -41,8 +48,6 @@ import com.example.tripmingle.port.in.BoardCommentUseCase;
 import com.example.tripmingle.port.in.BoardUseCase;
 
 import lombok.RequiredArgsConstructor;
-
-import static com.example.tripmingle.common.constants.Constants.NO_PARENT_COMMENT_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +76,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getBoardList(GetAllBoardReqDTO getAllBoardReqDTO, Pageable pageable) {
 		Page<Board> boardPage = boardService.getAllBoards(getAllBoardReqDTO, pageable);
 		User currentUser = userService.getCurrentUser();
-		return boardPage.map(board -> makeBoardDTO(board,currentUser));
+		return boardPage.map(board -> makeBoardDTO(board, currentUser));
 	}
 
 	@Override
@@ -80,7 +85,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		User currentUser = userService.getCurrentUser();
 		List<ParentBoardCommentResDTO> boardComments
 			= structureBoardComment(boardCommentService.getBoardCommentsByBoardId(board.getId()), currentUser);
-		return makeBoardInfoDTO(board,currentUser,boardComments);
+		return makeBoardInfoDTO(board, currentUser, boardComments);
 	}
 
 	private List<ParentBoardCommentResDTO> structureBoardComment(List<BoardComment> boardComments, User currentUser) {
@@ -120,7 +125,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.registeredDate(boardComment.getCreatedAt())
 			.userId(boardComment.getUser().getId())
 			.userNickname(boardComment.getUser().getNickName())
-			.userImageUrl("")
+			.userImageUrl(
+				boardComment.getUser().getUserImageUrl() == null || boardComment.getUser().getUserImageUrl().isEmpty()
+					? "" : boardComment.getUser().getUserImageUrl())
 			.isMine(currentUser.getId().equals(boardComment.getUser().getId()))
 			.build();
 	}
@@ -135,7 +142,9 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.registeredDate(boardComment.getCreatedAt())
 			.userId(boardComment.getUser().getId())
 			.userNickname(boardComment.getUser().getNickName())
-			.userImageUrl("")
+			.userImageUrl(
+				boardComment.getUser().getUserImageUrl() == null || boardComment.getUser().getUserImageUrl().isEmpty()
+					? "" : boardComment.getUser().getUserImageUrl())
 			.isMine(currentUser.getId().equals(boardComment.getUser().getId()))
 			.build();
 	}
@@ -146,13 +155,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		User currentUser = userService.getCurrentUser();
 		String randomImageUrl = countryImageService.getRandomCountryImage(createBoardReqDTO.getCountryName());
 		if (randomImageUrl.isEmpty()) {
-			randomImageUrl = continentService.getContinentByContinentName(createBoardReqDTO.getContinent()).getImageUrl();
+			randomImageUrl = continentService.getContinentByContinentName(createBoardReqDTO.getContinent())
+				.getImageUrl();
 		}
 		Board board = boardService.createBoard(createBoardReqDTO, currentUser, randomImageUrl);
 		companionService.registerLeader(board, currentUser);
 		boardScheduleService.createBoardSchedule(board, currentUser, createBoardReqDTO.getCreateBoardSchedule());
 
-		return makeBoardInfoDTO(board,currentUser,new ArrayList<>());
+		return makeBoardInfoDTO(board, currentUser, new ArrayList<>());
 
 	}
 
@@ -163,7 +173,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		Board board = boardService.updateBoard(boardId, patchBoardReqDTO, currentUser);
 		List<ParentBoardCommentResDTO> boardComments
 			= structureBoardComment(boardCommentService.getBoardCommentsByBoardId(board.getId()), currentUser);
-		return makeBoardInfoDTO(board,currentUser,boardComments);
+		return makeBoardInfoDTO(board, currentUser, boardComments);
 	}
 
 	@Override
@@ -179,7 +189,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	}
 
 	@Override
-	public Page<SearchBoardResDTO>  searchBoard(String countryName, String keyword, Pageable pageable) {
+	public Page<SearchBoardResDTO> searchBoard(String countryName, String keyword, Pageable pageable) {
 		Page<Board> boardPage = boardService.searchBoard(countryName, keyword, pageable);
 
 		return boardPage.map(board -> SearchBoardResDTO.builder()
@@ -202,7 +212,8 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 			.ageRange(board.getUser().getAgeRange())
 			.gender(board.getUser().getGender())
 			.nationality(board.getUser().getNationality())
-			.userImageUrl(board.getImageUrl()==null || board.getImageUrl().isEmpty() ? "" : board.getImageUrl())
+			.userImageUrl(board.getUser().getUserImageUrl() == null || board.getUser().getUserImageUrl().isEmpty()
+				? "" : board.getUser().getUserImageUrl())
 			.build());
 	}
 
@@ -214,10 +225,12 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		BoardComment boardComment = boardCommentService.createBoardComment(createBoardCommentReqDTO, board,
 			currentUser);
 		Long parentBoardCommentId =
-			boardComment.isParentBoardCommentNull() ? NO_PARENT_COMMENT_ID : boardComment.getParentBoardComment().getId();
+			boardComment.isParentBoardCommentNull() ? NO_PARENT_COMMENT_ID :
+				boardComment.getParentBoardComment().getId();
 
 		if (!parentBoardCommentId.equals(NO_PARENT_COMMENT_ID) &&
-			!createBoardCommentReqDTO.getBoardId().equals(boardCommentService.getBoardByCommentId(parentBoardCommentId).getId())) {
+			!createBoardCommentReqDTO.getBoardId()
+				.equals(boardCommentService.getBoardByCommentId(parentBoardCommentId).getId())) {
 			throw new IllegalArgumentException("board id not equal");
 		}
 	}
@@ -277,14 +290,14 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getMyLikedBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<BoardLikes> boardLikes = boardLikesService.getMyLikedBoards(currentUser, pageable);
-		return boardLikes.map(boardLike -> makeBoardDTO(boardLike.getBoard(),currentUser));
+		return boardLikes.map(boardLike -> makeBoardDTO(boardLike.getBoard(), currentUser));
 	}
 
 	@Override
 	public Page<GetBoardsResDTO> getMyBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<Board> boardList = boardService.getBoardsByUser(currentUser, pageable);
-		return boardList.map(board -> makeBoardDTO(board,currentUser));
+		return boardList.map(board -> makeBoardDTO(board, currentUser));
 	}
 
 	@Override
@@ -323,7 +336,7 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 	public Page<GetBoardsResDTO> getMyCompanionBoards(Pageable pageable) {
 		User currentUser = userService.getCurrentUser();
 		Page<Companion> companionList = companionService.getCompanionsByUser(currentUser, pageable);
-		return companionList.map(companion -> makeBoardDTO(companion.getBoard(),currentUser));
+		return companionList.map(companion -> makeBoardDTO(companion.getBoard(), currentUser));
 	}
 
 	@Override
@@ -331,74 +344,77 @@ public class BoardFacadeService implements BoardUseCase, BoardCommentUseCase {
 		boardService.getBoardsByIdList();
 	}
 
-	private GetBoardInfoResDTO makeBoardInfoDTO(Board board, User currentUser, List<ParentBoardCommentResDTO> boardComments){
+	private GetBoardInfoResDTO makeBoardInfoDTO(Board board, User currentUser,
+		List<ParentBoardCommentResDTO> boardComments) {
 		return GetBoardInfoResDTO.builder()
-				.continent(board.getContinent())
-				.countryName(board.getCountryName())
-				.boardId(board.getId())
-				.title(board.getTitle())
-				.content(board.getContent())
-				.language(board.getLanguage())
-				.tripType(commonUtils.convertStringToArray(board.getTripType()))
-				.preferGender(commonUtils.convertDoubleToInt(board.getPreferGender()))
-				.preferSmoking(commonUtils.convertDoubleToInt(board.getPreferSmoking()))
-				.preferBudget(commonUtils.convertDoubleToInt(board.getPreferBudget()))
-				.preferPhoto(commonUtils.convertDoubleToInt(board.getPreferPhoto()))
-				.preferDrink(commonUtils.convertDoubleToInt(board.getPreferDrink()))
-				.startDate(board.getStartDate())
-				.endDate(board.getEndDate())
-				.currentCount(board.getCurrentCount())
-				.maxCount(board.getMaxCount())
-				.createdAt(board.getCreatedAt())
-				.commentCount(board.getCommentCount())
-				.likeCount(board.getLikeCount())
-				.bookMarkCount(board.getBookMarkCount())
-				.isMine(currentUser.getId().equals(board.getUser().getId()))
-				.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-				.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-				.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-				.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-				.boardComments(boardComments)
-				.userId(board.getUser().getId())
-				.nickName(board.getUser().getNickName())
-				.ageRange(board.getUser().getAgeRange())
-				.gender(board.getUser().getGender())
-				.nationality(board.getUser().getNationality())
-				.selfIntroduction(board.getUser().getSelfIntroduction()==null || board.getUser().getSelfIntroduction().isEmpty()
-						? "" : board.getUser().getSelfIntroduction())
-				.userImageUrl(board.getImageUrl()==null || board.getImageUrl().isEmpty() ? "" : board.getImageUrl())
-				.userScore(board.getUser().getUserScore())
-				.imageUrl(board.getImageUrl())
-				.build();
+			.continent(board.getContinent())
+			.countryName(board.getCountryName())
+			.boardId(board.getId())
+			.title(board.getTitle())
+			.content(board.getContent())
+			.language(board.getLanguage())
+			.tripType(commonUtils.convertStringToArray(board.getTripType()))
+			.preferGender(commonUtils.convertDoubleToInt(board.getPreferGender()))
+			.preferSmoking(commonUtils.convertDoubleToInt(board.getPreferSmoking()))
+			.preferBudget(commonUtils.convertDoubleToInt(board.getPreferBudget()))
+			.preferPhoto(commonUtils.convertDoubleToInt(board.getPreferPhoto()))
+			.preferDrink(commonUtils.convertDoubleToInt(board.getPreferDrink()))
+			.startDate(board.getStartDate())
+			.endDate(board.getEndDate())
+			.currentCount(board.getCurrentCount())
+			.maxCount(board.getMaxCount())
+			.createdAt(board.getCreatedAt())
+			.commentCount(board.getCommentCount())
+			.likeCount(board.getLikeCount())
+			.bookMarkCount(board.getBookMarkCount())
+			.isMine(currentUser.getId().equals(board.getUser().getId()))
+			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
+			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
+			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+			.boardComments(boardComments)
+			.userId(board.getUser().getId())
+			.nickName(board.getUser().getNickName())
+			.ageRange(board.getUser().getAgeRange())
+			.gender(board.getUser().getGender())
+			.nationality(board.getUser().getNationality())
+			.selfIntroduction(
+				board.getUser().getSelfIntroduction() == null || board.getUser().getSelfIntroduction().isEmpty()
+					? "" : board.getUser().getSelfIntroduction())
+			.userImageUrl(board.getUser().getUserImageUrl() == null || board.getUser().getUserImageUrl().isEmpty()
+				? "" : board.getUser().getUserImageUrl())
+			.userScore(board.getUser().getUserScore())
+			.imageUrl(board.getImageUrl())
+			.build();
 	}
 
-
-	private GetBoardsResDTO makeBoardDTO(Board board, User currentUser){
+	private GetBoardsResDTO makeBoardDTO(Board board, User currentUser) {
 		return GetBoardsResDTO.builder()
-				.continent(board.getContinent())
-				.countryName(board.getCountryName())
-				.boardId(board.getId())
-				.title(board.getTitle())
-				.createdAt(board.getCreatedAt())
-				.startDate(board.getStartDate())
-				.endDate(board.getEndDate())
-				.currentCount(board.getCurrentCount())
-				.maxCount(board.getMaxCount())
-				.language(board.getLanguage())
-				.commentCount(board.getCommentCount())
-				.likeCount(board.getLikeCount())
-				.bookMarkCount(board.getBookMarkCount())
-				.imageUrl(board.getImageUrl())
-				.nickName(board.getUser().getNickName())
-				.ageRange(board.getUser().getAgeRange())
-				.gender(board.getUser().getGender())
-				.nationality(board.getUser().getNationality())
-				.userImageUrl(board.getImageUrl()==null || board.getImageUrl().isEmpty() ? "" : board.getImageUrl())
-				.isMine(currentUser.getId().equals(board.getUser().getId()))
-				.isLiked(boardLikesService.isLikedBoard(currentUser, board))
-				.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
-				.isParticipating(companionService.isParticipatingBoard(currentUser, board))
-				.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
-				.build();
+			.continent(board.getContinent())
+			.countryName(board.getCountryName())
+			.boardId(board.getId())
+			.title(board.getTitle())
+			.createdAt(board.getCreatedAt())
+			.startDate(board.getStartDate())
+			.endDate(board.getEndDate())
+			.currentCount(board.getCurrentCount())
+			.maxCount(board.getMaxCount())
+			.language(board.getLanguage())
+			.commentCount(board.getCommentCount())
+			.likeCount(board.getLikeCount())
+			.bookMarkCount(board.getBookMarkCount())
+			.imageUrl(board.getImageUrl())
+			.nickName(board.getUser().getNickName())
+			.ageRange(board.getUser().getAgeRange())
+			.gender(board.getUser().getGender())
+			.nationality(board.getUser().getNationality())
+			.userImageUrl(board.getUser().getUserImageUrl() == null || board.getUser().getUserImageUrl().isEmpty()
+				? "" : board.getUser().getUserImageUrl())
+			.isMine(currentUser.getId().equals(board.getUser().getId()))
+			.isLiked(boardLikesService.isLikedBoard(currentUser, board))
+			.isBookMarked(boardBookMarkService.isBookMarkedBoard(currentUser, board))
+			.isParticipating(companionService.isParticipatingBoard(currentUser, board))
+			.isExpired(commonUtils.isEndDatePassed(board.getEndDate()))
+			.build();
 	}
 }
