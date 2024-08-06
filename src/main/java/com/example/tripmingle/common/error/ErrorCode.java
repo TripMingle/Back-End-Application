@@ -49,6 +49,8 @@ public enum ErrorCode {
 	// auth
 	LOGOUT_USER(400, "A001", "로그아웃된 유저입니다."),
 	TOKEN_NOT_FOUND(404, "A002", "토큰이 없습니다."),
+	INVALID_REFRESH_TOKEN(400, "A003", "리프레시 토큰이 유효하지 않습니다."),
+
 	//S3
 	EMPTY_FILE_EXCEPTION(400, "S001", "파일이 존재하지 않습니다."),
 	IO_EXCEPTION_ON_IMAGE_UPLOAD(400, "S002", "파일 업로드 오류가 발생하였습니다."),
