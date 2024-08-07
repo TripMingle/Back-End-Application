@@ -6,7 +6,6 @@ import com.example.tripmingle.common.error.ErrorCode;
 import com.example.tripmingle.common.exception.ExpiredRefreshTokenException;
 import com.example.tripmingle.common.exception.InvalidUserAccessException;
 import com.example.tripmingle.common.utils.JwtUtils;
-import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
 import com.example.tripmingle.dto.res.auth.TokenDTO;
 import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
 import com.example.tripmingle.entity.User;
@@ -23,8 +22,9 @@ public class AuthService {
 	private final UserPersistPort userPersistPort;
 	private final RefreshPort refreshPort;
 
-	public ValidateDuplicationResDTO validateDuplication(ValidateDuplicationReqDTO validateDuplicationReqDTO) {
-		boolean duplicationStatus = userPersistPort.existsByNickName(validateDuplicationReqDTO.getNickName());
+	public ValidateDuplicationResDTO validateDuplication(String nickName) {
+		boolean duplicationStatus = userPersistPort.existsByNickName(nickName);
+		System.out.println(duplicationStatus);
 		return ValidateDuplicationResDTO.builder()
 			.duplicationStatus(duplicationStatus)
 			.build();
