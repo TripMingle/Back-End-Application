@@ -5,13 +5,12 @@ import static com.example.tripmingle.common.result.ResultCode.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.tripmingle.common.result.ResultResponse;
-import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
 import com.example.tripmingle.dto.res.auth.TokenDTO;
 import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
 import com.example.tripmingle.port.in.AuthUseCase;
@@ -31,9 +30,8 @@ public class AuthController {
 	@Operation(summary = "닉네임 중복 여부 확인")
 	@GetMapping("/validate/duplication")
 	public ResponseEntity<ResultResponse> validateDuplication(
-		@RequestBody ValidateDuplicationReqDTO validateDuplicationReqDTO) {
-		ValidateDuplicationResDTO validateDuplicationResDTO = authUseCase.validateDuplication(
-			validateDuplicationReqDTO);
+		@RequestParam("nickName") String nickName) {
+		ValidateDuplicationResDTO validateDuplicationResDTO = authUseCase.validateDuplication(nickName);
 		return ResponseEntity.ok(ResultResponse.of(VALIDATE_COMPLETE, validateDuplicationResDTO));
 	}
 

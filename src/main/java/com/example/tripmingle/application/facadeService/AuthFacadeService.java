@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.tripmingle.application.service.AuthService;
 import com.example.tripmingle.application.service.UserService;
-import com.example.tripmingle.dto.req.auth.ValidateDuplicationReqDTO;
 import com.example.tripmingle.dto.res.auth.LogoutResDTO;
 import com.example.tripmingle.dto.res.auth.TokenDTO;
 import com.example.tripmingle.dto.res.auth.ValidateDuplicationResDTO;
@@ -21,8 +20,8 @@ public class AuthFacadeService implements AuthUseCase {
 	private final UserService userService;
 
 	@Override
-	public ValidateDuplicationResDTO validateDuplication(ValidateDuplicationReqDTO validateDuplicationReqDTO) {
-		return authService.validateDuplication(validateDuplicationReqDTO);
+	public ValidateDuplicationResDTO validateDuplication(String nickName) {
+		return authService.validateDuplication(nickName);
 	}
 
 	@Override

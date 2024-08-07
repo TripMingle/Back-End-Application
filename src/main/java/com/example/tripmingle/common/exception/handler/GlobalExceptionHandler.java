@@ -26,6 +26,7 @@ import com.example.tripmingle.common.exception.JsonParsingException;
 import com.example.tripmingle.common.exception.LeaderCannotLeaveException;
 import com.example.tripmingle.common.exception.LogoutUserException;
 import com.example.tripmingle.common.exception.MatchingServerException;
+import com.example.tripmingle.common.exception.NickNameDuplicationException;
 import com.example.tripmingle.common.exception.OneOnOneChatRoomNotFoundException;
 import com.example.tripmingle.common.exception.PostingCommentNotFoundException;
 import com.example.tripmingle.common.exception.PostingLikesNotFoundException;
@@ -256,6 +257,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(ExpiredRefreshTokenException.class)
 	public ResponseEntity<ErrorResponse> handleExpiredRefreshTokenException(ExpiredRefreshTokenException ex) {
 		log.error("handleExpiredRefreshTokenException", ex);
+		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+	}
+
+	@ExceptionHandler(NickNameDuplicationException.class)
+	public ResponseEntity<ErrorResponse> handleNickNameDuplicationException(NickNameDuplicationException ex) {
+		log.error("handleNickNameDuplicationException", ex);
 		final ErrorResponse response = new ErrorResponse(ex.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
 	}
