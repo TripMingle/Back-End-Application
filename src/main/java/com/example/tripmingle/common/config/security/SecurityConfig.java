@@ -1,6 +1,7 @@
 package com.example.tripmingle.common.config.security;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +77,7 @@ public class SecurityConfig {
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setMaxAge(3600L);
 
-						configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+						configuration.setExposedHeaders(List.of("Authorization", "access-token", "refresh-token"));
 						return configuration;
 					}
 				}))
