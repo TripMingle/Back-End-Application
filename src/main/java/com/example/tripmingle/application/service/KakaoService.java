@@ -119,6 +119,7 @@ public class KakaoService {
 			.loginType(KAKAO.getLoginType())
 			.oauthId(getKakaoUserDataResDTO.getKakaoId())
 			.nickName(additionalUserDetailReqDTO.getNickName())
+			.selfIntroduction(additionalUserDetailReqDTO.getSelfIntroduction())
 			.ageRange(kakaoUserInfo.getAgeRange())
 			.gender(kakaoUserInfo.getGender())
 			.name(kakaoUserInfo.getName())

@@ -13,6 +13,7 @@ public class AdditionalUserDetailReqDTO {
 	private String kakaoAccessToken;
 	private String nickName;
 	private String nationality;
+	private String selfIntroduction;
 
 	public void insertKakaoAccessToken(String kakaoAccessToken) {
 		this.kakaoAccessToken = kakaoAccessToken;
