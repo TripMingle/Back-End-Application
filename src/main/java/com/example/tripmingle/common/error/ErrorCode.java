@@ -68,7 +68,7 @@ public enum ErrorCode {
 	// user
 	USER_NOT_FOUND(404, "U001", "해당 유저가 존재하지 않습니다."),
 	INVALID_USER_ACCESS(403, "U002", "해당 유저에 권한이 없습니다."),
-	ALREADY_EXISTS_USER_NICKNAME(452, "U003", "이미 존재하는 닉네임입니다."),
+	ALREADY_EXISTS_USER_NICKNAME(409, "U003", "이미 존재하는 닉네임입니다."),
 
 	// posting
 	POSING_NOT_FOUND(404, "P001", "해당 포스팅글이 존재하지 않습니다."),
