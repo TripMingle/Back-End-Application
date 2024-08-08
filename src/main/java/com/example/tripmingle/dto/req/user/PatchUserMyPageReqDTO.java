@@ -11,5 +11,6 @@ public class PatchUserMyPageReqDTO {
 	private String nationality;
 	private String phoneNumber;
 	private String userEmail;
+	private String selfIntroduction;
 
 }

@@ -95,6 +95,9 @@ public class User extends BaseEntity {
 		if (patchUserMyPageReqDTO.getUserEmail() != null) {
 			this.email = patchUserMyPageReqDTO.getUserEmail();
 		}
+		if (patchUserMyPageReqDTO.getSelfIntroduction() != null) {
+			this.selfIntroduction = patchUserMyPageReqDTO.getSelfIntroduction();
+		}
 	}
 
 	public void uploadUserImage(String userImageUrl) {
