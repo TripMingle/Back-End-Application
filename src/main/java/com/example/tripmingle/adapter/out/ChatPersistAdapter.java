@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatPersistAdapter implements ChatPersistPort {
 
-	private final ChatRepository chatRepository;
+	// private final ChatRepository chatRepository;
 
 	@Override
 	public Slice<ChatMessage> getChatMessages(GetAllChatMessageReqDTO getAllChatMessageReqDTO, Pageable pageable) {
