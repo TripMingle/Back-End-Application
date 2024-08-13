@@ -1,11 +1,14 @@
 package com.example.tripmingle.application.facadeService;
 
+import static com.example.tripmingle.common.constants.Constants.*;
+
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.example.tripmingle.application.service.BoardService;
 import com.example.tripmingle.application.service.ChatRoomService;
+import com.example.tripmingle.application.service.ChatService;
 import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.dto.req.chat.EnterGroupChatRoomReqDTO;
 import com.example.tripmingle.dto.req.chat.EnterOneOnOneChatRoomReqDTO;
@@ -32,14 +35,17 @@ import lombok.RequiredArgsConstructor;
 public class ChatRoomFacadeService implements ChatRoomUseCase {
 
 	private final ChatRoomService chatRoomService;
+	private final ChatService chatService;
 	private final BoardService boardService;
 	private final UserService userService;
 
-	private ChatRoomUser generateChatRoomUserEntity(Long chatRoomId, Long userId, ChatRoomType chatRoomType) {
+	private ChatRoomUser generateChatRoomUserEntity(Long chatRoomId, Long userId, ChatRoomType chatRoomType,
+		Long chatFirstIndex) {
 		return ChatRoomUser.builder()
 			.chatRoomId(chatRoomId)
 			.user(userService.getUserById(userId))
 			.chatRoomType(chatRoomType)
+			.chatFirstIndex(chatFirstIndex)
 			.build();
 	}
 
@@ -54,13 +60,12 @@ public class ChatRoomFacadeService implements ChatRoomUseCase {
 				.user2(contactUser)
 				.build();
 			OneOnOneChatRoom savedOneOnOneChatRoom = chatRoomService.saveOneOnOneChatRoom(oneOnOneChatRoom);
-
 			ChatRoomUser currentChatRoomUser = generateChatRoomUserEntity(savedOneOnOneChatRoom.getId(),
-				currentUser.getId(), ChatRoomType.ONE_ON_ONE);
+				currentUser.getId(), ChatRoomType.ONE_ON_ONE, FIRST_ENTER_CHAT_ROOM_CHAT_COUNT);
 			chatRoomService.joinOneOnOneChatRoom(currentChatRoomUser);
 
 			ChatRoomUser contactChatRoomUser = generateChatRoomUserEntity(savedOneOnOneChatRoom.getId(),
-				contactUser.getId(), ChatRoomType.ONE_ON_ONE);
+				contactUser.getId(), ChatRoomType.ONE_ON_ONE, FIRST_ENTER_CHAT_ROOM_CHAT_COUNT);
 			chatRoomService.joinOneOnOneChatRoom(contactChatRoomUser);
 		} else {
 			oneOnOneChatRoom = chatRoomService.getOneOnOneChatRoomByUserIds(currentUser.getId(), contactUser.getId());
@@ -83,16 +88,20 @@ public class ChatRoomFacadeService implements ChatRoomUseCase {
 				.user(board.getUser())
 				.chatRoomId(groupChatRoom.getId())
 				.chatRoomType(ChatRoomType.GROUP)
+				.chatFirstIndex(FIRST_ENTER_CHAT_ROOM_CHAT_COUNT)
 				.build();
 			chatRoomService.joinGroupChatRoom(chatRoomMasterUser);
 		} else {
 			groupChatRoom = chatRoomService.getGroupChatRoomByBoardId(enterGroupChatRoomReqDTO.getBoardId());
 		}
 		if (!chatRoomService.existsUserInChatRoom(user.getId())) {
+			Long alreadyExistsChatCount = chatService.getChatMessagesCount(ChatRoomType.GROUP, groupChatRoom.getId());
 			ChatRoomUser chatRoomUser = ChatRoomUser.builder()
 				.chatRoomId(groupChatRoom.getId())
 				.user(user)
 				.chatRoomType(ChatRoomType.GROUP)
+				.chatFirstIndex(
+					alreadyExistsChatCount == 0 ? FIRST_ENTER_CHAT_ROOM_CHAT_COUNT : alreadyExistsChatCount - 1)
 				.build();
 			chatRoomService.joinGroupChatRoom(chatRoomUser);
 		}

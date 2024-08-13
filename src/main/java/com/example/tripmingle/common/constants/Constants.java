@@ -8,4 +8,5 @@ public class Constants {
 	public static String SORT_CREATING_CRITERIA = "createdAt";
 	public static String SORT_ID_CRITERIA = "id";
 	public static Long NO_PARENT_COMMENT_ID = -1L;
+	public static Long FIRST_ENTER_CHAT_ROOM_CHAT_COUNT = 0L;
 }
