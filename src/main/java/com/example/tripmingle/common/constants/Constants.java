@@ -9,4 +9,6 @@ public class Constants {
 	public static String SORT_ID_CRITERIA = "id";
 	public static Long NO_PARENT_COMMENT_ID = -1L;
 	public static Long FIRST_ENTER_CHAT_ROOM_CHAT_COUNT = 0L;
+	public static double[] WEIGHTS = {12.0, 12.0, 12.0, 12.0, 8.0, 10.0, 7.0, 7.0, 9.0, 9.0, 9.0, 9.0, 9.0, 7.0, 12.0, 12.0};
+	public static int MAX_USER_MATCHING_SIZE = 50;
 }

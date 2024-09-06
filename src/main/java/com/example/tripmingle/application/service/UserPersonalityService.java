@@ -2,6 +2,7 @@ package com.example.tripmingle.application.service;
 
 import java.util.List;
 
+import com.example.tripmingle.dto.etc.ChangeUserPersonalityDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,5 +85,26 @@ public class UserPersonalityService {
 
 	public List<UserPersonality> getUserPersonalityByIds(List<Long> similarUsers) {
 		return userPersonalityPersistPort.getUserPersonalitiesByIds(similarUsers);
+	}
+
+	public void changeUserPersonality(UserPersonality userPersonality, PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+		ChangeUserPersonalityDTO changeUserPersonalityDTO = ChangeUserPersonalityDTO.builder()
+				.vegan(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getVegan()))
+				.islam(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getIslam()))
+				.hindu(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getHindu()))
+				.smoking(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getSmoking()))
+				.budget(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getBudget()))
+				.accommodationFlexibility(
+						commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getAccommodationFlexibility()))
+				.foodFlexibility(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getFoodFlexibility()))
+				.activity(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getActivity()))
+				.photo(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getPhoto()))
+				.foodExploration(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getFoodExploration()))
+				.adventure(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getAdventure()))
+				.personality(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getPersonality()))
+				.schedule(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getSchedule()))
+				.drink(commonUtils.convertIntToDouble(postUserPersonalityReqDTO.getDrink()))
+				.build();
+		userPersonality.changeUserPersonality(changeUserPersonalityDTO);
 	}
 }

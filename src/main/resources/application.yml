@@ -13,8 +13,8 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        #show_sql: true
+        #format_sql: true
   jwt:
     secret: ${jwt.secret-key}
     access-token-expiration: 6000000000000
@@ -38,6 +38,8 @@ spring:
     username: ${elasticsearch-username}
     password: ${elasticsearch-password}
     board-url: ${elasticsearch-board-url}
+    matching-url: ${elasticsearch-matching-url}
+    matching-url-es: ${elasticsearch-matching-url-es}
 
 oauth2:
   kakao:

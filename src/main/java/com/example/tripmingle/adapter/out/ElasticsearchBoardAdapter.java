@@ -2,9 +2,8 @@ package com.example.tripmingle.adapter.out;
 
 import com.example.tripmingle.client.ElasticsearchBoardClient;
 import com.example.tripmingle.entity.Board;
-import com.example.tripmingle.entity.pojo.ElasticsearchResponse;
+import com.example.tripmingle.entity.pojo.ElasticsearchBoardResponse;
 import com.example.tripmingle.port.out.BoardSearchPort;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -94,7 +93,7 @@ public class ElasticsearchBoardAdapter implements BoardSearchPort {
 
         log.info("Elasticsearch query: {}", query);
 
-        ElasticsearchResponse response = elasticSearchBoardClient.searchBoardDocument(query);
+        ElasticsearchBoardResponse response = elasticSearchBoardClient.searchBoardDocument(query);
         return response.getHits().getHits().stream()
                 .map(hit -> hit.get_source().getBoard_id())
                 .map(Long::parseLong)

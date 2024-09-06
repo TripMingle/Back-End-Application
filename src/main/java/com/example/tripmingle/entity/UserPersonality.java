@@ -1,5 +1,7 @@
 package com.example.tripmingle.entity;
 
+import com.example.tripmingle.dto.etc.ChangeUserPersonalityDTO;
+import com.example.tripmingle.dto.req.matching.PostUserPersonalityReqDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.example.tripmingle.common.constants.Constants.WEIGHTS;
 
 @Entity
 @Getter
@@ -42,4 +46,28 @@ public class UserPersonality {
 	private double drink; //음주 성향
 	private double ageRange; // 나이대, 자동생성
 
+	public double[] toFeatureVector() {
+		return new double[] {
+				(gender-3.0) * WEIGHTS[0],
+				(vegan-3.0) * WEIGHTS[1],
+				(islam-3.0) * WEIGHTS[2],
+				(hindu-3.0) * WEIGHTS[3],
+				(smoking-3.0) * WEIGHTS[4],
+				(budget-3.0) * WEIGHTS[5],
+				(accommodationFlexibility-3.0) * WEIGHTS[6],
+				(foodFlexibility-3.0) * WEIGHTS[7],
+				(activity-3.0) * WEIGHTS[8],
+				(photo-3.0) * WEIGHTS[9],
+				(foodExploration-3.0) * WEIGHTS[10],
+				(adventure-3.0) * WEIGHTS[11],
+				(personality-3.0) * WEIGHTS[12],
+				(schedule-3.0) * WEIGHTS[13],
+				(drink-3.0) * WEIGHTS[14],
+				(ageRange-3.0) * WEIGHTS[15]
+		};
+	}
+
+	public void changeUserPersonality(ChangeUserPersonalityDTO changeUserPersonalityDTO) {
+
+	}
 }
