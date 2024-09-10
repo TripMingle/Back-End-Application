@@ -77,6 +77,7 @@ springdoc:
 
 cors:
   allowed-origins: ${allowed-origins}
+  allowed-remote-origins: ${allowed-remote-origins}
 
 cloud:
   aws:

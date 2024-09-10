@@ -41,6 +41,9 @@ public class SecurityConfig {
 	@Value("${cors.allowed-origins}")
 	private String allowedOrigins;
 
+	@Value("${cors.allowed-remote-origins}")
+	private String allowedRemoteOrigins;
+
 	private static final String[] AUTH_WHITELIST = {
 		"/swagger-ui/**", "swagger-ui.html/**", "/v3/**", "/country/**", "/continent/**"
 	};
@@ -70,7 +73,7 @@ public class SecurityConfig {
 						CorsConfiguration configuration = new CorsConfiguration();
 
 						configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
-						configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+						configuration.setAllowedOrigins(Collections.singletonList(allowedRemoteOrigins));
 
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
