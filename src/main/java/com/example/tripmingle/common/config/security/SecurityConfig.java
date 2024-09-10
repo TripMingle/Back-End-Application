@@ -72,9 +72,8 @@ public class SecurityConfig {
 					public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
 
-						// configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
-						configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-						// configuration.setAllowedOrigins(Collections.singletonList("https://tripmingle.netlify.app"));
+						configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
+						configuration.setAllowedOrigins(Collections.singletonList(allowedRemoteOrigins));
 
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
