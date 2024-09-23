@@ -2,6 +2,7 @@ package com.example.tripmingle.adapter.in;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
+import com.example.tripmingle.dto.res.user.GetUserInfoResDTO;
 import com.example.tripmingle.dto.res.user.PatchUserMyPageResDTO;
 import com.example.tripmingle.dto.res.user.UploadUserImageResDTO;
 import com.example.tripmingle.port.in.UserUseCase;
@@ -41,6 +43,13 @@ public class UserController {
 	public ResponseEntity<ResultResponse> updateUserMyPage(@RequestBody PatchUserMyPageReqDTO patchUserMyPageReqDTO) {
 		PatchUserMyPageResDTO patchUserMyPageResDTO = userUseCase.updateUserMyPage(patchUserMyPageReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_USER_MY_PAGE_SUCCESS, patchUserMyPageResDTO));
+	}
+
+	@Operation(summary = "로그인 유저 정보 조회")
+	@GetMapping("/info")
+	public ResponseEntity<ResultResponse> getUserInfo() {
+		GetUserInfoResDTO getUserInfoDTO = userUseCase.getUserInfo();
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_INFO_SUCCESS, getUserInfoDTO));
 	}
 
 }
