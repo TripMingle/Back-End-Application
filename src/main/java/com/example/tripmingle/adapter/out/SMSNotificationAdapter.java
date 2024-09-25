@@ -7,7 +7,7 @@ public class SMSNotificationAdapter implements Noti{
 
     @Override
     public boolean isAcceptable(String type) {
-        return ;
+        return false;
     }
 
     @Override
