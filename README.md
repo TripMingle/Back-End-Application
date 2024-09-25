@@ -37,8 +37,8 @@
 ## 2. 프로젝트 설계
 
 ### 2-1. 헥사고날 아키텍처
-![Hexagonal_Architecture1.png](./image/Hexagonal_Architecture1.png)
 ![Hexagonal_Architecture2.png](./image/Hexagonal_Architecture2.png)
+![Hexagonal_Architecture1.png](./image/Hexagonal_Architecture1.png)
 
 
 ## 3. 개발 과정
