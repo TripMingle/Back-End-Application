@@ -1,9 +1,14 @@
-# TripMingle 여행 동행 서비스
+![1-1](https://github.com/user-attachments/assets/8336dec7-8048-4305-be9f-ac0c10a2116f)
 
-글로벌 여행 동행 서비스 입니다.
+
 
 <div align="center">
-
+  <h1>
+    TripMingle 여행 동행 서비스
+  </h1>
+  <p>
+    Tripmingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행 일정 관리, 여행 동행 매칭 및 추천 기능을 제공합니다.
+  </p>
 </div>
 
 ## 목차
