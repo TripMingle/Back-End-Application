@@ -30,7 +30,7 @@
 
 
 ### 1-2. 시스템 구성도
-
+![structure.png](./image/structure.png)
 
 ### 1-3. 주요 기능
 
@@ -51,3 +51,18 @@
 ## 3. 개발 과정
 
 ## 4. 프로젝트 관리
+
+### 4-1. Jira ticket을 활용한 task 관리
+
+효율적인 협업과 팀원간의 빠른 피드백을 통해 변화에 신속하게 대응하기 위해 개발 프로세스에는 스크럼 방식을 채택하였습니다.
+
+![burn_down_chart.png](./image/burn_down_chart.png)
+ 
+ 번다운 차트 등의 지표를 확인할 수 있고, task의 세부 조정이 가능한 Jira를 통해 task를 관리하였습니다.
+
+![jira_ticket.png](./image/jira_ticket.png)
+![github_pr.png](./image/github_pr.png)
+
+ Jira의 티켓 번호와 GitHub의 커밋 및 PR을 연동시켜, 작업 내역을 추적하고 효율적인 협업을 도모하였습니다.
+
+
