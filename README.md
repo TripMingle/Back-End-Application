@@ -1,4 +1,10 @@
 
+<div align="center">
+  <img src=https://github.com/user-attachments/assets/107d3693-2918-4339-9ad5-019d593762d5 alt='logo' width='600px' />
+  <h1>
+    TripMingle 여행 동행 서비스
+  </h1>
+</div>
 
 ## 목차
 
@@ -16,18 +22,8 @@
 
 ### 1-1. 프로젝트 소개
 
+TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행 일정 관리, 여행 동행 매칭 및 추천 서비스를 제공합니다.
 
-<div align="center">
-  <img src=https://github.com/user-attachments/assets/107d3693-2918-4339-9ad5-019d593762d5 alt='logo' width='600px' />
-  <h1>
-    TripMingle 여행 동행 서비스
-  </h1>
-  <p>
-    Tripmingle은 글로벌 여행 동행 서비스로,
-</br>
-  여행 동행 찾기, 여행 일정 관리, 여행 동행 매칭 및 추천 기능을 제공합니다.
-  </p>
-</div>
 
 
 ### 1-2. 시스템 구성도
