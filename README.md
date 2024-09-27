@@ -59,10 +59,8 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 </p>
 
 #### 정보게시판 & 마이페이지
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/306365b4-91e8-48a4-8b4a-57a1f410b5f8" alt="트립밍글_UseCase정보게시판" width="500" />
-  <img src="https://github.com/user-attachments/assets/367d9847-1578-43d5-9b5d-91b8de4e1f5a" alt="트립밍글_UseCase마이페이지" width="500" />
-</p>
+![posting_usecase.png](https://github.com/user-attachments/assets/306365b4-91e8-48a4-8b4a-57a1f410b5f8) |![mypage_usecase.png](https://github.com/user-attachments/assets/367d9847-1578-43d5-9b5d-91b8de4e1f5a)
+--|--|
 
 ## 3. 개발 과정
 
