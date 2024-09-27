@@ -53,8 +53,15 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 </p>
 
 ### 2-3. UseCase 다이어그램
+#### 동행게시판
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/590b740e-dc7a-4fc9-991c-01b8e13c748b" width="500" height="1000"/>
+  <img src="https://github.com/user-attachments/assets/a47e332b-5cfa-4159-a035-6aac4d554580" alt="트립밍글_UseCase동행게시판" width="500" />
+</p>
+
+#### 정보게시판 & 마이페이지
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/306365b4-91e8-48a4-8b4a-57a1f410b5f8" alt="트립밍글_UseCase정보게시판" width="500" />
+  <img src="https://github.com/user-attachments/assets/367d9847-1578-43d5-9b5d-91b8de4e1f5a" alt="트립밍글_UseCase마이페이지" width="500" />
 </p>
 
 ## 3. 개발 과정
