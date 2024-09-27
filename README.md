@@ -1,8 +1,7 @@
-![1-1](https://github.com/user-attachments/assets/8336dec7-8048-4305-be9f-ac0c10a2116f)
-
 
 
 <div align="center">
+  <img src=https://github.com/user-attachments/assets/107d3693-2918-4339-9ad5-019d593762d5 alt='logo' width='600px' />
   <h1>
     TripMingle 여행 동행 서비스
   </h1>
@@ -36,7 +35,7 @@
 
 ### 1-4. 개발 환경
 
-- Front-end: `JavaScript`, `TypeScript`, `React.js`
+- Front-end: `TypeScript`, `React.js`, `NextJs14`, `zustand`, `vanilla-extract`, `pnpm`
 - Back-end: <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=flat-square&logo=Spring Data JPA&logoColor=white"/> <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat-square&logo=Spring Security&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=Redis&logoColor=white"/> <img src="https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=MongoDB&logoColor=white"/> <img src="https://img.shields.io/badge/EC2-FF9900?style=flat-square&logo=Amazon EC2&logoColor=white"/> <img src="https://img.shields.io/badge/RDS-527FFF?style=flat-square&logo=Amazon RDS&logoColor=white"/> <img src="https://img.shields.io/badge/AWS OpenSearch-005EB8?style=flat-square&logo=OpenSearch&logoColor=white"/> <img src="https://img.shields.io/badge/S3-569A31?style=flat-square&logo=Amazon S3&logoColor=white"/>
 
 
