@@ -16,6 +16,7 @@
 - [2. 프로젝트 설계](#2-프로젝트-설계)
   - [2-1. 헥사고날 아키텍처](#2-1-헥사고날-아키텍처)
   - [2-2. ERD 다이어그램](#2-2-ERD-다이어그램)
+  - [2-3. UseCase 다이어그램](#2-3-UseCase-다이어그램)
 - [3. 개발 과정](#3-개발-과정)
 - [4. 프로젝트 관리](#4-프로젝트-관리)
 
@@ -23,7 +24,7 @@
 
 ### 1-1. 프로젝트 소개
 
-TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행 일정 관리, 여행 동행 매칭 및 추천 서비스를 제공합니다.
+TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행 일정 관리, 여행 동행 매칭 및 추천 서비스, 여행 동행 채팅 서비스를 제공합니다.
 
 
 
@@ -42,11 +43,16 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 ## 2. 프로젝트 설계
 
 ### 2-1. 헥사고날 아키텍처
-![Hexagonal_Architecture2.png](./image/Hexagonal_Architecture2.png)
-![Hexagonal_Architecture1.png](./image/Hexagonal_Architecture1.png)
+![Hexagonal_Architecture2.png](./image/Hexagonal_Architecture2.png) |![Hexagonal_Architecture1.png](./image/Hexagonal_Architecture1.png)
+--|--|
 ### 2-2. ERD 다이어그램
 <p align="center">
   <img src="https://github.com/user-attachments/assets/5ee18433-5900-4597-95bf-599caf378210" width="1000" height="665"/>
+</p>
+
+### 2-3. UseCase 다이어그램
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/590b740e-dc7a-4fc9-991c-01b8e13c748b" width="500" height="1000"/>
 </p>
 
 ## 3. 개발 과정
