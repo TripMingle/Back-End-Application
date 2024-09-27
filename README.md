@@ -19,6 +19,8 @@
   - [2-3. UseCase 다이어그램](#2-3-UseCase-다이어그램)
 - [3. 개발 과정](#3-개발-과정)
 - [4. 프로젝트 관리](#4-프로젝트-관리)
+  - [4-1. Jira ticket을 활용한 task 관리](#4-1-Jira)
+  - [4-2. API 서버 개발 및 API 문서화/테스트](#4-2-Swagger-Postman)
 
 ## 1. 프로젝트 개요
 
@@ -71,5 +73,13 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 ![github_pr.png](./image/github_pr.png)
 
  Jira의 티켓 번호와 GitHub의 커밋 및 PR을 연동시켜, 작업 내역을 추적하고 효율적인 협업을 도모하였습니다.
-
-
+### 4-2. API 서버 개발 및 API 문서화/테스트
+백엔드 API 서버 개발은 Java와 Spring Boot 기반으로 진행하였으며, OpenAPI Spec에 맞는 RESTful한 API를 개발하였습니다.
+<br />
+API 서버 개발은 Swagger와 Postman을 통해 문서화 및 테스트를 진행하였습니다.
+#### Swagger
+![리드미_첨부_스웨거](https://github.com/user-attachments/assets/67f8353f-a0c7-40e2-9b57-f3b28c369671)
+OpenAPI 2.5 Spec을 준수하는 Swagger를 사용하여 API 문서화를 했습니다.
+#### Postman
+<img width="1275" alt="리드미_첨부_포스트맨" src="https://github.com/user-attachments/assets/2c34501f-bf0a-446a-bfc8-561934cad6f5">
+API Platform인 Postman을 이용하여, 개발 환경과 배포 환경 모두 API 테스팅을 할 수 있도록 구성하였습니다.
