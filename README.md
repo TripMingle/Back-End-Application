@@ -46,8 +46,15 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 ## 2. 프로젝트 설계
 
 ### 2-1. 헥사고날 아키텍처
-![Hexagonal_Architecture2.png](./image/Hexagonal_Architecture2.png) |![Hexagonal_Architecture1.png](./image/Hexagonal_Architecture1.png)
---|--|
+<div>
+  <p align="center">
+    <img src="./image/Hexagonal_Architecture2.png" width="800">
+  </p>
+  <p align="center">
+    <img src="./image/Hexagonal_Architecture1.png" width="800">
+  </p> 
+</div>
+
 ### 2-2. ERD 다이어그램
 <p align="center">
   <img src="https://github.com/user-attachments/assets/5ee18433-5900-4597-95bf-599caf378210" width="1000" height="665"/>
@@ -56,11 +63,11 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 ### 2-3. UseCase 다이어그램
 #### 동행게시판
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/a47e332b-5cfa-4159-a035-6aac4d554580" alt="트립밍글_UseCase동행게시판" width="500" />
+  <img src="https://github.com/user-attachments/assets/0106f4ec-76ad-41c6-a3b0-707eb13df502" alt="동행게시판_유즈케이스" width="700" />
 </p>
 
 #### 정보게시판 & 마이페이지
-![posting_usecase.png](https://github.com/user-attachments/assets/306365b4-91e8-48a4-8b4a-57a1f410b5f8) |![mypage_usecase.png](https://github.com/user-attachments/assets/367d9847-1578-43d5-9b5d-91b8de4e1f5a)
+![정보게시판_유즈케이스_수정본](https://github.com/user-attachments/assets/b9a5ee93-5508-4e02-b5be-78ebb7cfe79c) |![마이페이지_유즈케이스_수정본](https://github.com/user-attachments/assets/1b589c3e-6664-40fc-8bab-380b10c93c01)
 --|--|
 
 ## 3. 개발 과정
