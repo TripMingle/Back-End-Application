@@ -34,6 +34,7 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 ![structure.png](./image/structure.png)
 
 ### 1-3. 주요 기능
+![image](https://github.com/user-attachments/assets/2b777c75-9c49-48bc-a6c6-c35a3da83e13)
 
 
 ### 1-4. 개발 환경
