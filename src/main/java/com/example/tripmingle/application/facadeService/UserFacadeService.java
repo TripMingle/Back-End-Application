@@ -49,7 +49,7 @@ public class UserFacadeService implements UserUseCase {
 		User currentUser = userService.getCurrentUser();
 		return GetUserInfoResDTO.builder()
 			.userNickName(currentUser.getNickName())
-			.userProfileImage(currentUser.getUserImageUrl())
+			.userProfileImage(currentUser.getUserImageUrl() == null ? "" : currentUser.getUserImageUrl())
 			.build();
 	}
 }
