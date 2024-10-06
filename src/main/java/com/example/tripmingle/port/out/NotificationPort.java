@@ -1,17 +1,9 @@
 package com.example.tripmingle.port.out;
 
-import com.example.tripmingle.application.service.NotificationService;
-import lombok.Getter;
-import lombok.Setter;
+import com.example.tripmingle.dto.etc.NotificationDTO;
+
 
 public interface NotificationPort {
     void send(NotificationDTO notificationDTO);
-
-    @Getter
-    @Setter
-    public class NotificationDTO{
-        String information;
-        String type;
-    }
 
 }

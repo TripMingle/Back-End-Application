@@ -1,5 +1,6 @@
 package com.example.tripmingle.application.service;
 
+import com.example.tripmingle.dto.etc.NotificationDTO;
 import com.example.tripmingle.port.out.NotificationPort;
 import lombok.RequiredArgsConstructor;
 
@@ -8,7 +9,7 @@ public class NotificationService {
     private final NotificationPort notificationPort;
 
     void sendNotification(){
-        NotificationPort.NotificationDTO notificationDTO = new NotificationPort.NotificationDTO();
+        NotificationDTO notificationDTO = new NotificationDTO();
 
         notificationPort.send(notificationDTO);
 

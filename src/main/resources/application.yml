@@ -92,3 +92,5 @@ cloud:
     stack:
       auto: false
 
+email:
+  password: ${email-password}

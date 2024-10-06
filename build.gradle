@@ -77,6 +77,9 @@ dependencies {
     // mongodb
     //implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+    implementation("com.sun.mail:javax.mail:1.6.2")
+    implementation("com.google.firebase:firebase-admin:9.1.1")
+
 }
 
 dependencyManagement {
