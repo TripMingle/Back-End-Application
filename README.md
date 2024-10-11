@@ -96,3 +96,4 @@ OpenAPI 2.5 Spec을 준수하는 Swagger를 사용하여 API 문서화를 했습
 #### Postman
 <img width="1275" alt="리드미_첨부_포스트맨" src="https://github.com/user-attachments/assets/2c34501f-bf0a-446a-bfc8-561934cad6f5">
 API Platform인 Postman을 이용하여, 개발 환경과 배포 환경 모두 API 테스팅을 할 수 있도록 구성하였습니다.
+
