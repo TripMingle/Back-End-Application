@@ -4,6 +4,7 @@ import static com.example.tripmingle.common.constants.Constants.*;
 
 import java.util.List;
 
+import com.example.tripmingle.application.service.MatchingService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,28 +45,34 @@ public class MatchingController {
 		@RequestParam(value = "page", defaultValue = "0") int page) {
 		Pageable pageable = PageRequest.of(page, USER_MATCHING_SIZE,
 			Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
-		Page<MatchingUserResDTO> matchingUserResDTOS = matchingUseCase.getMyMatchingUsers(pageable);
+		//Page<MatchingUserResDTO> matchingUserResDTOS = matchingUseCase.getMyMatchingUsers(pageable);
+		//Page<MatchingUserResDTO> matchingUserResDTOS = matchingUseCase.getMyMatchingUsersByElasticSearch(pageable);
+		Page<MatchingUserResDTO> matchingUserResDTOS = matchingUseCase.getMyMatchingUsersByHNSW(pageable);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MY_USER_MATCHING_SUCCESS, matchingUserResDTOS));
 	}
 
 	@Operation(summary = "내 유저성향 추가")
 	//새로운 유저성향 추가
-	@PostMapping("/userPersonality")
+	@PostMapping("/user-personality")
 	public ResponseEntity<ResultResponse> addUserPersonality(
 		@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
-		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(
-			matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO));
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS, addUserResDTO));
+		//AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(
+		//	matchingUseCase.saveUserPersonality(postUserPersonalityReqDTO));
+		matchingUseCase.postUserPersonality(postUserPersonalityReqDTO);
+		//return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS, addUserResDTO));
+		return ResponseEntity.ok(ResultResponse.of(ResultCode.ADD_USER_PERSONALITY_SUCCESS));
 	}
 
 	@Operation(summary = "유저성향 변경")
-	@PatchMapping("/userPersonality")
+	@PatchMapping("/user-personality")
 	//유저성향 변경
 	public ResponseEntity<ResultResponse> modifyPersonality(
 		@RequestBody PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
 		AddUserResDTO addUserResDTO = matchingUseCase.addUserPersonality(
 			matchingUseCase.deleteAndSaveUserPersonality(postUserPersonalityReqDTO));
+		//matchingUseCase.changeUserPersonality(postUserPersonalityReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_USER_PERSONALITY_SUCCESS, addUserResDTO));
+		//return ResponseEntity.ok(ResultResponse.of(ResultCode.MODIFY_USER_PERSONALITY_SUCCESS));
 	}
 
 	@Operation(summary = "나와 어울리는 게시물 매칭")

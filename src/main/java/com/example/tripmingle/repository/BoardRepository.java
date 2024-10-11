@@ -46,7 +46,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	List<Board> findBoardsByUser(User user);
 
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Lock(LockModeType.PESSIMISTIC_READ)
 	@Query("SELECT b FROM Board b WHERE b.id = :id")
 	Board findByIdWithPessimisticLock(@Param("id") Long id);
 

@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.example.tripmingle.entity.pojo.ElasticsearchResponse;
+import com.example.tripmingle.entity.pojo.ElasticsearchBoardResponse;
 
 import feign.auth.BasicAuthRequestInterceptor;
 
-@FeignClient(name = "ElasticsearchClient", url = "${spring.elasticsearch.uris}", configuration = ElasticsearchBoardClient.FeignConfig.class)
+@FeignClient(name = "ElasticsearchBoardClient", url = "${spring.elasticsearch.uris}", configuration = ElasticsearchBoardClient.FeignConfig.class)
 public interface ElasticsearchBoardClient {
 
 	@PostMapping(value = "${spring.elasticsearch.board-url}" + "/_doc/{id}", consumes = "application/json")
@@ -25,7 +25,7 @@ public interface ElasticsearchBoardClient {
 	void deleteBoardDocument(@PathVariable("id") String id);
 
 	@PostMapping(value = "${spring.elasticsearch.board-url}" + "/_search", consumes = "application/json")
-	ElasticsearchResponse searchBoardDocument(@RequestBody Map<String, Object> query);
+	ElasticsearchBoardResponse searchBoardDocument(@RequestBody Map<String, Object> query);
 
 	class FeignConfig {
 

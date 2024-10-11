@@ -17,4 +17,8 @@ public interface CacheManagerPort {
 	List<GetCountriesResDTO> getCountriesAtCache(String continent);
 
 	void setCountriesAtCache(String continent, List<GetCountriesResDTO> getCountriesResDTOS);
+
+	long getCompanionCount(Long id);
+
+	void incrementCompanionCount(Long id, Long size);
 }

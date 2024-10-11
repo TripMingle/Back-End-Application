@@ -1,7 +1,9 @@
 package com.example.tripmingle.application.service;
 
+import com.example.tripmingle.entity.Board;
+import com.example.tripmingle.repository.BoardRepository;
+import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,9 +11,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.example.tripmingle.common.constants.Constants.PAGE_SIZE;
 import static com.example.tripmingle.common.constants.Constants.SORT_CREATING_CRITERIA;
@@ -20,34 +26,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-class BoardServiceTest {
+public class BoardServiceTest {
 
     @Autowired
-    private BoardService boardService;
+    private BoardRepository boardRepository;
 
     @Test
-    @DisplayName("elasticsearch 사용")
-    void searchBoard() {
-        Pageable pageable = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
+    public void test() {
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        CountDownLatch latch = new CountDownLatch(1);
 
-        Instant start = Instant.now();
-        boardService.searchBoard("korea", "guide", pageable);
-        Instant end = Instant.now();
-        Duration duration = Duration.between(start, end);
-        System.out.println("Elasticsearch Duration = " + duration.toMillis());
+        executorService.execute(()-> {
+
+        });
+
+        executorService.execute(()-> {
+
+        });
+        executorService.shutdown();
 
     }
 
-    @Test
-    @DisplayName("Database 사용")
-    void searchBoardByDB() {
-        Pageable pageable = PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, SORT_CREATING_CRITERIA));
-
-        Instant start = Instant.now();
-        boardService.searchBoardByDB("korea", "guide", pageable);
-        Instant end = Instant.now();
-        Duration duration = Duration.between(start, end);
-        System.out.println("Database Duration = " + duration.toMillis());
-
-    }
 }

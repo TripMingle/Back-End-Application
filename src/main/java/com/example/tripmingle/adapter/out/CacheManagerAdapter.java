@@ -28,6 +28,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.example.tripmingle.common.constants.Constants.COMPANION_COUNT;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -147,6 +149,17 @@ public class CacheManagerAdapter implements CacheManagerPort {
 	public void setCountriesAtCache(String continent, List<GetCountriesResDTO> getCountriesResDTOS) {
 		String continentName = setContinentName(continent);
 		redisTemplate.opsForValue().set(COUNTRY_KEY + continentName, getCountriesResDTOS);
+	}
+
+	@Override
+	public long getCompanionCount(Long id) {
+		Integer count = (Integer) redisTemplate.opsForValue().get(COMPANION_COUNT + id);
+		return (count != null) ? count.longValue() : 1L;
+	}
+
+	@Override
+	public void incrementCompanionCount(Long id, Long size) {
+		redisTemplate.opsForValue().increment(COMPANION_COUNT + id, size);
 	}
 
 	private String setContinentName(String continent) {

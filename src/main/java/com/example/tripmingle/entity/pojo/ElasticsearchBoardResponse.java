@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ElasticsearchResponse {
+public class ElasticsearchBoardResponse {
     private Hits hits;
 
     @Getter

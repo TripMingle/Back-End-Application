@@ -65,7 +65,6 @@ public class MatchingFacadeService implements MatchingUseCase {
 		if (response.equals(RedisMessageSubscriber.FAIL_TO_RE_CALCULATE_USER_PERSONALITY)) {
 			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
 		}
-
 		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId());
 
 		int start = (int)pageable.getOffset();
@@ -100,6 +99,96 @@ public class MatchingFacadeService implements MatchingUseCase {
 				.personality(commonUtils.convertDoubleToInt(userPersonality.getPersonality()))
 				.schedule(commonUtils.convertDoubleToInt(userPersonality.getSchedule()))
 				.build();
+
+		}).collect(Collectors.toList());
+
+		return new PageImpl<>(matchingUserResDTOList, pageable, matchingUserResDTOList.size());
+	}
+
+	@Override
+	public Page<MatchingUserResDTO> getMyMatchingUsersByElasticSearch(Pageable pageable) {
+		User currentUser = userService.getCurrentUser();
+		UserPersonality currentUserPersonality = userPersonalityService.getUserPersonalityByUserId(currentUser.getId());
+		List<Long> similarUsers = matchingService.getSimilarUserIdsByElasticSearch(currentUserPersonality.getId(), currentUserPersonality.toFeatureVector());
+
+		int start = (int)pageable.getOffset();
+		int end = Math.min((start + pageable.getPageSize()), similarUsers.size());
+		if (start > similarUsers.size()) {
+			return new PageImpl<>(Collections.emptyList(), pageable,
+					similarUsers.size()); // 요청한 페이지가 범위를 벗어나는 경우 빈 리스트 반환
+		}
+		similarUsers = similarUsers.subList(start, end);
+
+		List<MatchingUserResDTO> matchingUserResDTOList = similarUsers.stream().map(userPersonalityId -> {
+			UserPersonality userPersonality = userPersonalityService.getUserPersonalityById(userPersonalityId);
+			return MatchingUserResDTO.builder()
+					.userId(userPersonality.getUser().getId())
+					.nickName(userPersonality.getUser().getNickName())
+					.ageRange(userPersonality.getUser().getAgeRange())
+					.gender(userPersonality.getUser().getGender())
+					.nationality(userPersonality.getUser().getNationality())
+					.selfIntroduction(userPersonality.getUser().getSelfIntroduction())
+					.userPersonalityId(userPersonality.getId())
+					.vegan(commonUtils.convertDoubleToInt(userPersonality.getVegan()))
+					.islam(commonUtils.convertDoubleToInt(userPersonality.getIslam()))
+					.hindu(commonUtils.convertDoubleToInt(userPersonality.getHindu()))
+					.smoking(commonUtils.convertDoubleToInt(userPersonality.getSmoking()))
+					.budget(commonUtils.convertDoubleToInt(userPersonality.getBudget()))
+					.accommodationFlexibility(commonUtils.convertDoubleToInt(userPersonality.getAccommodationFlexibility()))
+					.foodFlexibility(commonUtils.convertDoubleToInt(userPersonality.getFoodFlexibility()))
+					.activity(commonUtils.convertDoubleToInt(userPersonality.getActivity()))
+					.photo(commonUtils.convertDoubleToInt(userPersonality.getPhoto()))
+					.foodExploration(commonUtils.convertDoubleToInt(userPersonality.getFoodExploration()))
+					.adventure(commonUtils.convertDoubleToInt(userPersonality.getAdventure()))
+					.personality(commonUtils.convertDoubleToInt(userPersonality.getPersonality()))
+					.schedule(commonUtils.convertDoubleToInt(userPersonality.getSchedule()))
+					.build();
+
+		}).collect(Collectors.toList());
+
+		return new PageImpl<>(matchingUserResDTOList, pageable, matchingUserResDTOList.size());
+	}
+
+	@Override
+	public Page<MatchingUserResDTO> getMyMatchingUsersByHNSW(Pageable pageable) {
+		User currentUser = userService.getCurrentUser();
+		UserPersonality currentUserPersonality = userPersonalityService.getUserPersonalityByUserId(currentUser.getId());
+		List<Long> similarUsers = matchingService.getSimilarUserIdsByHNSW(currentUserPersonality.getId(), currentUserPersonality.toFeatureVector());
+
+		System.out.println(similarUsers);
+
+		int start = (int)pageable.getOffset();
+		int end = Math.min((start + pageable.getPageSize()), similarUsers.size());
+		if (start > similarUsers.size()) {
+			return new PageImpl<>(Collections.emptyList(), pageable,
+					similarUsers.size()); // 요청한 페이지가 범위를 벗어나는 경우 빈 리스트 반환
+		}
+		similarUsers = similarUsers.subList(start, end);
+
+		List<MatchingUserResDTO> matchingUserResDTOList = similarUsers.stream().map(userPersonalityId -> {
+			UserPersonality userPersonality = userPersonalityService.getUserPersonalityById(userPersonalityId);
+			return MatchingUserResDTO.builder()
+					.userId(userPersonality.getUser().getId())
+					.nickName(userPersonality.getUser().getNickName())
+					.ageRange(userPersonality.getUser().getAgeRange())
+					.gender(userPersonality.getUser().getGender())
+					.nationality(userPersonality.getUser().getNationality())
+					.selfIntroduction(userPersonality.getUser().getSelfIntroduction())
+					.userPersonalityId(userPersonality.getId())
+					.vegan(commonUtils.convertDoubleToInt(userPersonality.getVegan()))
+					.islam(commonUtils.convertDoubleToInt(userPersonality.getIslam()))
+					.hindu(commonUtils.convertDoubleToInt(userPersonality.getHindu()))
+					.smoking(commonUtils.convertDoubleToInt(userPersonality.getSmoking()))
+					.budget(commonUtils.convertDoubleToInt(userPersonality.getBudget()))
+					.accommodationFlexibility(commonUtils.convertDoubleToInt(userPersonality.getAccommodationFlexibility()))
+					.foodFlexibility(commonUtils.convertDoubleToInt(userPersonality.getFoodFlexibility()))
+					.activity(commonUtils.convertDoubleToInt(userPersonality.getActivity()))
+					.photo(commonUtils.convertDoubleToInt(userPersonality.getPhoto()))
+					.foodExploration(commonUtils.convertDoubleToInt(userPersonality.getFoodExploration()))
+					.adventure(commonUtils.convertDoubleToInt(userPersonality.getAdventure()))
+					.personality(commonUtils.convertDoubleToInt(userPersonality.getPersonality()))
+					.schedule(commonUtils.convertDoubleToInt(userPersonality.getSchedule()))
+					.build();
 
 		}).collect(Collectors.toList());
 
@@ -170,6 +259,21 @@ public class MatchingFacadeService implements MatchingUseCase {
 	}
 
 	@Override
+	public void postUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+		User currentUser = userService.getCurrentUser();
+		UserPersonality userPersonality = userPersonalityService.saveUserPersonality(postUserPersonalityReqDTO, currentUser);
+		matchingService.saveUserPersonality(userPersonality);
+	}
+
+	@Override
+	public void changeUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO) {
+		User currentUser = userService.getCurrentUser();
+		UserPersonality userPersonality = userPersonalityService.getUserPersonalityByUserId(currentUser.getId());
+		userPersonalityService.changeUserPersonality(userPersonality, postUserPersonalityReqDTO);
+		matchingService.saveUserPersonality(userPersonality);
+	}
+
+	@Override
 	@Transactional
 	public AddUserResDTO addUserPersonality(Long userPersonalityId) {
 		String messageId = UUID.randomUUID().toString();
@@ -202,7 +306,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
 		}
 
-		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId());
+		//List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId(), currentUserPersonality.toFeatureVector());
 	}
 
 	@Transactional
@@ -220,7 +324,7 @@ public class MatchingFacadeService implements MatchingUseCase {
 			throw new MatchingServerException("matching server error", ErrorCode.MATCHING_SERVER_EXCEPTION);
 		}
 
-		List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId());
+		//List<Long> similarUsers = matchingService.getSimilarUserIds(currentUserPersonality.getId(), currentUserPersonality.toFeatureVector());
 	}
 
 	@Transactional

@@ -16,9 +16,17 @@ public interface MatchingUseCase {
 
 	AddUserResDTO addUserPersonality(Long userPersonalityId);
 
+	Page<MatchingUserResDTO> getMyMatchingUsersByElasticSearch(Pageable pageable);
+
+	Page<MatchingUserResDTO> getMyMatchingUsersByHNSW(Pageable pageable);
+
 	Long saveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
 
 	List<MatchingBoardResDTO> matchingBoard(MatchingBoardReqDTO matchingBoardReqDTO);
 
 	Long deleteAndSaveUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
+
+	void postUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
+
+	void changeUserPersonality(PostUserPersonalityReqDTO postUserPersonalityReqDTO);
 }

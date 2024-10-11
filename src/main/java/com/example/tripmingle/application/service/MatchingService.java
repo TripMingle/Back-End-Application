@@ -3,6 +3,8 @@ package com.example.tripmingle.application.service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import com.example.tripmingle.port.out.MatchingSearchPort;
+import com.example.tripmingle.repository.UserPersonalityRepository;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MatchingService {
+	private final MatchingSearchPort matchingSearchPort;
 	private final CacheManagerPort cacheManagerPort;
 	private final PublishPort publishPort;
 	private final BoardMatchingPort boardMatchingPort;
@@ -31,6 +34,14 @@ public class MatchingService {
 
 	public List<Long> getSimilarUserIds(Long userPersonalityId) {
 		return cacheManagerPort.getSimilarUsersByUserId(userPersonalityId);
+	}
+
+	public List<Long> getSimilarUserIdsByElasticSearch(Long userPersonalityId, double[] featureVector) {
+		return matchingSearchPort.getSimilarUsersByUserPersonalityId(userPersonalityId, featureVector);
+	}
+
+	public List<Long> getSimilarUserIdsByHNSW(Long userPersonalityId, double[] featureVector) {
+		return matchingSearchPort.getSimilarUsersByUserPersonalityIdByHNSW(userPersonalityId,featureVector);
 	}
 
 	public CompletableFuture<String> addUser(Long userPersonalityId, String messageId) {
@@ -71,5 +82,9 @@ public class MatchingService {
 			.startDate(matchingBoardReqDTO.getStartDate())
 			.endDate(matchingBoardReqDTO.getEndDate())
 			.build());
+	}
+
+	public void saveUserPersonality(UserPersonality userPersonality){
+		matchingSearchPort.saveUserPersonality(userPersonality);
 	}
 }
