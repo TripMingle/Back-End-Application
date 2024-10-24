@@ -34,6 +34,7 @@ import com.example.tripmingle.dto.res.posting.GetThumbNailPostingResDTO;
 import com.example.tripmingle.dto.res.posting.GetThumbNailPostingsResDTO;
 import com.example.tripmingle.entity.PostingType;
 import com.example.tripmingle.port.in.PostingCommentUseCase;
+import com.example.tripmingle.port.in.PostingLockUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +50,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PostingController {
 	private final PostingUseCase postingUseCase;
+	private final PostingLockUseCase postingLockUseCase;
 	private final PostingCommentUseCase postingCommentUseCase;
 
 	//포스트 게시하기
@@ -132,7 +134,7 @@ public class PostingController {
 	public ResponseEntity<ResultResponse> createPostingComment(@PathVariable("postingId") Long postingId,
 		@RequestBody PostPostingCommentReqDTO postPostingCommentReqDTO) {
 		postPostingCommentReqDTO.setPostingId(postingId);
-		GetOnePostingResDTO postPostingCommentResDTO = postingCommentUseCase.createPostingComment(
+		GetOnePostingResDTO postPostingCommentResDTO = postingLockUseCase.createPostingComment(
 			postPostingCommentReqDTO);
 		return ResponseEntity.ok(ResultResponse.of(POST_POSTING_COMMENT_SUCCESS, postPostingCommentResDTO));
 	}
