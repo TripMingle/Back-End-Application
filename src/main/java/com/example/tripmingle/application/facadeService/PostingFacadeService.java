@@ -1,5 +1,7 @@
 package com.example.tripmingle.application.facadeService;
 
+import static com.example.tripmingle.common.constants.Constants.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,9 +40,9 @@ import com.example.tripmingle.port.in.PostingCommentUseCase;
 import com.example.tripmingle.port.in.PostingUseCase;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import static com.example.tripmingle.common.constants.Constants.NO_PARENT_COMMENT_ID;
-
+@Slf4j
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
@@ -79,9 +81,10 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 	@Override
 	public GetOnePostingResDTO createPostingComment(PostPostingCommentReqDTO postPostingCommentReqDTO) {
 		User currentUser = userService.getCurrentUser();
-		Posting posting = postingService.getOnePostingWithPessimisticLock(postPostingCommentReqDTO.getPostingId());
+		Posting posting = postingService.getOnePosting(postPostingCommentReqDTO.getPostingId());
 		validatePostingCommentBelongsToPosting(posting, postPostingCommentReqDTO);
 		postingCommentService.createPostingComment(postPostingCommentReqDTO, posting, currentUser);
+		posting.increasePostingCommentCount();
 		return generateGetOnePostingResDTO(posting, currentUser);
 	}
 

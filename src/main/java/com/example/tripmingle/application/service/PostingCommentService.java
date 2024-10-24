@@ -37,8 +37,7 @@ public class PostingCommentService {
 			.postingComment(parentPostingComment)
 			.comment(postPostingCommentReqDTO.getComment())
 			.build();
-		Long postingCommentId = postingCommentPersistPort.save(postingComment).getId();
-		posting.increasePostingCommentCount();
+		postingCommentPersistPort.save(postingComment);
 	}
 
 	public void updatePostingComment(PatchPostingCommentReqDTO patchPostingCommentReqDTO, User currentUser) {

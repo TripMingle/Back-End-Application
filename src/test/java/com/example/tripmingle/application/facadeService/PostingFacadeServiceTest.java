@@ -1,6 +1,6 @@
 package com.example.tripmingle.application.facadeService;
 
-import static com.example.tripmingle.common.constants.Constants.NO_PARENT_COMMENT_ID;
+import static com.example.tripmingle.common.constants.Constants.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.concurrent.CountDownLatch;
@@ -26,24 +26,26 @@ public class PostingFacadeServiceTest {
 	private PostingFacadeService postingFacadeService;
 	@Autowired
 	private PostingRepository postingRepository;
+	@Autowired
+	private PostingLockFacadeService postingLockFacadeService;
 
 	@Test
-	@DisplayName("비관적 락 적용")
+	@DisplayName("Redisson 락 적용")
 	public void lockTest() throws InterruptedException {
 		PostPostingCommentReqDTO reqDTO = new PostPostingCommentReqDTO();
-		reqDTO.setPostingId(18L);
+		reqDTO.setPostingId(1L);
 		reqDTO.setComment("Hello World Test");
 		reqDTO.setParentCommentId(NO_PARENT_COMMENT_ID);
 
-		final int threadCount = 50;
-		final ExecutorService executorService = Executors.newFixedThreadPool(50);
+		final int threadCount = 100;
+		final ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 		final CountDownLatch countDownLatch = new CountDownLatch(threadCount);
 
 		// when
 		for (int i = 0; i < threadCount; i++) {
 			executorService.submit(() -> {
 				try {
-					postingFacadeService.createPostingComment(reqDTO);
+					postingLockFacadeService.createPostingComment(reqDTO);
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -52,7 +54,7 @@ public class PostingFacadeServiceTest {
 		countDownLatch.await();
 
 		// then
-		Posting posting = postingRepository.findById(18L).get();
-		assertThat(posting.getCommentCount()).isEqualTo(51);
+		Posting posting = postingRepository.findById(1L).get();
+		assertThat(posting.getCommentCount()).isEqualTo(threadCount);
 	}
 }
