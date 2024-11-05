@@ -119,6 +119,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.country(posting.getCountry())
 			.createAt(posting.getCreatedAt())
 			.postingComments(commentsInOnePosting)
+			.userId(user.getId())
 			.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 			.userNickName(posting.getUser().getNickName())
 			.userAgeRange(posting.getUser().getAgeRange())
@@ -139,6 +140,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 		return postingComments.stream().filter(filter -> filter.isParentComment())
 			.map(comments -> GetOnePostingCommentsResDTO.builder()
 				.commentId(comments.getId())
+				.userId(comments.getUser().getId())
 				.userImageUrl(comments.getUser().getUserImageUrl() == null ? "" : comments.getUser().getUserImageUrl())
 				.userNickName(comments.getUser().getNickName())
 				.comment(comments.getComment())
@@ -151,6 +153,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 					.map(cocomments -> GetOnePostingCoCommentResDTO.builder()
 						.coCommentId(cocomments.getId())
 						.parentCommentId(comments.getId())
+						.userId(cocomments.getUser().getId())
 						.userImageUrl(cocomments.getUser().getUserImageUrl() == null ? "" :
 							cocomments.getUser().getUserImageUrl())
 						.userNickName(cocomments.getUser().getNickName())
@@ -203,6 +206,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.postingId(posting.getId())
 				.title(posting.getTitle())
 				.content(posting.getContent())
+				.userId(posting.getUser().getId())
 				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())
@@ -241,6 +245,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 			.toList();
 		Page<Posting> postings = new PageImpl<>(rawPostings, pageable, getAllPostingLikes.getTotalElements());
 		return GetAllLikedPostingResDTO.builder()
+			.userId(currentUser.getId())
 			.userImageUrl(currentUser.getUserImageUrl() == null ? "" : currentUser.getUserImageUrl())
 			.userNickName(currentUser.getNickName())
 			.userAgeRange(currentUser.getAgeRange())
@@ -256,6 +261,7 @@ public class PostingFacadeService implements PostingUseCase, PostingCommentUseCa
 				.postingId(posting.getId())
 				.title(posting.getTitle())
 				.content(posting.getContent())
+				.userId(posting.getUser().getId())
 				.userImageUrl(posting.getUser().getUserImageUrl() == null ? "" : posting.getUser().getUserImageUrl())
 				.userNickName(posting.getUser().getNickName())
 				.userAgeRange(posting.getUser().getAgeRange())

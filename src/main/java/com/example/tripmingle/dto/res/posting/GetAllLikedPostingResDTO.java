@@ -7,6 +7,7 @@ import lombok.Getter;
 @Builder
 public class GetAllLikedPostingResDTO {
 
+	private Long userId;
 	private String userImageUrl;
 	private String userNickName;
 	private String userAgeRange;

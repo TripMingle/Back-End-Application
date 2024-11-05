@@ -11,6 +11,7 @@ import lombok.Getter;
 public class GetOnePostingCommentsResDTO {
 
 	private Long commentId;
+	private Long userId;
 	private String userImageUrl;
 	private String userNickName;
 	private String comment;
