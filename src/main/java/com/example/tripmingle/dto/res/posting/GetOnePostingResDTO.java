@@ -15,6 +15,7 @@ public class GetOnePostingResDTO {
 	private String content;
 	private String country;
 	private LocalDateTime createAt;
+	private Long userId;
 	private String userImageUrl;
 	private String userNickName;
 	private String userAgeRange;

@@ -11,6 +11,7 @@ public class GetOnePostingCoCommentResDTO {
 
 	private Long coCommentId;
 	private Long parentCommentId;
+	private Long userId;
 	private String userImageUrl;
 	private String userNickName;
 	private String coComment;

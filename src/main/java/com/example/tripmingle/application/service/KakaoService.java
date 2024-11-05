@@ -3,6 +3,8 @@ package com.example.tripmingle.application.service;
 import static com.example.tripmingle.common.constants.LoginType.*;
 import static com.example.tripmingle.common.error.ErrorCode.*;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -120,17 +122,45 @@ public class KakaoService {
 			.oauthId(getKakaoUserDataResDTO.getKakaoId())
 			.nickName(additionalUserDetailReqDTO.getNickName())
 			.selfIntroduction(additionalUserDetailReqDTO.getSelfIntroduction())
-			.ageRange(kakaoUserInfo.getAgeRange())
-			.gender(kakaoUserInfo.getGender())
-			.name(kakaoUserInfo.getName())
+			.ageRange(calculateAgeRange(additionalUserDetailReqDTO.getBirthDay()))
+			.gender(additionalUserDetailReqDTO.getGender())
+			.name(additionalUserDetailReqDTO.getName())
 			.nationality(additionalUserDetailReqDTO.getNationality())
-			.phoneNumber(kakaoUserInfo.getPhoneNumber())
+			.phoneNumber(additionalUserDetailReqDTO.getPhoneNumber())
+			.birthDay(additionalUserDetailReqDTO.getBirthDay())
 			.build());
 	}
 
 	public KakaoTokenResDTO getKakaoAccessToken(String code) {
 		return kakaoOutPort.getToken(kakaoProperties.getKakaoGrantType(),
 			kakaoProperties.getKakaoClientId(), kakaoProperties.getKakaoSecretKey(), code);
+	}
+
+	public String calculateAgeRange(LocalDate birthDay) {
+		LocalDate now = LocalDate.now();
+
+		int age = (int)ChronoUnit.YEARS.between(birthDay, now);
+
+		// 올해 생일을 이미 지났는지 확인
+		if (now.isBefore(birthDay.plusYears(age))) {
+			age -= 1;
+		}
+
+		String ageGroup;
+		switch (age / 10) { // 나이를 10으로 나눠서 연령대 구하기
+			case 0 -> ageGroup = "유아기";
+			case 1 -> ageGroup = "10대";
+			case 2 -> ageGroup = "20대";
+			case 3 -> ageGroup = "30대";
+			case 4 -> ageGroup = "40대";
+			case 5 -> ageGroup = "50대";
+			case 6 -> ageGroup = "60대";
+			case 7 -> ageGroup = "70대";
+			case 8 -> ageGroup = "80대";
+			case 9 -> ageGroup = "90대";
+			default -> ageGroup = "100세 이상";
+		}
+		return ageGroup;
 	}
 
 }

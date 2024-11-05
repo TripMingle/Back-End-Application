@@ -1,5 +1,7 @@
 package com.example.tripmingle.entity;
 
+import java.time.LocalDate;
+
 import com.example.tripmingle.common.entity.BaseEntity;
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
 
@@ -61,12 +63,16 @@ public class User extends BaseEntity {
 	@Column(nullable = true)
 	private String userImageUrl;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "DOUBLE DEFAULT 3.0")
 	private double userScore;
+
+	@Column(nullable = false, columnDefinition = "DATE DEFAULT '1900-01-01'")
+	private LocalDate birthDay;
 
 	@Builder(toBuilder = true)
 	public User(String email, String password, String role, String loginType, String oauthId, String nickName,
-		String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber) {
+		String ageRange, String gender, String name, String nationality, String selfIntroduction, String phoneNumber,
+		LocalDate birthDay) {
 		this.email = email;
 		this.password = password;
 		this.role = role;
@@ -79,7 +85,7 @@ public class User extends BaseEntity {
 		this.nationality = nationality;
 		this.selfIntroduction = selfIntroduction;
 		this.phoneNumber = phoneNumber;
-		this.userScore = 3.0;
+		this.birthDay = birthDay;
 	}
 
 	public void updateUserMyPage(PatchUserMyPageReqDTO patchUserMyPageReqDTO) {

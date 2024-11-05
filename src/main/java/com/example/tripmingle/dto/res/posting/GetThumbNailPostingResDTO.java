@@ -10,6 +10,7 @@ public class GetThumbNailPostingResDTO {
 	private Long postingId;
 	private String title;
 	private String content;
+	private Long userId;
 	private String userImageUrl;
 	private String userNickName;
 	private String userAgeRange;
