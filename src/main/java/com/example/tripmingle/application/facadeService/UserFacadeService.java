@@ -8,6 +8,7 @@ import com.example.tripmingle.application.service.S3Service;
 import com.example.tripmingle.application.service.UserService;
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
 import com.example.tripmingle.dto.res.user.GetUserInfoResDTO;
+import com.example.tripmingle.dto.res.user.GetUserProfileResDTO;
 import com.example.tripmingle.dto.res.user.PatchUserMyPageResDTO;
 import com.example.tripmingle.dto.res.user.UploadUserImageResDTO;
 import com.example.tripmingle.entity.User;
@@ -50,6 +51,21 @@ public class UserFacadeService implements UserUseCase {
 		return GetUserInfoResDTO.builder()
 			.userNickName(currentUser.getNickName())
 			.userProfileImage(currentUser.getUserImageUrl() == null ? "" : currentUser.getUserImageUrl())
+			.build();
+	}
+
+	@Override
+	public GetUserProfileResDTO getUserProfile(Long userId) {
+		User findUser = userService.getUserById(userId);
+		return GetUserProfileResDTO.builder()
+			.userId(userId)
+			.userNickName(findUser.getNickName())
+			.userImageUrl(findUser.getUserImageUrl() == null ? "" : findUser.getUserImageUrl())
+			.userScore(findUser.getUserScore())
+			.userGender(findUser.getGender())
+			.userAgeRange(findUser.getAgeRange())
+			.userNationality(findUser.getNationality())
+			.selfIntroduction(findUser.getSelfIntroduction() == null ? "" : findUser.getSelfIntroduction())
 			.build();
 	}
 }
