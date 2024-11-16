@@ -3,6 +3,7 @@ package com.example.tripmingle.port.in;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
+import com.example.tripmingle.dto.res.user.GetUserInfoForMyPageResDTO;
 import com.example.tripmingle.dto.res.user.GetUserInfoResDTO;
 import com.example.tripmingle.dto.res.user.GetUserProfileResDTO;
 import com.example.tripmingle.dto.res.user.PatchUserMyPageResDTO;
@@ -17,4 +18,5 @@ public interface UserUseCase {
 
 	GetUserProfileResDTO getUserProfile(Long userId);
 
+	GetUserInfoForMyPageResDTO getUserInfoForUpdatingUserInfo();
 }
