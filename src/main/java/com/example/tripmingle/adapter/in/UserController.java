@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.tripmingle.common.result.ResultCode;
 import com.example.tripmingle.common.result.ResultResponse;
 import com.example.tripmingle.dto.req.user.PatchUserMyPageReqDTO;
+import com.example.tripmingle.dto.res.user.GetUserInfoForMyPageResDTO;
 import com.example.tripmingle.dto.res.user.GetUserInfoResDTO;
 import com.example.tripmingle.dto.res.user.GetUserProfileResDTO;
 import com.example.tripmingle.dto.res.user.PatchUserMyPageResDTO;
@@ -47,6 +48,14 @@ public class UserController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.UPDATE_USER_MY_PAGE_SUCCESS, patchUserMyPageResDTO));
 	}
 
+	@Operation(summary = "마이페이지 정보 수정을 위한 유저 정보 조회")
+	@GetMapping("/my-page")
+	public ResponseEntity<ResultResponse> getUserInfoForUpdatingUserInfo() {
+		GetUserInfoForMyPageResDTO getUserInfoForMyPageResDTO = userUseCase.getUserInfoForUpdatingUserInfo();
+		return ResponseEntity.ok(
+			ResultResponse.of(ResultCode.GET_USER_INFO_FOR_MY_PAGE_SUCCESS, getUserInfoForMyPageResDTO));
+	}
+
 	@Operation(summary = "로그인(접속 중인) 유저 정보 조회")
 	@GetMapping("/info")
 	public ResponseEntity<ResultResponse> getUserInfo() {
@@ -54,7 +63,7 @@ public class UserController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_USER_INFO_SUCCESS, getUserInfoDTO));
 	}
 
-	@Operation(summary = "유저 프로필 조회")
+	@Operation(summary = "유저 프로필 (클릭시) 조회")
 	@GetMapping("/my-page/profile")
 	public ResponseEntity<ResultResponse> getUserProfile(@RequestParam("userId") Long userId) {
 		GetUserProfileResDTO getUserProfileResDTO = userUseCase.getUserProfile(userId);
