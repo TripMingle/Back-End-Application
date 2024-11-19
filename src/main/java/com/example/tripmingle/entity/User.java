@@ -89,21 +89,13 @@ public class User extends BaseEntity {
 	}
 
 	public void updateUserMyPage(PatchUserMyPageReqDTO patchUserMyPageReqDTO) {
-		if (patchUserMyPageReqDTO.getUserNickName() != null) {
-			this.nickName = patchUserMyPageReqDTO.getUserNickName();
-		}
-		if (patchUserMyPageReqDTO.getNationality() != null) {
-			this.nationality = patchUserMyPageReqDTO.getNationality();
-		}
-		if (patchUserMyPageReqDTO.getPhoneNumber() != null) {
-			this.phoneNumber = patchUserMyPageReqDTO.getPhoneNumber();
-		}
-		if (patchUserMyPageReqDTO.getUserEmail() != null) {
-			this.email = patchUserMyPageReqDTO.getUserEmail();
-		}
-		if (patchUserMyPageReqDTO.getSelfIntroduction() != null) {
-			this.selfIntroduction = patchUserMyPageReqDTO.getSelfIntroduction();
-		}
+		this.name = patchUserMyPageReqDTO.getName();
+		this.gender = patchUserMyPageReqDTO.getGender();
+		this.birthDay = patchUserMyPageReqDTO.getBirthDay();
+		this.nickName = patchUserMyPageReqDTO.getUserNickName();
+		this.nationality = patchUserMyPageReqDTO.getNationality();
+		this.phoneNumber = patchUserMyPageReqDTO.getPhoneNumber();
+		this.selfIntroduction = patchUserMyPageReqDTO.getSelfIntroduction();
 	}
 
 	public void uploadUserImage(String userImageUrl) {

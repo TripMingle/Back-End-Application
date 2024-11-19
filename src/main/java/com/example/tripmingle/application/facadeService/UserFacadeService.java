@@ -46,6 +46,13 @@ public class UserFacadeService implements UserUseCase {
 		currentUser.updateUserMyPage(patchUserMyPageReqDTO);
 		return PatchUserMyPageResDTO.builder()
 			.userId(currentUser.getId())
+			.name(currentUser.getName())
+			.gender(currentUser.getGender())
+			.birthDay(currentUser.getBirthDay())
+			.phoneNumber(currentUser.getPhoneNumber())
+			.nickName(currentUser.getNickName())
+			.nationality(currentUser.getNationality())
+			.selfIntroduction(currentUser.getSelfIntroduction() == null ? "" : currentUser.getSelfIntroduction())
 			.build();
 	}
 
