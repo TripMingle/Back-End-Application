@@ -86,6 +86,10 @@ TripMingle은 글로벌 여행 동행 서비스로, 여행 동행 찾기, 여행
 <br /><br />
 
 ### 3-2. 웹소켓 기반 동행 채팅 서비스
+사용자 간 원활한 소통을 지원하기 위해, 여행 일정과 동행 관련 논의를 즉각적으로 나눌 수 있는 실시간 채팅 서비스를 도입했습니다.
+<br/>
+웹소켓과 Redis Pub/Sub을 통해 다중 서버에서도 사용자 간 실시간 채팅이 가능합니다.
+<img width="800" height="600" alt="image" src="https://github.com/user-attachments/assets/b11f3af5-5ec7-4159-88b6-560ac2548750" />
 
 
 ## 4. 프로젝트 관리
